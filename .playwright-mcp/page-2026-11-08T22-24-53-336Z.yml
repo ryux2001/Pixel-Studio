@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - link "Ir al lienzo" [ref=e3] [cursor=pointer]:
+      - /url: "#drawing-canvas"
+    - generic [ref=e4]:
+      - heading "Pixel Art Studio" [level=1] [ref=e8]
+      - generic [ref=e9]: Sin título
+      - generic [ref=e10]:
+        - button "Nuevo" [ref=e11] [cursor=pointer]
+        - button "Deshacer" [disabled] [ref=e14]
+        - button "Rehacer" [disabled] [ref=e17]
+    - generic [ref=e20]:
+      - complementary "Herramientas y colores" [ref=e21]:
+        - region [ref=e22]:
+          - heading "Herramientas" [level=2] [ref=e23]
+          - generic [ref=e24]:
+            - button "LápizB" [pressed] [ref=e25] [cursor=pointer]
+            - button "GomaE" [ref=e28] [cursor=pointer]
+            - button "RellenoG" [ref=e31] [cursor=pointer]
+            - button "CuentagotasI" [ref=e34] [cursor=pointer]
+            - button "LíneaL" [ref=e37] [cursor=pointer]
+            - button "RectánguloR" [ref=e40] [cursor=pointer]
+            - button "SelecciónM" [ref=e43] [cursor=pointer]
+        - region [ref=e46]:
+          - heading "Color y paleta" [level=2] [ref=e47]
+          - generic [ref=e49]:
+            - text: Color activo
+            - code [ref=e50]: "#E8E1CDFF"
+          - generic [ref=e51]:
+            - text: Hexadecimal con alfa
+            - generic [ref=e52]:
+              - textbox "Hexadecimal con alfa" [ref=e53]: "#E8E1CDFF"
+              - button "Usar" [ref=e54] [cursor=pointer]
+            - text: "6 dígitos: opaco · 8 dígitos: RGBA"
+          - generic "Colores de la paleta" [ref=e55]:
+            - 'button "Color #E8E1CDFF" [pressed]':
+              - generic [ref=e56] [cursor=pointer]
+            - 'button "Color #16141FFF"'
+            - 'button "Color #35313FFF"'
+            - 'button "Color #65566FFF"'
+            - 'button "Color #9B8AA5FF"'
+            - 'button "Color #B95363FF"'
+            - 'button "Color #E58A70FF"'
+            - 'button "Color #F1C27DFF"'
+            - 'button "Color #A7BE82FF"'
+            - 'button "Color #537A67FF"'
+            - 'button "Color #557E9FFF"'
+            - 'button "Color #8BB8C9FF"'
+            - 'button "Color #DBB9CCFF"'
+            - 'button "Color #FFFFFFFF"'
+            - 'button "Color #797B88FF"'
+            - 'button "Color #B5ACA0FF"'
+          - generic [ref=e57]:
+            - button "Añadir color" [disabled] [ref=e58]
+            - button "Quitar color" [ref=e59] [cursor=pointer]
+        - group [ref=e60]:
+          - generic "Atajos de teclado" [ref=e61]
+        - paragraph [ref=e62]: Trabajo en memoria.El guardado llegará en la fase 3. Al cerrar o recargar se pierde esta sesión.
+      - region "Editor de píxeles" [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - button "Cuadrícula" [pressed] [ref=e66] [cursor=pointer]
+            - button "Ajustar" [ref=e69] [cursor=pointer]
+          - generic [ref=e72]:
+            - button "Reducir zoom" [ref=e73] [cursor=pointer]
+            - status "Zoom" [ref=e75]: 11×
+            - button "Aumentar zoom" [ref=e76] [cursor=pointer]
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - checkbox "Restringir edición a selección" [disabled] [ref=e81]
+            - text: Restringir edición a selección
+          - text: Sin selección
+        - generic "Área de dibujo desplazable" [ref=e82]:
+          - generic [ref=e84]:
+            - generic [ref=e85]:
+              - text: 0, 0
+              - generic [ref=e86]: 48 × 48 px
+            - generic "Lienzo de 48 por 48 píxeles. Usa las herramientas para dibujar con el puntero." [ref=e88]
+            - generic [ref=e89]:
+              - text: RGBA · transparencia real
+              - generic [ref=e90]: 11×
+        - generic [ref=e91]: "x: — y: —Arrastra para dibujar · Ctrl + rueda para zoom · Esc para cancelar"
+    - generic [ref=e92]:
+      - generic [ref=e93]:
+        - strong [ref=e94]: 48 × 48
+        - text: 1 plano RGBALápiz
+      - status [ref=e95]: Documento nuevo · sin cambios
+  - alert [ref=e96]
