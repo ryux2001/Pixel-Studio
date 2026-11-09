@@ -1,6 +1,6 @@
 # Formatos de Pixel Art Studio
 
-Implementados: `pixel-studio/project` y `pixel-studio/region-patch`, versión 1. Se importan mediante acciones distintas: abrir proyecto sustituye el documento; importar región aplica cambios mínimos sobre el documento actual. `pixel-studio/commands` sigue pendiente para fase 5.
+Implementados: `pixel-studio/project`, `pixel-studio/region-patch` y `pixel-studio/commands`, versión 1. Se importan mediante acciones distintas: abrir proyecto sustituye el documento; importar región aplica cambios mínimos sobre el documento actual. Importar comandos ejecuta un lote declarativo en orden sobre el documento actual, siempre con preview y confirmación.
 
 ## Proyecto JSON V1
 
@@ -176,3 +176,53 @@ Al confirmar se revalida el formato sobre el documento vigente y se comprueba id
 La región del archivo es independiente de la selección manual y de su checkbox de restricción. Aplicar mantiene la selección existente, dimensiones, nombre, paleta y referencia. Autosave conserva solo el resultado confirmado. Cancelar, cerrar, validar o previsualizar no modifican el proyecto; el borrador puede guardar trabajo previo pendiente, nunca una propuesta cancelada.
 
 Errores regionales adicionales: `REGION`, `NOTE`, `DIMENSION_MISMATCH` y `CONFLICT`; se reutilizan los códigos de JSON, tamaño, estructura, campos, versión y color. La nota es texto, nunca HTML ni instrucciones ejecutables. El formato no autentica al emisor ni identifica persistentemente un proyecto: revisar siempre el destino y la preview, especialmente al usar otro documento del mismo tamaño.
+
+## Comandos de dibujo — fase 5
+
+Raíz `DrawCommandsFileV1` con campos obligatorios `kind`, `version`, `canvas` y `commands`, y opcionales `scope` y `note`. Solo se admiten esos campos. `kind` debe ser `pixel-studio/commands`, versión entera `1`; canvas contiene width/height enteros de 8–128 y debe coincidir con el documento abierto. No crea ni redimensiona un documento automáticamente.
+
+| op | Campos adicionales obligatorios |
+| --- | --- |
+| setPixel | x, y, color |
+| setPixels | pixels: [{ x, y, color }, ...] |
+| drawLine | x1, y1, x2, y2, color |
+| fillRect | x, y, width, height, color |
+| drawRect | x, y, width, height, color |
+| clearRect | x, y, width, height |
+| floodFill | x, y, color |
+| replaceColor | from, to |
+
+Claves cerradas en cada objeto, arrays densos y colores #RRGGBBAA completos. No hay coerciones. Se acepta minúscula y se normaliza a mayúscula; RGBA se conserva exactamente. Coordenadas enteras desde cero; rectángulos con tamaño positivo y extremo final excluido. El borrado escribe #00000000.
+
+Límites independientes: 1 MiB UTF-8 de archivo/texto, 2000 comandos, 16384 elementos por setPixels y 65536 acumulados en el lote. note es texto literal opcional de hasta 2000 unidades UTF-16. Los arrays vacíos son válidos. Duplicados en setPixels se resuelven en orden, prevaleciendo el último, pero todas las entradas anteriores deben ser válidas. No se aceptan propiedades desconocidas, scripts ni bloques Markdown alrededor del JSON.
+
+### Ámbito y orden
+
+scope, si existe, es un rectángulo íntegro del canvas, desde 1×1; si falta, todo el lienzo queda autorizado y la preview lo indica. La selección manual no añade ni quita permisos al archivo.
+
+- setPixel/setPixels: cada coordenada debe estar autorizada, incluso si escribir no cambiaría su color.
+- Líneas y rectángulos: toda geometría escrita debe estar dentro del ámbito. Nunca se recortan silenciosamente.
+- floodFill usa cuatro vecinos y coincidencia RGBA exacta sobre el resultado de los comandos anteriores. La semilla debe estar autorizada; si el relleno que cambiaría muestras sale de scope, se rechaza el lote. No usa el relleno manual recortado a selección. Con color ya coincidente no cambia nada.
+- replaceColor recorre únicamente scope, o canvas completo si falta. No toca coincidencias exteriores; from = to no cambia nada.
+
+Los comandos se ejecutan en orden en una copia temporal y no utilizan basePixels ni detección de conflictos regionales. Pueden sobrescribir el estado actual dentro del ámbito después de confirmación. Si cualquier comando falla, no se publica ningún cambio anterior del lote.
+
+### Preview, cancelación e historial
+
+«Importar comandos JSON» permite archivo o pegado en textarea. Se valida y simula en un Web Worker local, sin enviar datos a ningún servicio. Cancelar termina el worker; resultados antiguos o lecturas canceladas no se publican. El motor puro se comparte con las pruebas y usa las primitivas de dibujo existentes.
+
+La comparación muestra actual/propuesta y el contorno del ámbito. El resumen cuenta diferencias finales únicas, no la suma de escrituras intermedias. También muestra número de comandos, desglose por op y operaciones que no cambiaron su estado intermedio. Pintar una celda y restaurarla después puede dejar el lote entero sin cambios finales; en ese caso Aplicar queda desactivado y no se crea historial.
+
+Al confirmar se comprueban identidad, revisión y referencia del documento capturado, dimensiones del resultado y que todas las diferencias finales están dentro del ámbito. Se publica la simulación ya validada sin repetir los segundos de trabajo en la interfaz. Una preview obsoleta requiere nueva simulación.
+
+Una aplicación es una sola acción «Aplicar comandos de dibujo». Undo/redo, base exportada y autosave funcionan como en fase 4. Se conservan nombre, paleta, dimensiones, referencia, selección y vista. No se guardan texto ni propuestas en el borrador. La nota se muestra como texto y nunca se ejecuta.
+
+Los errores identifican comando con numeración humana desde 1 y ruta interna desde 0, por ejemplo `Comando 2 (setPixel): commands[1].x`. Códigos: los compartidos de formato/JSON/color/campos, más `COORDINATE`, `COMMAND_LIMIT`, `PIXEL_LIMIT`, `OP`, `COMMAND_EXECUTION`, `OUTSIDE_SCOPE` y `DIMENSION_MISMATCH`.
+
+Ejemplo completo conforme al plan maestro: [commands-v1.json](examples/commands-v1.json). Abrir un documento 48×48, importar ese archivo, previsualizar, aplicar y deshacer el lote completo para volver al documento anterior.
+
+### Rendimiento reproducible
+
+`src/tests/unit/commands-performance.test.ts` ejecuta 2000 operaciones mixtas fillRect/floodFill/replaceColor a 48×48 y 128×128, con colores alternados para evitar que sean todos no-ops. Ejecutar `pnpm exec vitest run src/tests/unit/commands-performance.test.ts --reporter=verbose` para ver tiempos en el equipo actual. No hay umbrales temporales frágiles en las unitarias.
+
+La E2E de máximo tamaño ejecuta 2000 operaciones en 128×128, comprueba un temporizador de la interfaz durante la simulación y mide la confirmación hasta el siguiente frame. Los tiempos dependen del equipo y de la carga; la simulación puede tardar segundos, pero es cancelable y no ocupa el hilo de la interfaz. El resultado RGBA final se comprueba desde el JSON descargado.

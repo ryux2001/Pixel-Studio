@@ -1,0 +1,49 @@
+{
+  "kind": "pixel-studio/commands",
+  "version": 1,
+  "canvas": {
+    "width": 48,
+    "height": 48
+  },
+  "scope": {
+    "x": 10,
+    "y": 7,
+    "width": 28,
+    "height": 36
+  },
+  "commands": [
+    {
+      "op": "fillRect",
+      "x": 19,
+      "y": 10,
+      "width": 10,
+      "height": 8,
+      "color": "#E8E1CDFF"
+    },
+    {
+      "op": "drawLine",
+      "x1": 20,
+      "y1": 12,
+      "x2": 20,
+      "y2": 14,
+      "color": "#16141FFF"
+    },
+    {
+      "op": "drawLine",
+      "x1": 27,
+      "y1": 12,
+      "x2": 27,
+      "y2": 14,
+      "color": "#16141FFF"
+    },
+    {
+      "op": "fillRect",
+      "x": 16,
+      "y": 19,
+      "width": 16,
+      "height": 21,
+      "color": "#35313FFF"
+    }
+  ],
+  "note": "Ejemplo mínimo de cabeza y túnica, no sprite final"
+}

@@ -4,9 +4,9 @@ Editor web local de pixel art con Next.js App Router, React, TypeScript y Canvas
 
 ## Estado
 
-Fases 0, 1, 2, 3 y 4 completadas: base del proyecto, motor de píxeles probado y editor visual manual. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
+Fases 0, 1, 2, 3, 4 y 5 completadas: base del proyecto, motor de píxeles probado y editor visual manual. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
 
-Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
+Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos e importar lotes de comandos JSON de dibujo. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
 
 La V1 contempla un lienzo RGBA de 48×48 por defecto, herramientas manuales, historial por acción, proyectos JSON, PNG transparente, modificaciones regionales con detección de conflictos e importación de comandos con previsualización. Dimensiones previstas: 8–128 por eje, con presets 32, 48 y 64. No incluye capas, animación, cuentas ni agentes integrados.
 
@@ -172,7 +172,7 @@ Validación de cierre: ESLint, TypeScript, 144 pruebas unitarias, build de produ
 
 Los retoques locales en celdas que la propuesta no cambia se conservan. Un conflicto bloquea todo el lote; no existe sobrescritura forzada. Una propuesta ya aplicada o sin cambios no crea acciones. El ámbito del archivo es independiente de la selección manual activa y su restricción. Exportar una región no sustituye guardar el proyecto JSON.
 
-Límite: 1 MiB UTF-8; regiones desde 1×1 dentro de lienzos 8–128 por eje; nota de hasta 2000 unidades UTF-16. No hay importación de JavaScript ni comandos de dibujo todavía. El formato no prueba la identidad del emisor ni del proyecto: revisar siempre destino y preview.
+Límite: 1 MiB UTF-8; regiones desde 1×1 dentro de lienzos 8–128 por eje; nota de hasta 2000 unidades UTF-16. No se importa JavaScript; los comandos de dibujo usan la acción independiente de fase 5. El formato no prueba la identidad del emisor ni del proyecto: revisar siempre destino y preview.
 
 ### Comprobar la fase 4
 
@@ -180,4 +180,19 @@ Dibujar un personaje 48×48, seleccionar la cabeza y exportarla. Cambiar dos val
 
 Validación de cierre: ESLint, TypeScript, 175 pruebas unitarias, build y 26 E2E aprobados. Revisión visual en 390, 768 y 1440 píxeles de editor, entrada, preview, errores y conflictos; sin desbordamiento horizontal ni errores de ejecución. No se añadieron dependencias.
 
-Siguiente fase: importación de comandos JSON de dibujo con ejecución atómica y previsualización.
+## Comandos de dibujo — fase 5
+
+1. Abrir o crear un documento del tamaño indicado en el archivo (48×48 para el ejemplo).
+2. Pulsar «Importar comandos JSON» y elegir un archivo o pegar su contenido.
+3. Previsualizar el lote: revisar ámbito, actual/propuesta y diferencias finales. Sin scope, todo el lienzo está autorizado; la selección manual es independiente.
+4. Confirmar «Aplicar N cambios». Deshacer recupera el estado anterior en un paso; rehacer repite el lote. El resultado confirmado entra en autosave y queda pendiente de guardar JSON.
+
+Ejemplo listo para importar: [commands-v1.json](docs/examples/commands-v1.json). Soporta setPixel, setPixels, drawLine, fillRect, drawRect, clearRect, floodFill y replaceColor. Los comandos se ejecutan en orden; un error rechaza todo el lote. floodFill importado rechaza un relleno que exceda scope, sin recortarlo como la selección manual. Los lotes sin diferencias finales no crean acciones.
+
+La simulación es local y cancelable; los lotes grandes se ejecutan fuera del hilo de la interfaz. No se ejecuta código recibido ni se envían datos a IA. La entrada JSON se pliega durante la preview y se puede reabrir para editar.
+
+Límites: 1 MiB UTF-8, 2000 comandos, 16384 muestras por setPixels y 65536 en el lote; nota hasta 2000 unidades UTF-16. El tiempo de simulación depende de la complejidad, incluso dentro de esos límites. Contrato y semántica completos en [JSON_FORMATS.md](docs/JSON_FORMATS.md).
+
+Validación de cierre: ESLint, TypeScript, 215 pruebas unitarias, build y 33 E2E aprobados. Pruebas de máximo 128×128/2000 comandos con interfaz activa; revisión visual de editor, preview, error y no-op a 390, 768 y 1440 píxeles. No se añadieron dependencias.
+
+Siguiente fase: cierre global de V1, usabilidad, plantillas de prompts y documentación del flujo completo. [Plan detallado de fase 6](docs/plan/FASE_6_CIERRE_V1.md), pendiente de implementación.

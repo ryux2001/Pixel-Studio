@@ -732,21 +732,25 @@ No activar atajos de letras mientras se escribe en campos de texto.
 
 **Tareas:**
 
-- [ ] Definir discriminated union `DrawCommandV1` en TypeScript.
-- [ ] Implementar validador por `op` con mensajes útiles.
-- [ ] Implementar ejecutor puro de lote con reglas de `scope`.
-- [ ] Previsualizar lote completo sin modificar estado real.
-- [ ] Importar archivo y pegar texto de comandos.
-- [ ] Rechazo atómico de comandos erróneos o fuera del área autorizada.
-- [ ] Mostrar resumen de píxeles cambiados y confirmar.
-- [ ] Aplicar lote confirmado como una acción de historial.
-- [ ] Tests de comandos en orden, límites y rechazo parcial.
+- [x] Definir discriminated union `DrawCommandV1` en TypeScript.
+- [x] Implementar validador por `op` con mensajes útiles.
+- [x] Implementar ejecutor puro de lote con reglas de `scope`.
+- [x] Previsualizar lote completo sin modificar estado real.
+- [x] Importar archivo y pegar texto de comandos.
+- [x] Rechazo atómico de comandos erróneos o fuera del área autorizada.
+- [x] Mostrar resumen de píxeles cambiados y confirmar.
+- [x] Aplicar lote confirmado como una acción de historial.
+- [x] Tests de comandos en orden, límites y rechazo parcial.
 
 **Criterio de salida:** pegar JSON de ejemplo de la sección 5.4 → vista previa → aplicar → aparece la silueta en el lugar correcto → deshacer limpia el lote.
+
+**Cierre verificado (9 de noviembre de 2026):** contrato commands V1 con ocho operaciones, validación por comando/campo, scope estricto y ejecución secuencial atómica. Archivo y pegado comparten simulación en un Web Worker local cancelable; confirmación verifica la instantánea y el ámbito sin repetir la simulación en la interfaz. Lotes sin diff final no crean historial; los demás se aplican como una acción con autosave. ESLint, TypeScript, 215 pruebas unitarias, build y 33 E2E aprobados. Máximo 128×128 con 2000 comandos: aproximadamente 1955 ms en el worker y 15,2 ms desde el clic de confirmación hasta el siguiente frame en el equipo de prueba, con la interfaz activa durante la simulación. Revisión visual a 390×844, 768×900 y 1440×1000 sin desbordamientos horizontales ni errores de ejecución. README, JSON_FORMATS y ejemplo `docs/examples/commands-v1.json` actualizados. Sin dependencias nuevas; fase 6 pendiente.
 
 ### Fase 6 — Flujo completo, usabilidad y documentación
 
 **Objetivo:** V1 presentable y cómoda para producción inicial de sprites.
+
+**Plan detallado:** [FASE_6_CIERRE_V1.md](FASE_6_CIERRE_V1.md). Planificación completada; implementación pendiente. La referencia visual ya existe desde fase 3 y en esta fase se revisará su flujo y cobertura.
 
 **Tareas:**
 

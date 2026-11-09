@@ -1,6 +1,6 @@
 # Fase 5 — Intercambio con IA: comandos JSON de dibujo
 
-Estado: planificación; implementación pendiente.
+Estado: implementada y validada el 9 de noviembre de 2026.
 Fecha: 9 de noviembre de 2026.
 Base: plan maestro, secciones 5.4 y 7, y cierre de fase 4.
 
@@ -252,18 +252,34 @@ pnpm test:e2e
 
 Realizar una ronda visual conjunta con editor, entrada, simulación, error, preview y sin cambios en escritorio y ventanas estrechas. Corregir defectos en una tanda y confirmar con una segunda ronda como máximo. Revisar diff y documentación antes de cerrar.
 
-- [ ] Contrato V1 estricto y ocho operaciones implementadas con errores por comando/campo.
-- [ ] Archivo y texto comparten parser, límites y semántica.
-- [ ] Ejecución en orden, puro RGBA y sin código arbitrario ni mutación del documento activo.
-- [ ] Scope impide escrituras exteriores sin recortar; floodFill importado mantiene semántica estricta.
-- [ ] Un fallo rechaza todo el lote sin corrupción parcial.
-- [ ] Preview final, ámbito, conteos y advertencia de alcance son claros.
-- [ ] No-ops finales no crean historial ni limpian pendientes.
-- [ ] Confirmación verifica destino vigente y crea una sola acción recuperable.
-- [ ] Cancelación, autosave y recuperación funcionan sin publicar propuestas antiguas.
-- [ ] Se midió el máximo y se resolvió cualquier bloqueo prolongado de interfaz.
-- [ ] Se verifica el ejemplo maestro, archivo y pegado, con undo/redo exacto.
-- [ ] Checks, regresiones y revisión visual pasan; README y JSON_FORMATS describen lo implementado.
-- [ ] Solo entonces marcar fase 5 completada; informar resultados, limitaciones y siguiente fase.
+- [x] Contrato V1 estricto y ocho operaciones implementadas con errores por comando/campo.
+- [x] Archivo y texto comparten parser, límites y semántica.
+- [x] Ejecución en orden, puro RGBA y sin código arbitrario ni mutación del documento activo.
+- [x] Scope impide escrituras exteriores sin recortar; floodFill importado mantiene semántica estricta.
+- [x] Un fallo rechaza todo el lote sin corrupción parcial.
+- [x] Preview final, ámbito, conteos y advertencia de alcance son claros.
+- [x] No-ops finales no crean historial ni limpian pendientes.
+- [x] Confirmación verifica destino vigente y crea una sola acción recuperable.
+- [x] Cancelación, autosave y recuperación funcionan sin publicar propuestas antiguas.
+- [x] Se midió el máximo y se resolvió cualquier bloqueo prolongado de interfaz.
+- [x] Se verifica el ejemplo maestro, archivo y pegado, con undo/redo exacto.
+- [x] Checks, regresiones y revisión visual pasan; README y JSON_FORMATS describen lo implementado.
+- [x] Solo entonces marcar fase 5 completada; informar resultados, limitaciones y siguiente fase.
 
-Este documento solo planifica. La implementación de fase 5 queda pendiente de una petición posterior del usuario.
+## 13. Ejecución y resultados
+
+Implementación autorizada por la petición posterior «Implementa» y completada el 9 de noviembre de 2026.
+
+- Se crearon `draw-commands.ts`, parser por op, ejecutor puro y setPixels multicolor con validación previa, duplicados de último valor y una sola copia como máximo por comando.
+- Se reutilizan las primitivas existentes de líneas, rectángulos, relleno y reemplazo. No se modificó el comportamiento manual. El relleno importado es estricto y la semilla se valida contra scope incluso en no-op.
+- La medición inicial con Node 24/Vitest en este equipo, 2000 operaciones mixtas fillRect/floodFill/replaceColor alternando colores, dio aproximadamente 528 ms a 48×48 y 3672 ms a 128×128. Ese trabajo excedía el presupuesto de bloqueo previsto para la interfaz.
+- Por ello la aplicación usa `commands.worker.ts`: parseo, validación y simulación se ejecutan en un Web Worker local. El documento activo se clona sin transferir/desasociar su buffer. Cancelar, editar o reemplazar una solicitud termina el worker y descarta respuestas antiguas.
+- La preview captura documento, identidad y revisión. La acción `apply-commands` comprueba que siguen vigentes, valida dimensiones y que el diff final está dentro del ámbito, y publica el resultado ya simulado. No repite el lote completo en el hilo principal. El resultado de comandos es independiente del de regiones y se conserva al guardar/undo/redo para no reabrir diálogos completados.
+- Resultado de navegador Chromium, producción, 128×128 y 2000 operaciones alternadas fillRect/floodFill, con las E2E ejecutándose con cinco workers de pruebas: aproximadamente 1955 ms de simulación y 15,2 ms desde el clic de confirmación hasta el siguiente frame. Un temporizador de 20 ms en la interfaz siguió avanzando durante la simulación. Son observaciones del equipo de prueba, no garantías universales de latencia.
+- Benchmark puro reproducible en `src/tests/unit/commands-performance.test.ts`, con salida visible mediante reporter verbose. La E2E máxima comprueba el RGBA final descargado y registra tiempos de worker/confirmación sin un umbral frágil para equipos distintos.
+- UI integrada con los componentes Modal/Preview y estilos de fase 4. Texto de entrada plegable, nota literal, resumen de operaciones, ámbito explícito y Aplicar desactivado ante error/no-op. No fue necesario un rediseño ni nuevas dependencias.
+- Validación: `pnpm lint`, `pnpm typecheck`, 215 unitarias, `pnpm build` y 33 E2E, todo aprobado. Regresiones de editor, archivos, PNG, borrador y region-patch incluidas. Ejemplo maestro verificado por archivo y pegado con undo/redo exacto.
+- Revisión visual a 390×844, 768×900 y 1440×1000: editor, preview, error y no-op sin desbordamientos horizontales ni errores de ejecución. El comprobador automático de estilos no encontró incidencias.
+- Se actualizaron README, JSON_FORMATS, el plan maestro y el ejemplo importable `docs/examples/commands-v1.json`. No se inició fase 6 ni se creó un commit de esta implementación.
+
+Limitaciones: la simulación de lotes grandes puede tardar segundos, aunque sea cancelable; requiere soporte de Web Workers del navegador moderno. No hay conflictos basados en estado previo como en region-patch: el usuario autoriza explícitamente el resultado sobre su documento actual. Se mantienen límites de tamaño, comandos y muestras, sin crear/redimensionar documentos automáticamente.

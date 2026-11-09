@@ -28,7 +28,8 @@ export function usePixelEditor() {
   const recover = useCallback((project: EditorProject, base: EditorProject | null) => { setSelection(null); setRestrict(false); dispatch({ type: "recover", project, base }); }, []);
   const saved = (project: EditorProject, id: number) => dispatch({ type: "saved", project, id });
   const applyRegion = (patch: RegionPatchFileV1, documentId: number, revision: number, document: PixelDocument, request: number) => dispatch({ type: "apply-region", patch, documentId, revision, document, request });
-  return { history, applyRegion, project: history.present, dirty: isHistoryDirty(history), openProject, recover, saved,
+  const applyCommands = (proposal: PixelDocument, scope: PixelRect, documentId: number, revision: number, document: PixelDocument, request: number) => dispatch({ type: "apply-commands", proposal, scope, documentId, revision, document, request });
+  return { history, applyRegion, applyCommands, project: history.present, dirty: isHistoryDirty(history), openProject, recover, saved,
     tool, setTool, color, setColor, selection, setSelection, restrict, setRestrict, filled, setFilled,
     zoom, setZoom, grid, setGrid, busy, setBusy, clearSelection, commit, updateProject, undo, redo, newProject };
 }

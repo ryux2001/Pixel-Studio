@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { usePixelEditor } from "@/hooks/usePixelEditor";
 import { useProjectFiles } from "@/hooks/useProjectFiles";
+import { useDrawCommands } from "@/hooks/useDrawCommands";
+import { CommandsDialog } from "./CommandsDialog";
 import { useRegionPatch } from "@/hooks/useRegionPatch";
 import { RegionActions } from "./RegionActions";
 import { RegionPatchDialog } from "./RegionPatchDialog";
@@ -25,7 +27,8 @@ export function EditorShell() {
   const files = useProjectFiles(editor.project, editor.history.documentId, editor.saved);
   const autosave = useAutosave(editor.project, editor.history.bases[editor.history.documentId], editor.recover);
   const region = useRegionPatch(editor.history, editor.selection, editor.applyRegion);
-  const locked = editor.busy || files.loading || !!files.proposal || autosave.show || region.open;
+  const commands = useDrawCommands(editor.history, editor.applyCommands);
+  const locked = editor.busy || files.loading || !!files.proposal || autosave.show || region.open || commands.open;
   const canvas = useRef<CanvasHandle>(null);
   const { document, name, palette } = editor.project;
   const activeTool = TOOLS.find((item) => item.id === editor.tool)!;
@@ -39,11 +42,11 @@ export function EditorShell() {
       <div className={styles.headerActions}><button type="button" disabled={locked} onClick={() => setNewOpen(true)}><EditorIcon name="file" />Nuevo</button><span className={styles.divider} /><button type="button" disabled={locked || !editor.history.past.length} onClick={editor.undo} title="Deshacer (Ctrl/Cmd + Z)"><EditorIcon name="undo" /><span>Deshacer</span></button><button type="button" disabled={locked || !editor.history.future.length} onClick={editor.redo} title="Rehacer (Ctrl/Cmd + Shift + Z)"><EditorIcon name="redo" /><span>Rehacer</span></button></div>
     </header>
     <FileActions disabled={locked || newOpen} load={files.load} save={files.save} exportPng={files.exportPng} />
-    <RegionActions selection={editor.selection} width={document.width} height={document.height} disabled={locked || newOpen} onExport={region.exportSelection} onImport={region.begin} />
+    <RegionActions selection={editor.selection} width={document.width} height={document.height} disabled={locked || newOpen} onExport={region.exportSelection} onImport={region.begin} onCommands={commands.begin} />
     <div className={styles.fileStatus}>
-      <span role="status">{files.loading ? "Procesando archivo…" : region.message || files.message || autosave.status}</span>
+      <span role="status">{files.loading ? "Procesando archivo…" : commands.message || region.message || files.message || autosave.status}</span>
       {files.loading && <button type="button" onClick={files.cancel}>Cancelar lectura</button>}
-      {autosave.pending && !autosave.show && <button type="button" disabled={region.open || newOpen || !!files.proposal || files.loading || editor.busy} onClick={autosave.review}>Revisar borrador</button>}
+      {autosave.pending && !autosave.show && <button type="button" disabled={commands.open || region.open || newOpen || !!files.proposal || files.loading || editor.busy} onClick={autosave.review}>Revisar borrador</button>}
       {files.error && <span role="alert" className={styles.error}>{files.error}</span>}
     </div>
     <div className={styles.workspace}>
@@ -69,6 +72,7 @@ export function EditorShell() {
     <footer className={styles.statusBar}><div><strong>{document.width} × {document.height}</strong><span>1 plano RGBA</span><span>{activeTool.label}</span></div><span role="status">{editor.dirty ? "Cambios sin exportar" : "Sin cambios pendientes"}</span></footer>
     {files.proposal && !autosave.show && <ProjectImportDialog current={editor.project} proposal={files.proposal.project} dirty={editor.dirty} onClose={files.cancel} onApply={() => { editor.openProject(files.proposal!.project, files.proposal!.clean); files.cancel(); requestAnimationFrame(() => canvas.current?.fit()); }} />}
     {region.open && !autosave.show && <RegionPatchDialog flow={region} name={name} />}
+    {commands.open && !autosave.show && <CommandsDialog flow={commands} name={name} width={document.width} height={document.height} />}
     {autosave.show && <DraftRecoveryDialog draft={autosave.draft} status={autosave.status} onClose={autosave.close} onDiscard={autosave.discard} onRestore={autosave.restore} onRead={autosave.read} />}
     {newOpen && !autosave.show && <NewDocumentDialog dirty={editor.dirty} onClose={() => setNewOpen(false)} onCreate={(project) => { editor.newProject(project); setNewOpen(false); }} />}
   </main>;
