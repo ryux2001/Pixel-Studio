@@ -2,6 +2,8 @@
 
 Fecha: 9 de noviembre de 2026. Estado: **propuesta técnica para ejecución posterior por fases**. Este documento no implementa funcionalidades ni convierte los esquemas propuestos en contratos ya aprobados.
 
+Seguimiento: [fases 0 y 1 completadas](FASES_0_1_ANIMACIONES.md). El contrato implementado y las decisiones cerradas se detallan en [ANIMATION_FORMATS](../ANIMATION_FORMATS.md); las fases posteriores siguen pendientes.
+
 ## 1. Fuentes, alcance y convenciones
 
 Fuentes: especificación del usuario `PIXEL_STUDIO_ESPECIFICACION_ANIMACIONES_PARA_PLANIFICACION.md`, informe [ESTADO_ACTUAL_PROYECTO](../ESTADO_ACTUAL_PROYECTO.md), [aceptación V1](../V1_ACCEPTANCE.md), [formatos actuales](../JSON_FORMATS.md) e inspección del código real. La especificación se leyó desde Downloads; no se presupone que ese archivo esté versionado en el repositorio.

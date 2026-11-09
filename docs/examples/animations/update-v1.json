@@ -1,0 +1,31 @@
+{
+  "kind": "pixel-studio/animation-proposal",
+  "version": 1,
+  "contextId": "context-example",
+  "projectId": "character-example",
+  "animationId": "idle",
+  "mode": "update-frames",
+  "updates": [
+    {
+      "frameId": "frame-001",
+      "expectedHash": "f270cd4348864f96f0e6e7cac4d6263674e160b21fb6a0f8f2e9ba6a8b378879",
+      "scope": {
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      },
+      "payload": {
+        "type": "commands",
+        "commands": [
+          {
+            "op": "setPixel",
+            "x": 3,
+            "y": 3,
+            "color": "#42065EFF"
+          }
+        ]
+      }
+    }
+  ]
+}

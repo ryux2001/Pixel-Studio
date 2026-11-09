@@ -4,6 +4,10 @@ Uso paso a paso: [guía](USER_GUIDE.md). Para pedir archivos a una IA externa: [
 
 Implementados: `pixel-studio/project`, `pixel-studio/region-patch` y `pixel-studio/commands`, versión 1. Se importan mediante acciones distintas: abrir proyecto sustituye el documento; importar región aplica cambios mínimos sobre el documento actual. Importar comandos ejecuta un lote declarativo en orden sobre el documento actual, siempre con preview y confirmación.
 
+## Evolución para animaciones
+
+El contrato V2 y su API independiente están documentados en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md). La interfaz actual y los formatos V1 descritos a continuación se conservan hasta su integración en las fases posteriores.
+
 ## Proyecto JSON V1
 
 Campos obligatorios, sin propiedades adicionales:
