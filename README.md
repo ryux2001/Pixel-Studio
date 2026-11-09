@@ -4,11 +4,13 @@ Editor web local de pixel art con Next.js App Router, React, TypeScript y Canvas
 
 ## Estado
 
-Fases 0, 1, 2, 3, 4 y 5 completadas: base del proyecto, motor de píxeles probado y editor visual manual. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
+V1 implementada, fases 0–6 completadas. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
 
 Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos e importar lotes de comandos JSON de dibujo. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
 
-La V1 contempla un lienzo RGBA de 48×48 por defecto, herramientas manuales, historial por acción, proyectos JSON, PNG transparente, modificaciones regionales con detección de conflictos e importación de comandos con previsualización. Dimensiones previstas: 8–128 por eje, con presets 32, 48 y 64. No incluye capas, animación, cuentas ni agentes integrados.
+«Prompts para IA» ofrece tres plantillas copiables adaptadas al lienzo: generar una base, mejorar una región y continuar un sprite. La referencia PNG se puede añadir desde su propio panel. No incluye capas, animación, cuentas ni agentes integrados.
+
+Empieza con la [guía de uso](docs/USER_GUIDE.md), las [plantillas para IA](docs/AI_PROMPT_TEMPLATES.md) o la [exportación a Godot](docs/GODOT_EXPORT.md). Resultados y límites: [aceptación V1](docs/V1_ACCEPTANCE.md).
 
 Especificación: [Plan de desarrollo V1](docs/plan/PLAN_PIXEL_ART_STUDIO_V1.md).
 
@@ -195,4 +197,12 @@ Límites: 1 MiB UTF-8, 2000 comandos, 16384 muestras por setPixels y 65536 en el
 
 Validación de cierre: ESLint, TypeScript, 215 pruebas unitarias, build y 33 E2E aprobados. Pruebas de máximo 128×128/2000 comandos con interfaz activa; revisión visual de editor, preview, error y no-op a 390, 768 y 1440 píxeles. No se añadieron dependencias.
 
-Siguiente fase: cierre global de V1, usabilidad, plantillas de prompts y documentación del flujo completo. [Plan detallado de fase 6](docs/plan/FASE_6_CIERRE_V1.md), pendiente de implementación.
+## Flujo completo y cierre — fase 6
+
+La ayuda «Prompts para IA» incluye campos exactos, ejemplos y límites. Copia solo por petición del usuario y permite selección manual si el portapapeles falla. No envía archivos ni matrices. La referencia tiene estado vacío, carga/sustitución y retirada; no modifica el proyecto ni sus exportaciones.
+
+Los diálogos contienen Tab/Shift+Tab, cierran con Escape y restauran el foco. La suite cubre A–E, tamaños 32/48/64/128 y rectangular 8×128, además de las regresiones previas. Revisión visual en 390/768/1440 sin desbordamientos.
+
+Validación: lint, TypeScript, 223 unitarias, build y 45 E2E aprobados (43 en Chromium y una comprobación dirigida en Firefox y otra en Edge). Para repetir compatibilidad adicional, consulta [V1_ACCEPTANCE.md](docs/V1_ACCEPTANCE.md). La importación dentro de Godot queda pendiente porque el motor no está instalado; el PNG entregado sí se verifica por dimensiones y bytes RGBA.
+
+[Plan y resultados de fase 6](docs/plan/FASE_6_CIERRE_V1.md). No se inició V1.1 ni se publicó la aplicación.

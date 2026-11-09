@@ -1,6 +1,6 @@
 # Fase 6 — Flujo completo, usabilidad y cierre de V1
 
-**Estado:** plan detallado; implementación pendiente.  
+**Estado:** implementada y verificada; V1 cerrada con limitaciones documentadas.
 **Fecha:** 9 de noviembre de 2026.  
 **Dependencia:** fases 0–5 completadas. Base verificada: 215 pruebas unitarias, 33 E2E, lint, TypeScript y build aprobados.
 
@@ -145,15 +145,35 @@ pnpm test:e2e
 
 Playwright requiere build actualizado y puerto 3100 libre. Registrar resultados reales, navegador y limitaciones. No repetir suites después de cambios exclusivamente documentales salvo ejemplos o referencias que necesiten validación propia.
 
-- [ ] Cada criterio de la sección 13 del maestro tiene evidencia trazable y estado correcto.
-- [ ] Referencia funcional, descubrible y separada de píxeles/exportaciones/persistencia.
-- [ ] Tres prompts documentados y copiables con contratos compatibles y alternativa manual.
-- [ ] Escenarios A–E verificados de extremo a extremo, incluidos cancelación, conflictos y undo/redo.
-- [ ] Tamaños 32, 48, 64 y 128, rectangular y mínimo cubiertos sin reescalado accidental.
-- [ ] Teclado, foco, errores y estados vacíos revisados; ventanas 390/768/1440 sin desbordamiento de página.
-- [ ] Regresiones de datos exactos, autosave y worker pasan; no se introducen servicios externos.
-- [ ] README, formatos, guía, prompts y Godot describen comportamiento real y límites.
-- [ ] Comprobaciones automatizadas aprobadas y verificación manual documentada con pendientes explícitos.
-- [ ] Plan maestro actualizado con resultados; ningún criterio marcado por anticipado.
+- [x] Cada criterio de la sección 13 del maestro tiene evidencia trazable y estado correcto.
+- [x] Referencia funcional, descubrible y separada de píxeles/exportaciones/persistencia.
+- [x] Tres prompts documentados y copiables con contratos compatibles y alternativa manual.
+- [x] Escenarios A–E verificados de extremo a extremo, incluidos cancelación, conflictos y undo/redo.
+- [x] Tamaños 32, 48, 64 y 128, rectangular y mínimo cubiertos sin reescalado accidental.
+- [x] Teclado, foco, errores y estados vacíos revisados; ventanas 390/768/1440 sin desbordamiento de página.
+- [x] Regresiones de datos exactos, autosave y worker pasan; no se introducen servicios externos.
+- [x] README, formatos, guía, prompts y Godot describen comportamiento real y límites.
+- [x] Comprobaciones automatizadas aprobadas y verificación manual documentada con pendientes explícitos.
+- [x] Plan maestro actualizado con resultados; ningún criterio marcado por anticipado.
 
 La entrega final resumirá qué cambió, pruebas, pasos de uso y limitaciones. Un commit o publicación posteriores requieren su propia instrucción; este plan no autoriza implementar otras versiones.
+
+## 11. Ejecución y resultados
+
+Implementación autorizada mediante «Implementa» y completada el 9 de noviembre de 2026.
+
+- Se añadieron helpers puros de prompts y PromptDialog con las tres plantillas, dimensiones vigentes, coordenadas de selección regional, formas exactas de ocho operaciones y ejemplo commands. No se adjuntan matrices ni archivos; el usuario hace el intercambio externo.
+- Copia explícita con API de portapapeles y alternativa seleccionable ante permiso denegado o API ausente. Texto literal, estado anunciado y foco restaurado. La ayuda bloquea atajos e importaciones simultáneas y cede prioridad a recuperación.
+- El panel de referencia existente ahora muestra instrucciones y acción de carga cuando está vacío, sustitución y retirada deshabilitadas durante operaciones protegidas. Se verificaron errores sin perder referencia anterior, revocación de cada URL y ausencia de cambios en proyecto, PNG, historial o borrador. No fue necesario modificar el hook de archivos.
+- La revisión detectó que Tab desde el último control podía alcanzar los controles del navegador. Se añadió keepDialogFocus a Modal y Nuevo; Tab/Shift+Tab envuelven los controles visibles/habilitados del diálogo. Las pruebas verifican el fallo corregido.
+- Se excluyeron test-results y playwright-report de ESLint: las trazas de Playwright contienen JavaScript generado ajeno al código fuente.
+- Se añadieron 8 unitarias y 10 E2E Chromium. La configuración opcional PIXEL_COMPAT añade solo una prueba dirigida por navegador, sin multiplicar toda la suite.
+- Resultado: pnpm lint, pnpm typecheck, 223 unitarias en 14 archivos, pnpm build y 45 E2E aprobados (43 Chromium, una Firefox y una Edge). Las pruebas existentes de fases anteriores siguen pasando.
+- Compatibilidad dirigida: Chromium 158.0.8127.18, Firefox 159.0 de Playwright y Edge 157.0.4341.42 instalado. Puntero, modal/foco, alternativa del portapapeles, worker local, PNG, referencia e historial, sin tráfico externo ni errores de página.
+- Prueba máxima durante la suite concurrente: 128×128 y 2000 comandos, aproximadamente 4266 ms de worker y 18,4 ms de confirmación al siguiente frame, con heartbeat activo. Son medidas observadas, no promesas de latencia.
+- Revisión visual conjunta de editor, referencia vacía y ayuda/alternativa de copia a 1440×1000, 768×900 y 390×844. Sin errores de página ni desbordamiento horizontal; no hizo falta una tanda de cambios visuales. Detector de estilos sin hallazgos.
+- README y JSON_FORMATS enlazan USER_GUIDE, AI_PROMPT_TEMPLATES, GODOT_EXPORT y V1_ACCEPTANCE. Las unitarias validan los ejemplos JSON publicados. La matriz registra evidencia para los 19 requisitos y escenarios A–E.
+
+Limitación adicional: no se encontró Godot en el equipo inspeccionado, por lo que no se afirma haber probado una escena dentro del motor. Se documentó el flujo de Godot 4.6 contrastando sus fuentes oficiales y se comprobó el PNG exportado por dimensiones y bytes. La comprobación de escena queda pendiente, separada de los requisitos obligatorios de aplicación/documentación. Tampoco se afirma certificación WCAG ni una auditoría completa con lector de pantalla.
+
+No se añadieron dependencias, no se creó commit de esta fase, no se publicó la aplicación y no se inició V1.1.

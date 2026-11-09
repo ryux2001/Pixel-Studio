@@ -2,7 +2,7 @@
 
 **Documento maestro para implementar el proyecto con Codex u OpenCode**  
 **Versión del plan:** 1.0 · **Fecha:** 8 de noviembre de 2026  
-**Estado:** Especificación previa a la implementación  
+**Estado:** V1 implementada y verificada; fases 0–6 completadas el 9 de noviembre de 2026
 **Stack obligatorio:** Next.js (App Router) + React + TypeScript + APIs nativas del navegador.  
 **Idioma de la interfaz:** español.  
 **Objetivo principal:** editor web de pixel art que permita **trabajar alternando dibujo humano e instrucciones JSON generadas por cualquier IA externa**, sin APIs de pago ni agentes integrados.
@@ -750,21 +750,23 @@ No activar atajos de letras mientras se escribe en campos de texto.
 
 **Objetivo:** V1 presentable y cómoda para producción inicial de sprites.
 
-**Plan detallado:** [FASE_6_CIERRE_V1.md](FASE_6_CIERRE_V1.md). Planificación completada; implementación pendiente. La referencia visual ya existe desde fase 3 y en esta fase se revisará su flujo y cobertura.
+**Plan detallado y resultados:** [FASE_6_CIERRE_V1.md](FASE_6_CIERRE_V1.md). Implementación completada. Evidencia por requisito: [V1_ACCEPTANCE.md](../V1_ACCEPTANCE.md).
 
 **Tareas:**
 
-- [ ] Panel de referencia importada desde archivo local.
-- [ ] Plantillas para copiar prompts a IA externa.
-- [ ] Mensajes de error útiles y estados vacíos.
-- [ ] Validación de navegación por teclado, modales y focus.
-- [ ] Tests E2E de todos los escenarios de la sección 1.4.
-- [ ] Pruebas de 32×32, 48×48, 64×64 y resolución máxima.
-- [ ] Documentar formatos JSON, limitaciones, flujo con IA y exportación a Godot.
-- [ ] Ejecutar `npm run build`, lint y tests; corregir fallos.
-- [ ] Capturas o instrucciones claras para validar manualmente.
+- [x] Panel de referencia importada desde archivo local.
+- [x] Plantillas para copiar prompts a IA externa.
+- [x] Mensajes de error útiles y estados vacíos.
+- [x] Validación de navegación por teclado, modales y focus.
+- [x] Tests E2E de todos los escenarios de la sección 1.4.
+- [x] Pruebas de 32×32, 48×48, 64×64 y resolución máxima.
+- [x] Documentar formatos JSON, limitaciones, flujo con IA y exportación a Godot.
+- [x] Ejecutar `npm run build`, lint y tests; corregir fallos.
+- [x] Capturas o instrucciones claras para validar manualmente.
 
 **Criterio de salida:** la V1 satisface la lista de aceptación completa de la sección 13.
+
+**Cierre verificado (9 de noviembre de 2026):** tres prompts copiables adaptados al lienzo, alternativa manual de portapapeles, referencia descubrible y revisión de su independencia. Foco contenido con Tab/Shift+Tab en diálogos y retorno con Escape. Guía de uso, prompts con ejemplos validados, exportación a Godot 4.6 y matriz de 19 requisitos. Lint, TypeScript, 223 unitarias, build y 45 E2E aprobados: 43 Chromium y 2 dirigidas Firefox/Edge. Escenarios A–E y tamaños 32/48/64/128 más 8×128 verificados. Revisión visual 390/768/1440 sin desbordamientos. Comprobación adicional dentro de Godot pendiente por ausencia del motor; PNG exacto verificado. Sin nuevas dependencias, publicación ni inicio de V1.1.
 
 ---
 
@@ -872,25 +874,25 @@ Detalles deseados: [INSTRUCCIONES].
 
 **La V1 está terminada cuando se cumplen todos estos criterios:**
 
-- [ ] La app corre localmente con `npm install` y `npm run dev`.
-- [ ] Next.js App Router, TypeScript estricto, sin backend de IA.
-- [ ] Nuevo proyecto 48×48 por defecto, presets funcionales, sin reescalado accidental.
-- [ ] Lápiz, goma, relleno, línea, rectángulo, cuentagotas y selección funcionales.
-- [ ] Lienzo pixel-perfect, transparencia y zoom sin suavizado.
-- [ ] Paleta editable, coordenadas y controles claros.
-- [ ] Undo/redo funciona tras trazo manual y tras importación JSON.
-- [ ] Proyecto JSON exportado e importado con colores/alfa idénticos.
-- [ ] PNG nativo RGBA correcto, sin cuadrícula ni checkerboard.
-- [ ] Exportación de selección devuelve `region-patch` válido con `basePixels` y `pixels`.
-- [ ] La importación de `region-patch` aplica solo diferencias, respeta límites y detecta conflictos.
-- [ ] La app puede importar JSON `commands` creado externamente y dibujarlo correctamente.
-- [ ] Ambas importaciones ofrecen previsualización y se pueden cancelar sin modificar nada.
-- [ ] Archivos malformados e instrucciones peligrosas no producen ejecución de código ni corrupción parcial.
-- [ ] Copiar/pegar JSON y descargar/subir archivos funcionan.
-- [ ] Panel de referencia visual funcional sin contaminar el dibujo.
-- [ ] Borrador local restaurable, pero exportación a archivo disponible y clara.
-- [ ] Tests unitarios y E2E esenciales pasan; `npm run build` y lint pasan.
-- [ ] `README.md`, `docs/JSON_FORMATS.md` y `docs/AI_PROMPT_TEMPLATES.md` actualizados.
+- [x] La app corre localmente con `pnpm install` y `pnpm dev`, usando el gestor y lockfile fijados en el repositorio.
+- [x] Next.js App Router, TypeScript estricto, sin backend de IA.
+- [x] Nuevo proyecto 48×48 por defecto, presets funcionales, sin reescalado accidental.
+- [x] Lápiz, goma, relleno, línea, rectángulo, cuentagotas y selección funcionales.
+- [x] Lienzo pixel-perfect, transparencia y zoom sin suavizado.
+- [x] Paleta editable, coordenadas y controles claros.
+- [x] Undo/redo funciona tras trazo manual y tras importación JSON.
+- [x] Proyecto JSON exportado e importado con colores/alfa idénticos.
+- [x] PNG nativo RGBA correcto, sin cuadrícula ni checkerboard.
+- [x] Exportación de selección devuelve `region-patch` válido con `basePixels` y `pixels`.
+- [x] La importación de `region-patch` aplica solo diferencias, respeta límites y detecta conflictos.
+- [x] La app puede importar JSON `commands` creado externamente y dibujarlo correctamente.
+- [x] Ambas importaciones ofrecen previsualización y se pueden cancelar sin modificar nada.
+- [x] Archivos malformados e instrucciones peligrosas no producen ejecución de código ni corrupción parcial.
+- [x] Copiar/pegar JSON y descargar/subir archivos funcionan.
+- [x] Panel de referencia visual funcional sin contaminar el dibujo.
+- [x] Borrador local restaurable, pero exportación a archivo disponible y clara.
+- [x] Tests unitarios y E2E esenciales pasan; `npm run build` y lint pasan.
+- [x] `README.md`, `docs/JSON_FORMATS.md` y `docs/AI_PROMPT_TEMPLATES.md` actualizados.
 
 ---
 

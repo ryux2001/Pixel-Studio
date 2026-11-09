@@ -8,7 +8,13 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
   use: { baseURL, trace: "retain-on-failure" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    ...(process.env.PIXEL_COMPAT === "1" ? [
+      { name: "firefox", testMatch: "compatibility.spec.ts", use: { ...devices["Desktop Firefox"] } },
+      { name: "edge", testMatch: "compatibility.spec.ts", use: { ...devices["Desktop Edge"], channel: "msedge" } },
+    ] : []),
+  ],
   webServer: {
     command: "pnpm exec next start --hostname 127.0.0.1 --port 3100",
     url: baseURL,

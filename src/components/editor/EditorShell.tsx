@@ -5,6 +5,7 @@ import { usePixelEditor } from "@/hooks/usePixelEditor";
 import { useProjectFiles } from "@/hooks/useProjectFiles";
 import { useDrawCommands } from "@/hooks/useDrawCommands";
 import { CommandsDialog } from "./CommandsDialog";
+import { PromptDialog } from "./PromptDialog";
 import { useRegionPatch } from "@/hooks/useRegionPatch";
 import { RegionActions } from "./RegionActions";
 import { RegionPatchDialog } from "./RegionPatchDialog";
@@ -24,11 +25,13 @@ import styles from "./EditorShell.module.css";
 export function EditorShell() {
   const editor = usePixelEditor();
   const [newOpen, setNewOpen] = useState(false);
+  const [promptsOpen, setPromptsOpen] = useState(false);
+  const referenceInput = useRef<HTMLInputElement>(null);
   const files = useProjectFiles(editor.project, editor.history.documentId, editor.saved);
   const autosave = useAutosave(editor.project, editor.history.bases[editor.history.documentId], editor.recover);
   const region = useRegionPatch(editor.history, editor.selection, editor.applyRegion);
   const commands = useDrawCommands(editor.history, editor.applyCommands);
-  const locked = editor.busy || files.loading || !!files.proposal || autosave.show || region.open || commands.open;
+  const locked = editor.busy || files.loading || !!files.proposal || autosave.show || region.open || commands.open || promptsOpen;
   const canvas = useRef<CanvasHandle>(null);
   const { document, name, palette } = editor.project;
   const activeTool = TOOLS.find((item) => item.id === editor.tool)!;
@@ -42,11 +45,11 @@ export function EditorShell() {
       <div className={styles.headerActions}><button type="button" disabled={locked} onClick={() => setNewOpen(true)}><EditorIcon name="file" />Nuevo</button><span className={styles.divider} /><button type="button" disabled={locked || !editor.history.past.length} onClick={editor.undo} title="Deshacer (Ctrl/Cmd + Z)"><EditorIcon name="undo" /><span>Deshacer</span></button><button type="button" disabled={locked || !editor.history.future.length} onClick={editor.redo} title="Rehacer (Ctrl/Cmd + Shift + Z)"><EditorIcon name="redo" /><span>Rehacer</span></button></div>
     </header>
     <FileActions disabled={locked || newOpen} load={files.load} save={files.save} exportPng={files.exportPng} />
-    <RegionActions selection={editor.selection} width={document.width} height={document.height} disabled={locked || newOpen} onExport={region.exportSelection} onImport={region.begin} onCommands={commands.begin} />
+    <RegionActions selection={editor.selection} width={document.width} height={document.height} disabled={locked || newOpen} onExport={region.exportSelection} onImport={region.begin} onCommands={commands.begin} onPrompts={() => setPromptsOpen(true)} />
     <div className={styles.fileStatus}>
       <span role="status">{files.loading ? "Procesando archivo…" : commands.message || region.message || files.message || autosave.status}</span>
       {files.loading && <button type="button" onClick={files.cancel}>Cancelar lectura</button>}
-      {autosave.pending && !autosave.show && <button type="button" disabled={commands.open || region.open || newOpen || !!files.proposal || files.loading || editor.busy} onClick={autosave.review}>Revisar borrador</button>}
+      {autosave.pending && !autosave.show && <button type="button" disabled={locked || newOpen} onClick={autosave.review}>Revisar borrador</button>}
       {files.error && <span role="alert" className={styles.error}>{files.error}</span>}
     </div>
     <div className={styles.workspace}>
@@ -55,10 +58,14 @@ export function EditorShell() {
         <ColorPalette key={rgbaToHex(editor.color)} color={editor.color} palette={palette} onColor={editor.setColor} onPalette={(value) => editor.updateProject({ ...editor.project, palette: value }, "Editar paleta")} disabled={locked} />
         <details className={styles.shortcuts}><summary>Atajos de teclado</summary><dl>{TOOLS.map((item) => <div key={item.id}><dt>{item.label}</dt><dd><kbd>{item.key}</kbd></dd></div>)}<div><dt>Deshacer</dt><dd>Ctrl/Cmd Z</dd></div><div><dt>Rehacer</dt><dd>Ctrl/Cmd ⇧ Z</dd></div><div><dt>Cancelar</dt><dd>Esc</dd></div></dl></details>
         <p className={styles.sessionNote}>Guarda JSON para conservar un proyecto portable. El borrador local no sustituye una descarga.<br /><span role="status">{autosave.status}</span></p>
-        {files.reference && <section className={styles.reference} aria-label="Referencia visual"><h2 className={styles.sectionTitle}>Referencia · solo esta sesión</h2>
+        <section className={styles.reference} aria-label="Referencia visual"><h2 className={styles.sectionTitle}>Referencia · solo esta sesión</h2>
+          <input ref={referenceInput} type="file" accept=".png,image/png" hidden aria-label="PNG del panel de referencia" onChange={event => { const file = event.target.files?.[0]; event.target.value = ""; if (file) void files.load(file, "reference"); }} />
+          {files.reference ? <>
           {/* Local object URL; there is no remote image to optimize. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={files.reference.url} alt={`Referencia: ${files.reference.name}`} /><p className={styles.longName}>{files.reference.name}</p><button type="button" onClick={files.removeReference}>Quitar referencia</button></section>}
+          <img src={files.reference.url} alt={`Referencia: ${files.reference.name}`} /><p className={styles.longName}>{files.reference.name}</p><button type="button" disabled={locked || newOpen} onClick={files.removeReference}>Quitar referencia</button></> : <p className={styles.regionHelp}>Añade un PNG para consultar mientras dibujas. No cambia los píxeles ni se guarda en el proyecto.</p>}
+          <button type="button" disabled={locked || newOpen} onClick={() => referenceInput.current?.click()}>{files.reference ? "Cambiar referencia" : "Añadir referencia PNG"}</button>
+        </section>
       </aside>
       <section id="drawing-canvas" tabIndex={-1} className={styles.canvasPanel} aria-label="Editor de píxeles">
         <div className={styles.canvasControls}>
@@ -73,6 +80,7 @@ export function EditorShell() {
     {files.proposal && !autosave.show && <ProjectImportDialog current={editor.project} proposal={files.proposal.project} dirty={editor.dirty} onClose={files.cancel} onApply={() => { editor.openProject(files.proposal!.project, files.proposal!.clean); files.cancel(); requestAnimationFrame(() => canvas.current?.fit()); }} />}
     {region.open && !autosave.show && <RegionPatchDialog flow={region} name={name} />}
     {commands.open && !autosave.show && <CommandsDialog flow={commands} name={name} width={document.width} height={document.height} />}
+    {promptsOpen && !autosave.show && <PromptDialog width={document.width} height={document.height} selection={editor.selection} onClose={() => setPromptsOpen(false)} />}
     {autosave.show && <DraftRecoveryDialog draft={autosave.draft} status={autosave.status} onClose={autosave.close} onDiscard={autosave.discard} onRestore={autosave.restore} onRead={autosave.read} />}
     {newOpen && !autosave.show && <NewDocumentDialog dirty={editor.dirty} onClose={() => setNewOpen(false)} onCreate={(project) => { editor.newProject(project); setNewOpen(false); }} />}
   </main>;

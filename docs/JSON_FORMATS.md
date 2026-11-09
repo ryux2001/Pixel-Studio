@@ -1,5 +1,7 @@
 # Formatos de Pixel Art Studio
 
+Uso paso a paso: [guía](USER_GUIDE.md). Para pedir archivos a una IA externa: [plantillas y ejemplos validados](AI_PROMPT_TEMPLATES.md), también disponibles en «Prompts para IA» del editor. La aplicación no envía tus datos a ningún servicio.
+
 Implementados: `pixel-studio/project`, `pixel-studio/region-patch` y `pixel-studio/commands`, versión 1. Se importan mediante acciones distintas: abrir proyecto sustituye el documento; importar región aplica cambios mínimos sobre el documento actual. Importar comandos ejecuta un lote declarativo en orden sobre el documento actual, siempre con preview y confirmación.
 
 ## Proyecto JSON V1

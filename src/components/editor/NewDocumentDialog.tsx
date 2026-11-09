@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createDocument } from "@/lib/pixels/bitmap";
+import { keepDialogFocus } from "@/lib/editor/dialog-focus";
 import { INITIAL_PALETTE, type EditorProject } from "@/lib/editor/state";
 import styles from "./EditorShell.module.css";
 
@@ -18,7 +19,7 @@ export function NewDocumentDialog({ dirty, onClose, onCreate }: { dirty: boolean
     element?.showModal();
     return () => { element?.close(); if (previous instanceof HTMLElement) previous.focus(); };
   }, []);
-  return <dialog ref={dialog} onCancel={(event) => { event.preventDefault(); onClose(); }} aria-labelledby="new-title" className={styles.dialog}>
+  return <dialog ref={dialog} onKeyDown={keepDialogFocus} onCancel={(event) => { event.preventDefault(); onClose(); }} aria-labelledby="new-title" className={styles.dialog}>
     <form noValidate onSubmit={(event) => {
       event.preventDefault(); setSubmitted(true);
       if (!widthValid || !heightValid || !name.trim() || (dirty && !confirmed)) return;

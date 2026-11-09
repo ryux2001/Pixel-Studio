@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { PixelDocument, PixelRect, PixelPoint } from "@/types/pixel-studio";
 import type { EditorProject } from "@/lib/editor/state";
 import type { Draft } from "@/lib/storage/draft";
+import { keepDialogFocus } from "@/lib/editor/dialog-focus";
 import styles from "./EditorShell.module.css";
 
 export function Modal({ title, onClose, children, wide = false }: { title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
@@ -11,7 +12,7 @@ export function Modal({ title, onClose, children, wide = false }: { title: strin
     element?.showModal();
     return () => { element?.close(); if (previous instanceof HTMLElement) previous.focus(); };
   }, []);
-  return <dialog className={`${styles.dialog} ${wide ? styles.wideDialog : ""}`} ref={ref} aria-label={title} onCancel={event => { event.preventDefault(); onClose(); }}><h2>{title}</h2>{children}</dialog>;
+  return <dialog className={`${styles.dialog} ${wide ? styles.wideDialog : ""}`} ref={ref} aria-label={title} onKeyDown={keepDialogFocus} onCancel={event => { event.preventDefault(); onClose(); }}><h2>{title}</h2>{children}</dialog>;
 }
 export function Preview({ document, label, region, conflicts = [] }: { document: PixelDocument; label: string; region?: PixelRect; conflicts?: PixelPoint[] }) {
   const ref = useRef<HTMLCanvasElement>(null);
