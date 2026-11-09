@@ -40,7 +40,11 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
   }, [onZoom, width, height]);
   useEffect(() => { render(props.document); }, [props.document, render]);
   useEffect(() => { fit(); }, [fit]);
-  useEffect(() => () => { if (frame.current !== null) cancelAnimationFrame(frame.current); }, []);
+  useEffect(() => () => {
+    if (frame.current !== null) cancelAnimationFrame(frame.current);
+    // Strict Mode restarts effects: a cancelled frame must not block the next render.
+    frame.current = null;
+  }, []);
   useEffect(() => {
     const element = viewport.current;
     if (!element) return;

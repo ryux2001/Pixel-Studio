@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL = "http://127.0.0.1:3100";
+const development = process.env.PIXEL_DEV === "1";
+const port = development ? 3000 : 3100;
+const baseURL = `http://${development ? "localhost" : "127.0.0.1"}:${port}`;
 
 export default defineConfig({
   testDir: "./src/tests/e2e",
@@ -16,9 +18,9 @@ export default defineConfig({
     ] : []),
   ],
   webServer: {
-    command: "pnpm exec next start --hostname 127.0.0.1 --port 3100",
+    command: `pnpm exec next ${development ? "dev" : "start"} --hostname 127.0.0.1 --port ${port}`,
     url: baseURL,
-    reuseExistingServer: false,
+    reuseExistingServer: development && !process.env.CI,
     timeout: 60_000,
   },
 });
