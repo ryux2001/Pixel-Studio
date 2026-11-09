@@ -1,7 +1,8 @@
-import { useReducer, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { editorReducer } from "@/lib/editor/reducer";
 import { createInitialProject, INITIAL_COLOR, type Tool, type EditorProject } from "@/lib/editor/state";
-import { createHistory } from "@/lib/pixels/history";
+import { createHistory, isHistoryDirty } from "@/lib/pixels/history";
+import type { RegionPatchFileV1 } from "@/types/region-patch";
 import type { PixelDocument, PixelRect, RGBA } from "@/types/pixel-studio";
 
 export function usePixelEditor() {
@@ -23,7 +24,11 @@ export function usePixelEditor() {
     clearSelection();
     dispatch({ type: "commit", project, label: "Nuevo documento", newDocument: true });
   };
-  return { history, project: history.present, dirty: history.revision !== history.cleanRevision,
+  const openProject = (project: EditorProject, clean: boolean) => { clearSelection(); dispatch({ type: "open", project, clean }); };
+  const recover = useCallback((project: EditorProject, base: EditorProject | null) => { setSelection(null); setRestrict(false); dispatch({ type: "recover", project, base }); }, []);
+  const saved = (project: EditorProject, id: number) => dispatch({ type: "saved", project, id });
+  const applyRegion = (patch: RegionPatchFileV1, documentId: number, revision: number, document: PixelDocument, request: number) => dispatch({ type: "apply-region", patch, documentId, revision, document, request });
+  return { history, applyRegion, project: history.present, dirty: isHistoryDirty(history), openProject, recover, saved,
     tool, setTool, color, setColor, selection, setSelection, restrict, setRestrict, filled, setFilled,
     zoom, setZoom, grid, setGrid, busy, setBusy, clearSelection, commit, updateProject, undo, redo, newProject };
 }

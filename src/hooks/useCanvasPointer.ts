@@ -7,7 +7,7 @@ import type { Tool } from "@/lib/editor/state";
 import type { PixelDocument, PixelPoint, PixelRect, RGBA } from "@/types/pixel-studio";
 
 type Options = {
-  document: PixelDocument; tool: Tool; color: RGBA; filled: boolean; scope?: PixelRect;
+  disabled?: boolean; document: PixelDocument; tool: Tool; color: RGBA; filled: boolean; scope?: PixelRect;
   render: (document: PixelDocument) => void;
   commit: (document: PixelDocument, label: string) => void;
   select: (rect: PixelRect) => void; pick: (color: RGBA) => void;
@@ -52,7 +52,7 @@ export function useCanvasPointer(options: Options) {
     cancel: () => finish(true, true),
     handlers: {
       onPointerDown: (event: ReactPointerEvent<HTMLCanvasElement>) => {
-        if (gesture.current || event.button !== 0 || !event.isPrimary) return;
+        if (options.disabled || gesture.current || event.button !== 0 || !event.isPrimary) return;
         const p = point(event);
         if (!p) return;
         event.preventDefault();

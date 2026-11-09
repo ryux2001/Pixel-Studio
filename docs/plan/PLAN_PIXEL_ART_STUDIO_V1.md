@@ -692,16 +692,18 @@ No activar atajos de letras mientras se escribe en campos de texto.
 
 **Tareas:**
 
-- [ ] Serializar/deserializar proyecto JSON versión 1.
-- [ ] Validador estricto de proyecto y mensajes de error.
-- [ ] Abrir proyecto con confirmación y estado limpio/dirty correcto.
-- [ ] Descargar JSON de proyecto.
-- [ ] Exportar PNG RGBA nativo y PNG 8× nearest-neighbor.
-- [ ] Importar PNG nativo editable y referencia no editable.
-- [ ] Implementar autosave local de borrador con recuperación.
-- [ ] Test de roundtrip JSON y PNG.
+- [x] Serializar/deserializar proyecto JSON versión 1.
+- [x] Validador estricto de proyecto y mensajes de error.
+- [x] Abrir proyecto con confirmación y estado limpio/dirty correcto.
+- [x] Descargar JSON de proyecto.
+- [x] Exportar PNG RGBA nativo y PNG 8× nearest-neighbor.
+- [x] Importar PNG nativo editable y referencia no editable.
+- [x] Implementar autosave local de borrador con recuperación.
+- [x] Test de roundtrip JSON y PNG.
 
 **Criterio de salida:** exportar → recargar página → importar JSON → obtener exactamente el mismo sprite; PNG nativo correcto.
+
+**Cierre verificado (9 de noviembre de 2026):** proyectos JSON con validación estricta, previsualización y apertura recuperable; base exportada por documento para pendientes correctos tras undo/redo; PNG RGBA nativo y 8× exactos mediante fast-png; PNG editable y referencia de sesión; borrador local versionado con recuperación explícita, pausa y manejo de fallos. ESLint, TypeScript, 144 pruebas unitarias, build y 19 E2E aprobados. Revisión visual a 390×844, 768×900 y 1440×1000 sin desbordamiento horizontal ni errores de ejecución. Contrato y límites en `docs/JSON_FORMATS.md`; detalle de ejecución en `docs/plan/FASE_3_PERSISTENCIA_Y_PNG.md`. PNG editable limitado a estático de 8 bits sin entrelazado; no aplica perfiles de color. La fase 4 permanece pendiente.
 
 ### Fase 4 — Intercambio con IA: modificaciones de región
 
@@ -709,18 +711,20 @@ No activar atajos de letras mientras se escribe en campos de texto.
 
 **Tareas:**
 
-- [ ] Botón «Exportar selección» con origen, tamaño, `basePixels` y `pixels`.
-- [ ] Si no hay selección, ofrecer «Exportar todo como región».
-- [ ] Pegar/subir JSON de `region-patch`.
-- [ ] Validar dimensiones, colores, longitudes, coordenadas, versión.
-- [ ] Calcular diff de posiciones que la propuesta modifica.
-- [ ] Detectar conflictos con modificaciones locales posteriores.
-- [ ] Previsualizar antes/después y región delimitada.
-- [ ] Aplicar solo celdas que cambian, dentro de la región.
-- [ ] Agrupar todo en una acción de historial.
-- [ ] Tests de modificaciones disjuntas, conflictos, patch sin cambios, transparencia.
+- [x] Botón «Exportar selección» con origen, tamaño, `basePixels` y `pixels`.
+- [x] Si no hay selección, ofrecer «Exportar todo como región».
+- [x] Pegar/subir JSON de `region-patch`.
+- [x] Validar dimensiones, colores, longitudes, coordenadas, versión.
+- [x] Calcular diff de posiciones que la propuesta modifica.
+- [x] Detectar conflictos con modificaciones locales posteriores.
+- [x] Previsualizar antes/después y región delimitada.
+- [x] Aplicar solo celdas que cambian, dentro de la región.
+- [x] Agrupar todo en una acción de historial.
+- [x] Tests de modificaciones disjuntas, conflictos, patch sin cambios, transparencia.
 
 **Criterio de salida:** exportar cabeza → editar dos colores en `pixels` manualmente → importar → aplicar → cuerpo intacto → deshacer revierte esos dos cambios.
+
+**Cierre verificado (9 de noviembre de 2026):** exportación de selección/lienzo completo como region-patch V1; importación desde archivo o texto; validación estricta, comparación de tres estados, preview delimitada y conflictos bloqueantes. Aplicación mínima atómica con comprobación de documento/revisión, historial único y autosave del resultado confirmado. ESLint, TypeScript, 175 pruebas unitarias, build y 26 E2E aprobados. Revisión visual a 390×844, 768×900 y 1440×1000, sin desbordamientos horizontales ni errores de ejecución. README y JSON_FORMATS actualizados; detalle en `FASE_4_MODIFICACIONES_DE_REGION.md`. No se añadieron dependencias. La fase 5 permanece pendiente.
 
 ### Fase 5 — Intercambio con IA: comandos
 

@@ -128,7 +128,7 @@ test("figuras con preview cancelable, goma y cuentagotas con alfa", async ({ pag
 test("selección restringida protege el exterior y acota el relleno", async ({ page }) => {
   await tool(page, "Selección");
   await drag(page, [8, 8], [5, 5]);
-  await expect(page.getByText("4 × 4 · origen 5, 5")).toBeVisible();
+  await expect(page.getByText("4 × 4 · origen 5, 5", { exact: true })).toBeVisible();
   await page.getByLabel("Restringir edición a selección").check();
   await tool(page, "Relleno");
   const p = await point(page, 6, 6); await page.mouse.click(p.x, p.y);

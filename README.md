@@ -4,9 +4,9 @@ Editor web local de pixel art con Next.js App Router, React, TypeScript y Canvas
 
 ## Estado
 
-Fases 0, 1 y 2 completadas: base del proyecto, motor de píxeles probado y editor visual manual. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
+Fases 0, 1, 2, 3 y 4 completadas: base del proyecto, motor de píxeles probado y editor visual manual. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
 
-El trabajo permanece en memoria: cerrar o recargar pierde la sesión. Guardar, abrir, exportar PNG y recuperar borradores corresponden a la fase 3 y todavía no están disponibles.
+Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
 
 La V1 contempla un lienzo RGBA de 48×48 por defecto, herramientas manuales, historial por acción, proyectos JSON, PNG transparente, modificaciones regionales con detección de conflictos e importación de comandos con previsualización. Dimensiones previstas: 8–128 por eje, con presets 32, 48 y 64. No incluye capas, animación, cuentas ni agentes integrados.
 
@@ -70,8 +70,10 @@ Vitest ejecuta exclusivamente `src/tests/unit/**/*.test.ts` en entorno Node, sin
 src/
   app/                 Entrada del editor, layout y estilos
   components/editor/   Lienzo, herramientas, paleta y diálogo de nuevo documento
-  hooks/               Estado del editor, gestos de puntero y atajos
+  hooks/               Estado, puntero, atajos, archivos y autosave
   lib/editor/          Coordenadas, herramientas y edición acotada
+  lib/io/              Proyecto JSON, codec PNG y descargas
+  lib/storage/         Sobre versionado del borrador local
   lib/pixels/          Motor RGBA puro: validación, colores, regiones, dibujo y diff
   types/               Contratos RGBA, documento y coordenadas
   tests/unit/          Pruebas Vitest
@@ -138,4 +140,44 @@ const changes = diffDocuments(original, result);
 
 Las entradas inválidas lanzan `PixelError` con `code` estable y contexto. Se valida antes de escribir y no se generan resultados parciales. Las pruebas cubren bordes, alfa, entradas inválidas, regiones, restricciones, inmutabilidad y operaciones de hasta 128×128.
 
-Siguiente fase: guardar/abrir proyectos JSON, exportar/importar PNG y recuperar borradores locales.
+## Archivos y recuperación — fase 3
+
+- «Guardar JSON» descarga el proyecto y actualiza la base exportada. «Abrir JSON» valida, previsualiza y solicita confirmación antes de sustituirlo. Se puede deshacer la apertura.
+- «PNG nativo» y «PNG 8×» exportan RGBA sin overlays y sin suavizado; no cambian los pendientes de guardar JSON.
+- «Importar PNG» ofrece dos acciones distintas: abrir editable (sustituye el documento) y cargar como referencia (solo visual, no se persiste).
+- Autosave local tras 750 ms de cambios confirmados. Al recargar, elegir recuperar, descartar o «Más tarde». Posponer pausa autosave para proteger el borrador anterior.
+- Los fallos de almacenamiento no impiden dibujar ni descargar JSON. Solo se admite una pestaña escritora; los cambios desde otra pestaña pausan autosave.
+
+Límites: JSON 1 MiB; PNG editable 5 MiB, estático de 8 bits sin entrelazado, 8–128 por eje; referencia PNG 10 MiB, 4096 por eje y 16 millones de píxeles. El editor conserva los bytes RGBA; los perfiles de color externos no se aplican al documento editable. La referencia se pierde al cerrar y el último intervalo de autosave puede perderse ante un cierre abrupto.
+
+Contrato, ejemplo JSON válido y detalles: [Formatos de archivo](docs/JSON_FORMATS.md). La dependencia MIT `fast-png` evita pérdidas de muestras de color por premultiplicación de Canvas; se carga al usar PNG y funciona localmente.
+
+### Comprobar la fase 3
+
+1. Dibujar, guardar JSON y exportar ambos PNG; confirmar sus dimensiones reales.
+2. Recargar, descartar el borrador para probar la apertura del archivo y abrir el JSON descargado; confirmar y comprobar el mismo dibujo.
+3. Deshacer/rehacer la apertura. Cancelar otra importación y comprobar que conserva el proyecto.
+4. Cargar un PNG editable y otro como referencia; exportar para comprobar que la referencia no aparece.
+5. Editar, esperar el aviso de borrador actualizado, recargar y recuperarlo. Probar «Más tarde» y volver con «Revisar borrador».
+
+Validación de cierre: ESLint, TypeScript, 144 pruebas unitarias, build de producción y 19 E2E. Revisión visual de editor, preview, error y recuperación en 390, 768 y 1440 píxeles, sin desbordamiento horizontal ni errores de ejecución.
+
+## Intercambio de región — fase 4
+
+1. Seleccionar una zona y pulsar «Exportar selección». Sin selección, usar «Exportar todo como región».
+2. Modificar solo `pixels` y opcionalmente `note` en el JSON, manualmente o con una IA externa. Conservar intactos el resto de campos, especialmente `basePixels`. El PNG completo puede adjuntarse como contexto visual.
+3. Pulsar «Importar región JSON» y elegir archivo o pegar texto. La app no envía datos a ninguna IA.
+4. Revisar actual/propuesta, región, cambios y conflictos. «Editar JSON o elegir otro archivo» permite corregir el contenido sin perderlo.
+5. Confirmar «Aplicar N cambios». El lote es una sola acción de Deshacer/Rehacer y se incorpora al borrador local.
+
+Los retoques locales en celdas que la propuesta no cambia se conservan. Un conflicto bloquea todo el lote; no existe sobrescritura forzada. Una propuesta ya aplicada o sin cambios no crea acciones. El ámbito del archivo es independiente de la selección manual activa y su restricción. Exportar una región no sustituye guardar el proyecto JSON.
+
+Límite: 1 MiB UTF-8; regiones desde 1×1 dentro de lienzos 8–128 por eje; nota de hasta 2000 unidades UTF-16. No hay importación de JavaScript ni comandos de dibujo todavía. El formato no prueba la identidad del emisor ni del proyecto: revisar siempre destino y preview.
+
+### Comprobar la fase 4
+
+Dibujar un personaje 48×48, seleccionar la cabeza y exportarla. Cambiar dos valores de `pixels`, importar y aplicar; comprobar que el cuerpo queda idéntico. Deshacer y rehacer deben revertir y repetir solo esos dos cambios. Para probar conflictos, exportar otra región, retocar localmente una celda y proponer un color distinto sobre esa misma celda: Aplicar quedará bloqueado.
+
+Validación de cierre: ESLint, TypeScript, 175 pruebas unitarias, build y 26 E2E aprobados. Revisión visual en 390, 768 y 1440 píxeles de editor, entrada, preview, errores y conflictos; sin desbordamiento horizontal ni errores de ejecución. No se añadieron dependencias.
+
+Siguiente fase: importación de comandos JSON de dibujo con ejecución atómica y previsualización.

@@ -52,7 +52,7 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
     element.addEventListener("wheel", wheel, { passive: false });
     return () => element.removeEventListener("wheel", wheel);
   }, [zoom, onZoom, busy]);
-  const pointer = useCanvasPointer({ document: props.document, tool: props.tool, color: props.color,
+  const pointer = useCanvasPointer({ disabled: busy, document: props.document, tool: props.tool, color: props.color,
     filled: props.filled, scope: props.restrict && props.selection ? props.selection : undefined,
     render, commit: props.onCommit, select: props.onSelection, pick: props.onPick, busy: props.onBusy });
   useImperativeHandle(handleRef, () => ({ cancel: pointer.cancel, fit }));

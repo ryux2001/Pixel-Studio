@@ -22,7 +22,7 @@ export function ColorPalette({ color, palette, onColor, onPalette, disabled }: {
       <small id="color-help">6 dígitos: opaco · 8 dígitos: RGBA</small>
       {error && <p id="color-error" role="alert" className={styles.error}>{error}</p>}
     </form>
-    <div className={styles.swatches} aria-label="Colores de la paleta">{palette.map((value) => <button type="button" key={value} className={styles.swatch} aria-label={`Color ${value}`} title={value} aria-pressed={hex === value} disabled={disabled} onClick={() => select(value)}><span style={{ backgroundColor: value }} />{hex === value && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8" /></svg>}</button>)}</div>
-    <div className={styles.paletteActions}><button type="button" disabled={disabled || palette.includes(hex)} onClick={() => onPalette([...palette, hex])}>Añadir color</button><button type="button" disabled={disabled || !palette.includes(hex)} onClick={() => onPalette(palette.filter((value) => value !== hex))}>Quitar color</button></div>
+    <div className={styles.swatches} aria-label="Colores de la paleta">{palette.map((value, index) => <button type="button" key={`${index}-${value}`} className={styles.swatch} aria-label={`Color ${value}`} title={value} aria-pressed={hex === value} disabled={disabled} onClick={() => select(value)}><span style={{ backgroundColor: value }} />{hex === value && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8" /></svg>}</button>)}</div>
+    <div className={styles.paletteActions}><button type="button" disabled={disabled || palette.includes(hex) || palette.length >= 256} onClick={() => onPalette([...palette, hex])}>Añadir color</button><button type="button" disabled={disabled || !palette.includes(hex)} onClick={() => onPalette(palette.filter((value) => value !== hex))}>Quitar color</button></div>
   </section>;
 }
