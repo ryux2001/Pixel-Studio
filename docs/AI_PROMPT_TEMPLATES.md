@@ -4,6 +4,26 @@ El editor no envía datos a ningún proveedor. «Prompts para IA» prepara estas
 
 Una respuesta puede respetar el formato y tener mal resultado artístico: revisa siempre la previsualización. Guarda primero un proyecto JSON portable. Las reglas completas están en [JSON_FORMATS.md](JSON_FORMATS.md).
 
+## Animaciones en `/animation`
+
+Exporta el contexto real y la plantilla del clip desde la interfaz. Contienen los IDs y hashes que corresponden a ese momento; no inventes hashes ni reutilices los ejemplos como si identificaran tu personaje. Se pueden incluir hasta 16 referencias. Elige update para modificar destinos existentes o append para añadir frames; no mezcles ambos modos. Los esquemas completos y ejemplos están en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md).
+
+Texto para acompañar el contexto y la plantilla descargados:
+
+```text
+Trabaja sobre el personaje de los archivos adjuntos. Devuelve únicamente
+el JSON pixel-studio/animation-proposal V1 de la plantilla, sin Markdown
+ni código ejecutable. Conserva projectId, animationId, contextId y los
+hashes suministrados. Respeta el modo, las dimensiones, el orden y scope.
+No cambies paleta, proporciones ni alineación de los pies. Mantén grupos
+de píxeles claros y el mismo volumen entre frames. Usa #RRGGBBAA.
+Objetivo: [describir movimiento y frames que deben cambiar].
+Revisa también la transición del último frame al primero si hay bucle.
+No afirmes que se ha probado dentro del editor o del motor de juego.
+```
+
+Un update antiguo puede quedar invalidado tras un retoque local. Exporta un nuevo contexto en ese caso. Al importar, compara todos los destinos y confirma solo el resultado que quieras; puedes deshacer todo el lote. El [piloto Esqueleto Morado](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json) sirve como práctica local sin solicitar otra imagen de referencia.
+
 ## 1. Generar una base con comandos
 
 ```text
@@ -97,3 +117,20 @@ Devuelve exclusivamente JSON válido, sin Markdown ni explicaciones.
 ```
 
 Adjunta las mismas reglas y ejemplo regionales del apartado anterior. La previsualización verifica integridad y ámbito; el usuario decide si el resultado artístico sirve.
+
+## Animaciones: actualizar y añadir frames
+
+En `/animation`, el panel **Intercambio con herramientas externas** genera prompts descargables en Markdown. Cada descarga incluye contexto real y una plantilla completa de `animation-proposal` versión 1. Selecciona hasta 16 referencias y usa **Descargar prompt para modificar** (`update-frames`) o **Descargar prompt para añadir** (`append-frames`). Las plantillas no ejecutan movimientos hasta que la herramienta externa rellene sus comandos.
+
+Pide conservar silueta, proporciones, paleta y grupos de píxeles. Especifica el movimiento, la cantidad de frames y las partes que deben permanecer inmóviles. No pidas modificar FPS/loop, borrar ni reordenar mediante este contrato; esos controles pertenecen al editor. La calidad artística requiere revisión humana.
+
+Los hashes se copian literalmente desde el contexto. Los updates incluyen frameId, expectedHash y scope por destino. Los appends conservan expectedOrder completo y usan tempId únicos; copy-commands identifica sourceFrameId y expectedSourceHash. Solo se copia desde un frame existente, nunca desde otro tempId de la propuesta. La app genera los IDs definitivos.
+
+Ejemplos íntegros, aceptados por el parser de la web:
+
+- [Proyecto V2](examples/animations/project-v2.json).
+- [Contexto de referencia](examples/animations/context-v1.json).
+- [Update con un píxel morado](examples/animations/update-v1.json).
+- [Append por copia con comandos](examples/animations/append-v1.json).
+
+Para probarlos, abre el proyecto V2 de ejemplo, selecciona `idle` e importa update o append. El contexto es una referencia, no se importa como propuesta. Si aplicas primero update, el append original puede quedar obsoleto: deshaz el update o exporta el contexto nuevo. No cambies un hash a mano para eludir un conflicto.

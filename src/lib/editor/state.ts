@@ -1,6 +1,9 @@
 import { createDocument } from "@/lib/pixels/bitmap";
 import type { PixelDocument, RGBA } from "@/types/pixel-studio";
 
+// V2 is deliberately separate until the target-aware reducer is introduced in phase 2.
+export type { CharacterProject } from "@/types/animation";
+
 export const TOOLS = [
   { id: "pencil", label: "Lápiz", key: "B" },
   { id: "eraser", label: "Goma", key: "E" },

@@ -7,13 +7,14 @@ import type { Tool } from "@/lib/editor/state";
 import type { PixelDocument, PixelPoint, PixelRect, RGBA } from "@/types/pixel-studio";
 
 type Options = {
+  operationKey?: string;
   disabled?: boolean; document: PixelDocument; tool: Tool; color: RGBA; filled: boolean; scope?: PixelRect;
   render: (document: PixelDocument) => void;
   commit: (document: PixelDocument, label: string) => void;
   select: (rect: PixelRect) => void; pick: (color: RGBA) => void;
   busy: (value: boolean) => void;
 };
-type Gesture = { id: number; base: PixelDocument; proposal: PixelDocument; start: PixelPoint; last: PixelPoint | null; end: PixelPoint; options: Options };
+type Gesture = { id: number; element: HTMLCanvasElement; base: PixelDocument; proposal: PixelDocument; start: PixelPoint; last: PixelPoint | null; end: PixelPoint; options: Options };
 
 export function useCanvasPointer(options: Options) {
   const gesture = useRef<Gesture | null>(null);
@@ -21,6 +22,7 @@ export function useCanvasPointer(options: Options) {
   const [provisional, setProvisional] = useState<PixelRect | null>(null);
   const point = (event: ReactPointerEvent<HTMLCanvasElement>) => pointerToPixel(event.clientX, event.clientY, event.currentTarget.getBoundingClientRect(), options.document.width, options.document.height);
   const update = (g: Gesture, p: PixelPoint | null) => {
+    if (g.options.operationKey !== options.operationKey) return;
     if (!p) { g.last = null; return; }
     g.end = p;
     const o = g.options;
@@ -40,6 +42,8 @@ export function useCanvasPointer(options: Options) {
     gesture.current = null;
     setProvisional(null);
     const o = g.options;
+    if (g.element.hasPointerCapture(g.id)) g.element.releasePointerCapture(g.id);
+    if (o.operationKey !== options.operationKey) { options.render(options.document); o.busy(false); return true; }
     if (escape || (cancelled && o.tool !== "pencil" && o.tool !== "eraser")) o.render(g.base);
     else if (o.tool === "select") o.select(rectFromPoints(g.start, g.end));
     else o.commit(g.proposal, o.tool === "eraser" ? "Borrar trazo" : "Dibujar");
@@ -63,7 +67,7 @@ export function useCanvasPointer(options: Options) {
           options.render(result); options.commit(result, "Rellenar"); return;
         }
         event.currentTarget.setPointerCapture(event.pointerId);
-        const g: Gesture = { id: event.pointerId, base: options.document, proposal: options.document, start: p, last: p, end: p, options };
+        const g: Gesture = { id: event.pointerId, element: event.currentTarget, base: options.document, proposal: options.document, start: p, last: p, end: p, options };
         gesture.current = g;
         options.busy(true);
         update(g, p);

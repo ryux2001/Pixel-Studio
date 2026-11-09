@@ -2,10 +2,13 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref
 import { useCanvasPointer } from "@/hooks/useCanvasPointer";
 import type { Tool } from "@/lib/editor/state";
 import type { PixelDocument, PixelRect, RGBA } from "@/types/pixel-studio";
+import { OnionSkinOverlay } from "./OnionSkinOverlay";
 import styles from "./EditorShell.module.css";
 
 export type CanvasHandle = { cancel: () => boolean; fit: () => void };
 type Props = {
+  onion?: { previous?: PixelDocument; next?: PixelDocument; opacity: number };
+  operationKey?: string;
   document: PixelDocument; tool: Tool; color: RGBA; filled: boolean;
   selection: PixelRect | null; restrict: boolean; zoom: number; grid: boolean; busy: boolean;
   onZoom: (zoom: number) => void; onCommit: (document: PixelDocument, label: string) => void;
@@ -56,7 +59,7 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
     element.addEventListener("wheel", wheel, { passive: false });
     return () => element.removeEventListener("wheel", wheel);
   }, [zoom, onZoom, busy]);
-  const pointer = useCanvasPointer({ disabled: busy, document: props.document, tool: props.tool, color: props.color,
+  const pointer = useCanvasPointer({ operationKey: props.operationKey, disabled: busy, document: props.document, tool: props.tool, color: props.color,
     filled: props.filled, scope: props.restrict && props.selection ? props.selection : undefined,
     render, commit: props.onCommit, select: props.onSelection, pick: props.onPick, busy: props.onBusy });
   useImperativeHandle(handleRef, () => ({ cancel: pointer.cancel, fit }));
@@ -67,7 +70,9 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
         <div className={styles.canvasGroup}>
           <div className={styles.canvasRuler}><span>0, 0</span><span>{width} × {height} px</span></div>
           <div className={styles.surface} style={{ width: width * zoom, height: height * zoom }}>
-            <canvas ref={canvas} width={width} height={height} {...(!error ? pointer.handlers : {})} tabIndex={0} aria-label={`Lienzo de ${width} por ${height} píxeles. Usa las herramientas para dibujar con el puntero.`} aria-describedby="canvas-help" className={styles.bitmap} />
+            {props.onion?.previous && <OnionSkinOverlay document={props.onion.previous} direction="previous" opacity={props.onion.opacity}/>}
+            {props.onion?.next && <OnionSkinOverlay document={props.onion.next} direction="next" opacity={props.onion.opacity}/>}
+            <canvas style={{position:"relative"}} ref={canvas} width={width} height={height} {...(!error ? pointer.handlers : {})} tabIndex={0} aria-label={`Lienzo de ${width} por ${height} píxeles. Usa las herramientas para dibujar con el puntero.`} aria-describedby="canvas-help" className={styles.bitmap} />
             {grid && zoom >= 4 && <div aria-hidden="true" className={styles.grid} style={{ backgroundSize: `${zoom}px ${zoom}px` }} />}
             {selection && <div aria-hidden="true" className={styles.selection} style={{ left: selection.x * zoom, top: selection.y * zoom, width: selection.width * zoom, height: selection.height * zoom }} />}
           </div>

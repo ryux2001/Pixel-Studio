@@ -4,6 +4,12 @@ Uso paso a paso: [guía](USER_GUIDE.md). Para pedir archivos a una IA externa: [
 
 Implementados: `pixel-studio/project`, `pixel-studio/region-patch` y `pixel-studio/commands`, versión 1. Se importan mediante acciones distintas: abrir proyecto sustituye el documento; importar región aplica cambios mínimos sobre el documento actual. Importar comandos ejecuta un lote declarativo en orden sobre el documento actual, siempre con preview y confirmación.
 
+## Evolución para animaciones
+
+La ruta `/animation` implementa proyectos V2, contextos de animación y propuestas multifotograma. Sus campos, hashes canónicos y límites están documentados en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md). Las propuestas usan `pixel-studio/animation-proposal`, versión 1, modos `update-frames` o `append-frames`, con previsualización y confirmación atómica. Los formatos V1 descritos a continuación siguen disponibles en `/`; en `/animation`, comandos y parches se resuelven contra el destino activo visible.
+
+El exportador de clips añade `pixel-studio/animation-manifest` V1 junto a hoja/secuencia PNG y ZIP32 sin compresión adicional. Conserva orden, IDs, FPS, loop y rectángulos de celdas; no es un proyecto reimportable. El proyecto V2 completo se guarda por separado. [Piloto completo de seis frames](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json). Atención: `personaje-capa-morada-v2.json` es una revisión artística que todavía usa formato V1; la versión contractual es siempre el campo `version`.
+
 ## Proyecto JSON V1
 
 Campos obligatorios, sin propiedades adicionales:

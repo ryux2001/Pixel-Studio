@@ -1,4 +1,24 @@
-# Guía de Pixel Art Studio V1
+# Guía de Pixel Art Studio
+
+## Personajes y animaciones V2
+
+Abre `http://localhost:3000/animation`. La ruta `/` conserva el editor estático V1; sus instrucciones aparecen después de esta sección.
+
+1. Usa «Abrir JSON» para elegir un proyecto V1 o V2 y confirma la previsualización. V1 se convierte a una base sin clips, sin alterar el archivo original. «Guardar JSON V2» descarga el personaje completo. «Más archivos → Exportar base JSON V1» es una copia estática independiente.
+2. Crea una animación. Su primer frame copia la base; los cambios posteriores en base y frames son independientes. Usa «Añadir vacío» para uno transparente, «Desde base» para copiar la base o «Duplicar frame» para copiar el seleccionado. El selector «Animación activa» permite volver a la base.
+3. Selecciona frames en el timeline. Con el foco allí, flechas, Home y End navegan; los botones «Mover antes» y «Mover después» reordenan. El último frame no puede borrarse; sí puede borrarse el clip. Renombrar no cambia los IDs.
+4. «Reproducir» anima el preview independiente. Pausar, navegar y ajustar la vista no crean historial ni cambios pendientes. Los pasos seleccionan el destino de edición. FPS (1–60) y «Repetir» son propiedades del clip y se pueden deshacer.
+5. Activa onion skin para comparar vecinos. Solo es una ayuda visual: no entra en el cuentagotas, relleno, guardado ni PNG. La referencia visual tampoco se exporta.
+6. Para trabajar con otra IA, exporta contexto y plantilla desde el intercambio de animación. Revisa identidad, ámbitos, hashes y cada antes/después al cargar su propuesta. Aplicar es una sola acción de historial; un conflicto bloquea el lote. Consulta [los contratos](ANIMATION_FORMATS.md).
+7. «Exportar animación» prepara la hoja o los PNG de cada frame, manifiesto y ZIP. Revisa distribución, FPS y bucle; prepara y descarga. Cancelar descarta la preparación. Guardar JSON sigue siendo necesario para conservar el proyecto editable. [Uso en Godot](GODOT_EXPORT.md).
+
+El autosave V2 usa IndexedDB y solicita recuperar o descartar borradores al volver. El borrador V1 se mantiene separado. «Más tarde» pausa la escritura; «Continuar en esta pestaña» toma el control explícitamente si otra pestaña es escritora. Conserva siempre una descarga JSON: el almacenamiento del navegador puede fallar o borrarse. Undo, selección y reproducción no se recuperan.
+
+Límites combinados: 32 clips, 256 frames por clip, 512 frames totales y 1 048 576 píxeles contando la base. A 64×64 caben 255 frames más base; a 128×128, 63. Proyecto JSON hasta 16 MiB. No existe redimensionado global ni continuidad artística automática.
+
+### Recorrido del piloto
+
+Abre [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json), selecciona idle y reproduce a 6 FPS. Son seis frames de movimiento vertical de cabeza de un píxel; bastón y pies permanecen alineados. Guarda JSON, cierra y reabre, recupera el borrador o abre la descarga, y exporta la hoja con tres columnas: 192×128. La secuencia contiene seis PNG de 64×64. Comprueba el bucle y la unión cabeza/cuello a escala nativa; es un piloto técnico, sujeto a tu aceptación artística. Puedes regenerarlo con `node scripts/create-animation-pilot.mjs` sin sobrescribir el original.
 
 ## Empezar y conservar el trabajo
 
@@ -62,3 +82,57 @@ Después de aplicar un lote, pulsa Deshacer una vez para restaurar el dibujo ant
 | Borrador inaccesible o lleno | Sigue trabajando y descarga un JSON. No dependas exclusivamente del almacenamiento local. |
 
 Límites y particularidades PNG: [formatos](JSON_FORMATS.md). Plantillas completas: [prompts](AI_PROMPT_TEMPLATES.md). Entrega al motor: [Godot](GODOT_EXPORT.md). Evidencia y pasos de revisión final: [aceptación V1](V1_ACCEPTANCE.md).
+## Acceso al editor de personajes V2
+
+Desde «Abrir editor V2 de personajes» o `/animation` puedes abrir proyectos V1/V2, guardar el personaje completo en JSON V2 y recuperar borradores IndexedDB. El selector «Editando» permite elegir la base o una animación. El timeline muestra sus frames y el lienzo edita solo el seleccionado.
+
+Al recuperar un borrador, elige V1 o V2 según nombre y fecha. Recuperar V1 conserva su copia original. «Más tarde» pausa el autosave. «Continuar con el personaje actual» activa el guardado V2 del trabajo visible; si otra pestaña escribe, usa «Continuar en esta pestaña» para tomar el control. Descarga JSON para conservar una copia portable.
+
+### Crear y editar una secuencia
+
+1. Abre el personaje y pulsa «Nueva animación». Su primer frame será una copia independiente de la base.
+2. Usa «Añadir vacío», «Desde base» o «Duplicar frame». Las copias se añaden al final y quedan seleccionadas.
+3. Dibuja en el lienzo. Cada frame conserva sus propios píxeles. Cambiar la base no modifica los frames existentes.
+4. Selecciona miniaturas con el ratón o entra al timeline con Tab y navega con flechas, Inicio y Fin. El timeline desplaza el resto de la secuencia; el número visible depende del espacio disponible.
+5. Usa «Mover antes/después» para ordenar. «Borrar frame» pide confirmación y se puede deshacer; no permite eliminar el último frame de un clip.
+6. «Renombrar» abre un campo contextual: Enter guarda y Escape cancela. También puedes duplicar o borrar una animación completa.
+7. Guarda JSON V2 para conservar todas las animaciones. «PNG actual» exporta solo el bitmap seleccionado; las opciones PNG adicionales e importación están en «Más archivos».
+
+Los límites combinan dimensiones y cantidad de frames; se muestra la capacidad disponible. Este paso permite editar secuencias manualmente. La reproducción se incorporará en la fase siguiente.
+
+
+### Reproducir una animación
+
+En `/animation`, selecciona un clip y usa **Reproducir** en **Vista previa**. El lienzo mantiene su selección mientras la vista previa avanza. **Pausar** conserva la posición. **Anterior/Siguiente** pausa y selecciona el frame para editarlo. **Repetir** permite envolver la secuencia; sin repetición, termina en el último frame y Play vuelve al primero. Un solo frame no necesita reproducción.
+
+Introduce un FPS de 1 a 60 y pulsa **Aplicar FPS**. FPS y repetición se guardan y admiten Deshacer. Reproducir y pausar no generan cambios pendientes. Al dibujar, cambiar de destino, abrir archivos u ocultar la pestaña, la reproducción se detiene. Volver a la pestaña no la inicia automáticamente. Puedes plegar la vista previa desde su título.
+
+
+### Dibujar con onion skin
+
+Selecciona un frame de una animación. Encima del lienzo, activa **Anterior azul** o **Siguiente rosa** para ver las posiciones vecinas detrás del dibujo. Ajusta **Opacidad** entre 0 y 60%; comienza en 25%. Los extremos no envuelven, aunque la animación tenga Repetir activo. En un clip de un frame no hay vecinos.
+
+Las guías se ocultan durante reproducción y regresan al pausar. No aparecen en PNG ni JSON y no afectan al cuentagotas, relleno o historial. En el sprite base estos controles están deshabilitados.
+
+## Intercambiar animaciones con herramientas externas
+
+En `/animation`, abre **Intercambio con herramientas externas**, debajo de la timeline. Selecciona entre 1 y 16 frames y decide si incluyes el sprite base como referencia. **Exportar contexto de animación** descarga un JSON con píxeles, hashes, IDs, orden, paleta y parámetros. Este archivo no modifica nada y no es una propuesta importable.
+
+También puedes descargar un prompt para **modificar** frames existentes o **añadir** frames. El Markdown incluye el contexto real y una plantilla JSON válida. Sustituye el objetivo artístico, envíalo tú mismo a la herramienta externa y pide únicamente la respuesta JSON. La web no envía datos a una IA.
+
+1. Selecciona el clip al que pertenece la propuesta y pulsa **Cargar propuesta externa**. Puedes pegar JSON o elegir un archivo.
+2. Pulsa **Simular propuesta** si pegaste texto. Cargar un archivo inicia la simulación automáticamente. Puedes cancelarla.
+3. Revisa la identidad del personaje/clip, los destinos, el área autorizada y las vistas **Actual/Propuesta**. El selector permite revisar cada resultado del lote.
+4. Marca la confirmación de revisión y pulsa **Aplicar lote completo**. Todos los resultados entran juntos; **Deshacer** revierte el lote completo. Cerrar sin aplicar conserva el proyecto.
+
+`update-frames` modifica únicamente IDs existentes; `append-frames` añade al final con IDs nuevos. Para añadir, crea primero el clip si aún no existe. La propuesta no puede renombrar, borrar ni reordenar clips/frames, ni modificar FPS o loop.
+
+Si un origen cambió, se borró o el orden de un append quedó antiguo, el lote entero se bloquea. Cierra la revisión y exporta un contexto nuevo. No hay sobrescritura forzada. El contexto no acredita autoría ni garantiza continuidad artística: revisa los píxeles.
+
+Los comandos V1 y parches regionales V1 se aceptan en el mismo diálogo y afectan **solo al destino activo**, sea base o frame. Para preparar un parche, selecciona una región y pulsa **Exportar región del destino activo V1**. Si restringiste manualmente la selección, los cambios V1 deben permanecer dentro de ella. Los parches con conflictos no se aplican.
+
+Límites de propuestas de animación: 8 MiB, 16 destinos, 2000 comandos agregados, 65536 muestras `setPixels` agregadas y 16384 por operación, 32 millones de celdas estimadas. Se mantienen los límites globales del proyecto. La simulación se cancela a los 10 segundos para que puedas reducir el lote. Los formatos V1 conservan el límite de 1 MiB.
+
+## Exportar una animación
+
+En `/animation`, selecciona un clip y pulsa **Exportar animación**. Elige hoja de sprites o PNG por frame. Para la hoja puedes ajustar columnas y revisar las dimensiones antes de preparar. **Preparar descarga** crea los archivos en segundo plano; puedes cancelarlo o cerrar el diálogo. Al terminar, descarga el ZIP completo o los archivos individuales. El manifiesto incluye orden, FPS y bucle. Exportar no marca el proyecto como guardado: conserva también tu JSON V2. Consulta [la guía de Godot](GODOT_EXPORT.md) para montar la animación.

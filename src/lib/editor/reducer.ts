@@ -8,6 +8,9 @@ import type { RegionPatchFileV1 } from "@/types/region-patch";
 import type { PixelDocument } from "@/types/pixel-studio";
 import type { EditorProject } from "./state";
 
+export { characterEditorReducer } from "@/lib/animation/reducer";
+export type { CharacterEditorAction } from "@/lib/animation/reducer";
+
 export type RegionOutcome = { request: number; applied: boolean; error?: string };
 export type EditorState = HistoryState & { regionOutcome?: RegionOutcome; commandsOutcome?: RegionOutcome };
 
