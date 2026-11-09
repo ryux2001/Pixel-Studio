@@ -6,6 +6,7 @@ import styles from "./EditorShell.module.css";
 
 export type CanvasHandle = { cancel: () => boolean; fit: () => void };
 type Props = {
+  operationKey?: string;
   document: PixelDocument; tool: Tool; color: RGBA; filled: boolean;
   selection: PixelRect | null; restrict: boolean; zoom: number; grid: boolean; busy: boolean;
   onZoom: (zoom: number) => void; onCommit: (document: PixelDocument, label: string) => void;
@@ -56,7 +57,7 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
     element.addEventListener("wheel", wheel, { passive: false });
     return () => element.removeEventListener("wheel", wheel);
   }, [zoom, onZoom, busy]);
-  const pointer = useCanvasPointer({ disabled: busy, document: props.document, tool: props.tool, color: props.color,
+  const pointer = useCanvasPointer({ operationKey: props.operationKey, disabled: busy, document: props.document, tool: props.tool, color: props.color,
     filled: props.filled, scope: props.restrict && props.selection ? props.selection : undefined,
     render, commit: props.onCommit, select: props.onSelection, pick: props.onPick, busy: props.onBusy });
   useImperativeHandle(handleRef, () => ({ cancel: pointer.cancel, fit }));
