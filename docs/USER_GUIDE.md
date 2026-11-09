@@ -93,3 +93,26 @@ Introduce un FPS de 1 a 60 y pulsa **Aplicar FPS**. FPS y repetición se guardan
 Selecciona un frame de una animación. Encima del lienzo, activa **Anterior azul** o **Siguiente rosa** para ver las posiciones vecinas detrás del dibujo. Ajusta **Opacidad** entre 0 y 60%; comienza en 25%. Los extremos no envuelven, aunque la animación tenga Repetir activo. En un clip de un frame no hay vecinos.
 
 Las guías se ocultan durante reproducción y regresan al pausar. No aparecen en PNG ni JSON y no afectan al cuentagotas, relleno o historial. En el sprite base estos controles están deshabilitados.
+
+## Intercambiar animaciones con herramientas externas
+
+En `/animation`, abre **Intercambio con herramientas externas**, debajo de la timeline. Selecciona entre 1 y 16 frames y decide si incluyes el sprite base como referencia. **Exportar contexto de animación** descarga un JSON con píxeles, hashes, IDs, orden, paleta y parámetros. Este archivo no modifica nada y no es una propuesta importable.
+
+También puedes descargar un prompt para **modificar** frames existentes o **añadir** frames. El Markdown incluye el contexto real y una plantilla JSON válida. Sustituye el objetivo artístico, envíalo tú mismo a la herramienta externa y pide únicamente la respuesta JSON. La web no envía datos a una IA.
+
+1. Selecciona el clip al que pertenece la propuesta y pulsa **Cargar propuesta externa**. Puedes pegar JSON o elegir un archivo.
+2. Pulsa **Simular propuesta** si pegaste texto. Cargar un archivo inicia la simulación automáticamente. Puedes cancelarla.
+3. Revisa la identidad del personaje/clip, los destinos, el área autorizada y las vistas **Actual/Propuesta**. El selector permite revisar cada resultado del lote.
+4. Marca la confirmación de revisión y pulsa **Aplicar lote completo**. Todos los resultados entran juntos; **Deshacer** revierte el lote completo. Cerrar sin aplicar conserva el proyecto.
+
+`update-frames` modifica únicamente IDs existentes; `append-frames` añade al final con IDs nuevos. Para añadir, crea primero el clip si aún no existe. La propuesta no puede renombrar, borrar ni reordenar clips/frames, ni modificar FPS o loop.
+
+Si un origen cambió, se borró o el orden de un append quedó antiguo, el lote entero se bloquea. Cierra la revisión y exporta un contexto nuevo. No hay sobrescritura forzada. El contexto no acredita autoría ni garantiza continuidad artística: revisa los píxeles.
+
+Los comandos V1 y parches regionales V1 se aceptan en el mismo diálogo y afectan **solo al destino activo**, sea base o frame. Para preparar un parche, selecciona una región y pulsa **Exportar región del destino activo V1**. Si restringiste manualmente la selección, los cambios V1 deben permanecer dentro de ella. Los parches con conflictos no se aplican.
+
+Límites de propuestas de animación: 8 MiB, 16 destinos, 2000 comandos agregados, 65536 muestras `setPixels` agregadas y 16384 por operación, 32 millones de celdas estimadas. Se mantienen los límites globales del proyecto. La simulación se cancela a los 10 segundos para que puedas reducir el lote. Los formatos V1 conservan el límite de 1 MiB.
+
+## Exportar una animación
+
+En `/animation`, selecciona un clip y pulsa **Exportar animación**. Elige hoja de sprites o PNG por frame. Para la hoja puedes ajustar columnas y revisar las dimensiones antes de preparar. **Preparar descarga** crea los archivos en segundo plano; puedes cancelarlo o cerrar el diálogo. Al terminar, descarga el ZIP completo o los archivos individuales. El manifiesto incluye orden, FPS y bucle. Exportar no marca el proyecto como guardado: conserva también tu JSON V2. Consulta [la guía de Godot](GODOT_EXPORT.md) para montar la animación.

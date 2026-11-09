@@ -1,4 +1,15 @@
 .characterEditor { min-height: 760px; }
+.exportDialog { overflow-wrap: anywhere; }
+.exportDialog p { line-height: 1.6; }
+.exportDialog fieldset { margin: 20px 0; padding: 12px; border: 1px solid #555866; }
+.exportDialog label { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.exportDialog fieldset label.exportChoice { display: flex; align-items: center; gap: 8px; }
+.exportDialog fieldset input[type="radio"] { width: 18px; height: 18px; min-height: 0; padding: 0; margin: 0; flex-shrink: 0; accent-color: #bdcdff; }
+.exportLayout { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.exportLayout input { width: 72px; }
+.exportFiles { display: flex; flex-wrap: wrap; gap: 8px; max-height: 180px; overflow-y: auto; margin: 12px 0; }
+.exportDialog button { min-height: 44px; }
+.exportDialog progress { width: 100%; accent-color: #bdcdff; }
 .characterEditor .fileToolbar { align-items: center; gap: 8px; }
 .characterEditor .fileToolbar > button { min-height: 40px; }
 .characterEditor .fileToolbar > button:first-of-type { color: #131826; background: #bdcdff; border-color: #bdcdff; font-weight: 600; }
@@ -92,6 +103,23 @@
 @media (min-width: 1200px) { .characterEditor > div:has(> .preview) { grid-template-columns: 210px minmax(0, 1fr) 250px; } }
 
 .onionOverlay { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; pointer-events: none; }
+.exchangePanel { border-top: 1px solid #393b46; padding: 10px 20px; font-size: 12px; }
+.exchangePanel summary { cursor: pointer; padding: 4px 0; font-weight: 600; }
+.exchangePanel p { color: #b1b2c0; line-height: 1.6; max-width: 70ch; }
+.exchangePanel fieldset { margin: 12px 0; padding: 12px; border: 1px solid #555866; border-radius: 4px; min-width: 0; }
+.exchangePanel label { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+.exchangeFrames { display: flex; flex-wrap: wrap; gap: 4px 16px; max-height: 144px; overflow: auto; margin-bottom: 12px; }
+.exchangeFrames label { flex-wrap: wrap; }
+.exchangeFrames span { color: #b1b2c0; overflow-wrap: anywhere; }
+.exchangeActions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+.exchangeFile { display: flex; flex-direction: column; gap: 6px; min-width: 0; max-width: 100%; }
+.exchangeFile input { max-width: 100%; }
+.exchangeField { display: flex; flex-direction: column; gap: 8px; min-width: 0; margin: 16px 0; }
+.exchangeField textarea { width: 100%; min-height: 120px; max-height: 240px; resize: vertical; background: #17181e; color: #ededf0; border: 1px solid #555866; padding: 10px; font-family: monospace; font-size: 12px; }
+.exchangeField select { min-width: 0; max-width: 100%; padding: 8px; }
+.exchangeReview { border-top: 1px solid #555866; margin-top: 20px; padding-top: 12px; }
+.exchangeIdentity, .exchangeNote { overflow-wrap: anywhere; white-space: pre-wrap; }
+@media (max-width: 600px) { .exchangePanel { padding: 10px 12px; } .exchangePanel button, .exchangePanel label { min-height: 44px; } }
 .onionControls { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 4px 20px; border-bottom: 1px solid #393b46; font-size: 12px; }
 .onionControls strong { font-weight: 500; }
 .onionControls label { display: flex; align-items: center; gap: 6px; min-height: 40px; }

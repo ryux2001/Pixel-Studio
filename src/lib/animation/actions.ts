@@ -7,6 +7,7 @@ import { resolveTarget } from "./targets";
 
 export type CharacterEdit =
   | { type: "pixels"; target: TargetRef; document: PixelDocument }
+  | { type: "append-document"; clipId: string; id: string; document: PixelDocument }
   | { type: "create-clip"; id: string; name: string; frameId: string }
   | { type: "duplicate-clip"; sourceId: string; id: string; name: string; frameIds: string[] }
   | { type: "delete-clip"; id: string }
@@ -25,6 +26,11 @@ export function editCharacter(p: CharacterProject, action: CharacterEdit): Chara
     return c;
   };
   switch (action.type) {
+    case "append-document": {
+      const c = clip(action.clipId);
+      next = { ...p, animations: p.animations.map(x => x === c ? { ...c, frames: [...c.frames, {id:action.id,document:cloneDocument(action.document)}] } : x) };
+      break;
+    }
     case "pixels": {
       resolveTarget(p, action.target);
       const document = cloneDocument(action.document);

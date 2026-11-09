@@ -6,7 +6,7 @@ Implementados: `pixel-studio/project`, `pixel-studio/region-patch` y `pixel-stud
 
 ## Evolución para animaciones
 
-El contrato V2 y su API independiente están documentados en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md). La interfaz actual y los formatos V1 descritos a continuación se conservan hasta su integración en las fases posteriores.
+La ruta `/animation` implementa proyectos V2, contextos de animación y propuestas multifotograma. Sus campos, hashes canónicos y límites están documentados en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md). Las propuestas usan `pixel-studio/animation-proposal`, versión 1, modos `update-frames` o `append-frames`, con previsualización y confirmación atómica. Los formatos V1 descritos a continuación siguen disponibles en `/`; en `/animation`, comandos y parches se resuelven contra el destino activo visible.
 
 ## Proyecto JSON V1
 

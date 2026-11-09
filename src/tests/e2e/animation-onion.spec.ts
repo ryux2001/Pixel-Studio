@@ -29,7 +29,7 @@ test("visual guides never contaminate picking, fill, PNG or history",async({page
   const pixel=await point(page,2,2);
   await page.getByRole("button",{name:/^Cuentagotas/}).click();await page.mouse.click(pixel.x,pixel.y);
   await expect(page.locator("code").filter({hasText:"#00000000"})).toBeVisible();
-  const d=page.waitForEvent("download");await page.getByRole("button",{name:"PNG actual",exact:true}).click();
+  const d=page.waitForEvent("download");await page.getByRole("button",{name:/^PNG frame \d+$/}).click();
   const png=decode(await readFile((await(await d).path())!));expect(Array.from(png.data).every(v=>v===0)).toBe(true);
   await page.getByLabel("Hexadecimal con alfa").fill("#123456FF");await page.getByRole("button",{name:"Usar",exact:true}).click();
   await page.getByRole("button",{name:/^Relleno/}).click();await page.mouse.click(pixel.x,pixel.y);

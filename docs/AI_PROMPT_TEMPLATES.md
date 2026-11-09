@@ -97,3 +97,20 @@ Devuelve exclusivamente JSON válido, sin Markdown ni explicaciones.
 ```
 
 Adjunta las mismas reglas y ejemplo regionales del apartado anterior. La previsualización verifica integridad y ámbito; el usuario decide si el resultado artístico sirve.
+
+## Animaciones: actualizar y añadir frames
+
+En `/animation`, el panel **Intercambio con herramientas externas** genera prompts descargables en Markdown. Cada descarga incluye contexto real y una plantilla completa de `animation-proposal` versión 1. Selecciona hasta 16 referencias y usa **Descargar prompt para modificar** (`update-frames`) o **Descargar prompt para añadir** (`append-frames`). Las plantillas no ejecutan movimientos hasta que la herramienta externa rellene sus comandos.
+
+Pide conservar silueta, proporciones, paleta y grupos de píxeles. Especifica el movimiento, la cantidad de frames y las partes que deben permanecer inmóviles. No pidas modificar FPS/loop, borrar ni reordenar mediante este contrato; esos controles pertenecen al editor. La calidad artística requiere revisión humana.
+
+Los hashes se copian literalmente desde el contexto. Los updates incluyen frameId, expectedHash y scope por destino. Los appends conservan expectedOrder completo y usan tempId únicos; copy-commands identifica sourceFrameId y expectedSourceHash. Solo se copia desde un frame existente, nunca desde otro tempId de la propuesta. La app genera los IDs definitivos.
+
+Ejemplos íntegros, aceptados por el parser de la web:
+
+- [Proyecto V2](examples/animations/project-v2.json).
+- [Contexto de referencia](examples/animations/context-v1.json).
+- [Update con un píxel morado](examples/animations/update-v1.json).
+- [Append por copia con comandos](examples/animations/append-v1.json).
+
+Para probarlos, abre el proyecto V2 de ejemplo, selecciona `idle` e importa update o append. El contexto es una referencia, no se importa como propuesta. Si aplicas primero update, el append original puede quedar obsoleto: deshaz el update o exporta el contexto nuevo. No cambies un hash a mano para eludir un conflicto.

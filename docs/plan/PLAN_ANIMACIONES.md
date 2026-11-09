@@ -641,3 +641,7 @@ Este ejemplo se corresponde con el proyecto del anexo A: actualiza un píxel del
 Seguimiento: [fase 5 completada, reproducción independiente](FASE_5_ANIMACIONES.md). Siguiente fase: onion skin.
 
 Seguimiento: [fase 6 completada, onion skin](FASE_6_ANIMACIONES.md). Siguiente fase: contexto y propuestas JSON externas.
+
+Seguimiento: [fase 7 implementada, contexto y propuestas JSON externas](FASE_7_ANIMACIONES.md). Siguiente fase: exportadores y guía Godot.
+
+Seguimiento: [fase 8 implementada, exportadores y guía Godot](FASE_8_ANIMACIONES.md). Siguiente fase: piloto, regresión y cierre. Reproducción real en Godot pendiente de aceptación externa.
