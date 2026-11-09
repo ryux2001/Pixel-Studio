@@ -4,11 +4,13 @@ Editor web local de pixel art con Next.js App Router, React, TypeScript y Canvas
 
 ## Estado
 
-V1 implementada, fases 0–6 completadas. El editor permite dibujar en un lienzo RGBA de 48×48, crear documentos de 8–128 píxeles por eje y deshacer/rehacer hasta 100 acciones agrupadas por gesto.
+V1 disponible en `/`. El editor de personajes y animaciones V2 está en `/animation`: base independiente, clips, timeline, reproducción, onion skin, propuestas JSON externas y exportación PNG/ZIP con manifiesto. Ambos admiten documentos de 8–128 píxeles por eje y hasta 100 acciones de historial; V2 también limita su memoria estimada a 64 MiB.
 
 Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos e importar lotes de comandos JSON de dibujo. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
 
-«Prompts para IA» ofrece tres plantillas copiables adaptadas al lienzo: generar una base, mejorar una región y continuar un sprite. La referencia PNG se puede añadir desde su propio panel. No incluye capas, animación, cuentas ni agentes integrados.
+«Prompts para IA» ofrece plantillas adaptadas al lienzo. V2 añade contexto y propuestas para modificar o añadir frames mediante una IA externa. La referencia PNG se puede añadir desde su propio panel. No incluye capas, cuentas ni agentes integrados.
+
+Piloto reproducible: [Esqueleto Morado idle, proyecto V2](docs/Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json), seis frames a 6 FPS. Abrirlo con «Proyecto V1 o V2» en `/animation` y seleccionar idle. [Aceptación de animaciones y límites comprobados](docs/ANIMACIONES_ACEPTACION.md). El archivo original V1 se conserva. El sufijo artístico `-v2` de los personajes antiguos no indica la versión del formato JSON.
 
 Empieza con la [guía de uso](docs/USER_GUIDE.md), las [plantillas para IA](docs/AI_PROMPT_TEMPLATES.md) o la [exportación a Godot](docs/GODOT_EXPORT.md). Resultados y límites: [aceptación V1](docs/V1_ACCEPTANCE.md).
 

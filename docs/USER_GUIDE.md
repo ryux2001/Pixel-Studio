@@ -1,4 +1,24 @@
-# Guía de Pixel Art Studio V1
+# Guía de Pixel Art Studio
+
+## Personajes y animaciones V2
+
+Abre `http://localhost:3000/animation`. La ruta `/` conserva el editor estático V1; sus instrucciones aparecen después de esta sección.
+
+1. Usa «Abrir JSON» para elegir un proyecto V1 o V2 y confirma la previsualización. V1 se convierte a una base sin clips, sin alterar el archivo original. «Guardar JSON V2» descarga el personaje completo. «Más archivos → Exportar base JSON V1» es una copia estática independiente.
+2. Crea una animación. Su primer frame copia la base; los cambios posteriores en base y frames son independientes. Usa «Añadir vacío» para uno transparente, «Desde base» para copiar la base o «Duplicar frame» para copiar el seleccionado. El selector «Animación activa» permite volver a la base.
+3. Selecciona frames en el timeline. Con el foco allí, flechas, Home y End navegan; los botones «Mover antes» y «Mover después» reordenan. El último frame no puede borrarse; sí puede borrarse el clip. Renombrar no cambia los IDs.
+4. «Reproducir» anima el preview independiente. Pausar, navegar y ajustar la vista no crean historial ni cambios pendientes. Los pasos seleccionan el destino de edición. FPS (1–60) y «Repetir» son propiedades del clip y se pueden deshacer.
+5. Activa onion skin para comparar vecinos. Solo es una ayuda visual: no entra en el cuentagotas, relleno, guardado ni PNG. La referencia visual tampoco se exporta.
+6. Para trabajar con otra IA, exporta contexto y plantilla desde el intercambio de animación. Revisa identidad, ámbitos, hashes y cada antes/después al cargar su propuesta. Aplicar es una sola acción de historial; un conflicto bloquea el lote. Consulta [los contratos](ANIMATION_FORMATS.md).
+7. «Exportar animación» prepara la hoja o los PNG de cada frame, manifiesto y ZIP. Revisa distribución, FPS y bucle; prepara y descarga. Cancelar descarta la preparación. Guardar JSON sigue siendo necesario para conservar el proyecto editable. [Uso en Godot](GODOT_EXPORT.md).
+
+El autosave V2 usa IndexedDB y solicita recuperar o descartar borradores al volver. El borrador V1 se mantiene separado. «Más tarde» pausa la escritura; «Continuar en esta pestaña» toma el control explícitamente si otra pestaña es escritora. Conserva siempre una descarga JSON: el almacenamiento del navegador puede fallar o borrarse. Undo, selección y reproducción no se recuperan.
+
+Límites combinados: 32 clips, 256 frames por clip, 512 frames totales y 1 048 576 píxeles contando la base. A 64×64 caben 255 frames más base; a 128×128, 63. Proyecto JSON hasta 16 MiB. No existe redimensionado global ni continuidad artística automática.
+
+### Recorrido del piloto
+
+Abre [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json), selecciona idle y reproduce a 6 FPS. Son seis frames de movimiento vertical de cabeza de un píxel; bastón y pies permanecen alineados. Guarda JSON, cierra y reabre, recupera el borrador o abre la descarga, y exporta la hoja con tres columnas: 192×128. La secuencia contiene seis PNG de 64×64. Comprueba el bucle y la unión cabeza/cuello a escala nativa; es un piloto técnico, sujeto a tu aceptación artística. Puedes regenerarlo con `node scripts/create-animation-pilot.mjs` sin sobrescribir el original.
 
 ## Empezar y conservar el trabajo
 

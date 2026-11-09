@@ -101,7 +101,7 @@ function restore(s: CharacterState, e: Entry, forward: boolean): CharacterProjec
   for (const change of e.changes) document.rgba.set(forward ? change.after : change.before,change.index * 4);
   return editCharacter(s.project,{ type: "pixels", target: e.target, document });
 }
-export function isCharacterDirty(s: CharacterState): boolean { return !s.saved || !equal(s.project,s.saved); }
+export function isCharacterDirty(s: Pick<CharacterState, "project" | "saved">): boolean { return !s.saved || !equal(s.project,s.saved); }
 export function markCharacterSaved(s: CharacterState, token: CharacterToken): CharacterState {
   assertCharacterToken(s,token); return { ...s,saved: copy(s.project) };
 }

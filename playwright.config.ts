@@ -13,8 +13,8 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     ...(process.env.PIXEL_COMPAT === "1" ? [
-      { name: "firefox", testMatch: "compatibility.spec.ts", use: { ...devices["Desktop Firefox"] } },
-      { name: "edge", testMatch: "compatibility.spec.ts", use: { ...devices["Desktop Edge"], channel: "msedge" } },
+      { name: "firefox", testMatch: /(?:^|[\\/])(?:animation-)?compatibility\.spec\.ts$/, use: { ...devices["Desktop Firefox"] } },
+      { name: "edge", testMatch: /(?:^|[\\/])(?:animation-)?compatibility\.spec\.ts$/, use: { ...devices["Desktop Edge"], channel: "msedge" } },
     ] : []),
   ],
   webServer: {

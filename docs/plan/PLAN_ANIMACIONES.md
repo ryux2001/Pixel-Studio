@@ -1,14 +1,14 @@
 # Plan de implementación de animaciones de Pixel Art Studio
 
-Fecha: 9 de noviembre de 2026. Estado: **propuesta técnica para ejecución posterior por fases**. Este documento no implementa funcionalidades ni convierte los esquemas propuestos en contratos ya aprobados.
+Fecha: 9 de noviembre de 2026. Estado: **fases 0–9 implementadas; aceptación externa en Godot pendiente**. Los capítulos técnicos conservan las propuestas originales como referencia histórica; el contrato vigente está en [ANIMATION_FORMATS](../ANIMATION_FORMATS.md). Evidencia actual: [ANIMACIONES_ACEPTACION](../ANIMACIONES_ACEPTACION.md) y [fase 9](FASE_9_ANIMACIONES.md).
 
-Seguimiento: [fases 0 y 1 completadas](FASES_0_1_ANIMACIONES.md). El contrato implementado y las decisiones cerradas se detallan en [ANIMATION_FORMATS](../ANIMATION_FORMATS.md); las fases posteriores siguen pendientes.
+Seguimiento histórico: [fases 0 y 1 completadas](FASES_0_1_ANIMACIONES.md). El contrato implementado y las decisiones cerradas se detallan en [ANIMATION_FORMATS](../ANIMATION_FORMATS.md).
 
-Seguimiento adicional: [fase 2, estado e historial implementados](FASE_2_ANIMACIONES.md). La conexión visual se realizará tras adaptar persistencia y controles en fases 3–4.
+Seguimiento: [fase 2, estado e historial](FASE_2_ANIMACIONES.md).
 
-Seguimiento: [fase 3, archivos y recuperación V2](FASE_3_ANIMACIONES.md), disponible en `/animation`. Timeline y controles completos de clips pendientes de fase 4.
+Seguimiento: [fase 3, archivos y recuperación V2](FASE_3_ANIMACIONES.md), disponible en `/animation`.
 
-Seguimiento: [fase 4 completada, clips y timeline](FASE_4_ANIMACIONES.md). El editor manual multifotograma ya está conectado a V2; reproducción pendiente de fase 5.
+Seguimiento: [fase 4, clips y timeline](FASE_4_ANIMACIONES.md), [fase 5, reproducción](FASE_5_ANIMACIONES.md), [fase 6, onion skin](FASE_6_ANIMACIONES.md), [fase 7, intercambio](FASE_7_ANIMACIONES.md), [fase 8, exportadores](FASE_8_ANIMACIONES.md) y [fase 9, cierre](FASE_9_ANIMACIONES.md).
 
 ## 1. Fuentes, alcance y convenciones
 
@@ -416,26 +416,26 @@ Las elecciones estéticas de CSS fino se resolverán sobre el sistema existente,
 
 ## 13. Checklist final de aceptación
 
-- [ ] V1 abre sin pérdida de RGBA/paleta y puede seguir editándose sin clips.
-- [ ] Base y frames son independientes; dimensiones no están fijadas a 64.
-- [ ] Se crean, renombran, seleccionan y borran clips con IDs estables.
-- [ ] Añadir/desde base/duplicar/borrar/reordenar frames funcionan por ratón y teclado.
-- [ ] Hay un único lienzo editable; timeline desplaza más de ocho frames y muestra destino inequívoco.
-- [ ] Playback, pasos, FPS y loop cumplen políticas descritas sin ensuciar datos.
-- [ ] Onion skin funciona y no entra en píxeles, cuentagotas ni exportaciones.
-- [ ] Undo/redo cubre píxeles, estructura, parámetros e importación completa.
-- [ ] Guardado V2 y recuperación conservan todos los frames; V1 no se pisa.
-- [ ] Dos pestañas no escriben sin control el mismo borrador.
-- [ ] JSON externo correcto se previsualiza y aplica de una vez; errores/obsolescencia no cambian nada.
-- [ ] Límites agregados se comprueban y comunican antes de duplicar, simular o exportar.
-- [ ] PNG estático, secuencia, ZIP si se adopta, hoja y manifiesto tienen orden/dimensiones/bytes correctos.
-- [ ] Piloto idle: seis frames del Esqueleto Morado v2, guardar/cerrar/reabrir, continuidad revisada y exportación comprobada.
-- [ ] Propuesta hacia frame eliminado/estado antiguo se bloquea; reorder no redirige destinos.
-- [ ] Personaje plateado y tamaño rectangular completan regresión complementaria.
-- [ ] UI verificada en 390/768/1440, foco y teclado revisados, sin overflow de página.
-- [ ] Suite V1 + V2, lint, tipos y build ejecutados y resultados registrados.
-- [ ] Godot reproduce el piloto o queda explícitamente pendiente de validación externa.
-- [ ] Guías y contratos actualizados; ningún reclamo de consistencia artística automática.
+- [x] V1 abre sin pérdida de RGBA/paleta y puede seguir editándose sin clips.
+- [x] Base y frames son independientes; dimensiones no están fijadas a 64.
+- [x] Se crean, renombran, seleccionan y borran clips con IDs estables.
+- [x] Añadir/desde base/duplicar/borrar/reordenar frames funcionan por ratón y teclado.
+- [x] Hay un único lienzo editable; timeline desplaza más de ocho frames y muestra destino inequívoco.
+- [x] Playback, pasos, FPS y loop cumplen políticas descritas sin ensuciar datos.
+- [x] Onion skin funciona y no entra en píxeles, cuentagotas ni exportaciones.
+- [x] Undo/redo cubre píxeles, estructura, parámetros e importación completa.
+- [x] Guardado V2 y recuperación conservan todos los frames; V1 no se pisa.
+- [x] Dos pestañas no escriben sin control el mismo borrador.
+- [x] JSON externo correcto se previsualiza y aplica de una vez; errores/obsolescencia no cambian nada.
+- [x] Límites agregados se comprueban y comunican antes de duplicar, simular o exportar.
+- [x] PNG estático, secuencia, ZIP si se adopta, hoja y manifiesto tienen orden/dimensiones/bytes correctos.
+- [x] Piloto idle: seis frames del Esqueleto Morado v2, guardar/cerrar/reabrir, continuidad revisada y exportación comprobada.
+- [x] Propuesta hacia frame eliminado/estado antiguo se bloquea; reorder no redirige destinos.
+- [x] Personaje plateado y tamaño rectangular completan regresión complementaria.
+- [x] UI verificada en 390/768/1440, foco y teclado revisados, sin overflow de página.
+- [x] Suite V1 + V2, lint, tipos y build ejecutados y resultados registrados.
+- [x] Godot reproduce el piloto o queda explícitamente pendiente de validación externa.
+- [x] Guías y contratos actualizados; ningún reclamo de consistencia artística automática.
 
 ## Anexo A — Ejemplo completo de proyecto V2 propuesto
 

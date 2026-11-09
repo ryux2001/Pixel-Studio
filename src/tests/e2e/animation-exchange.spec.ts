@@ -101,4 +101,18 @@ test("sixteen 128×128 targets simulate repeatedly and release every worker",asy
   }
   console.log(`Exchange worker 16×128², five simulations (ms): ${timings.join(", ")}`);
   await expect(page.getByRole("button",{name:"Deshacer",exact:true})).toBeDisabled();
+  await simulate(page,proposal);
+  await page.getByRole("checkbox",{name:"He revisado los destinos y confirmo aplicar el lote completo"}).check();
+  const confirmMs=await page.getByRole("button",{name:"Aplicar lote completo",exact:true}).evaluate(async(element:HTMLButtonElement)=>{
+    const start=performance.now();element.click();
+    await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
+    return performance.now()-start;
+  });
+  console.log(`ANIMATION_CONFIRM_16_TARGETS_MS ${confirmMs}`);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  const applied=await save(page);
+  expect(applied.animations[0].frames.every((f:{pixels:string[]})=>f.pixels[0]==="#12345600")).toBe(true);
+  await page.getByRole("button",{name:"Deshacer",exact:true}).click();
+  const undone=await save(page);
+  expect(undone.animations[0].frames.every((f:{pixels:string[]})=>f.pixels[0]==="#00000000")).toBe(true);
 });

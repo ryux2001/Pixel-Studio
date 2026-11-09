@@ -4,6 +4,26 @@ El editor no envía datos a ningún proveedor. «Prompts para IA» prepara estas
 
 Una respuesta puede respetar el formato y tener mal resultado artístico: revisa siempre la previsualización. Guarda primero un proyecto JSON portable. Las reglas completas están en [JSON_FORMATS.md](JSON_FORMATS.md).
 
+## Animaciones en `/animation`
+
+Exporta el contexto real y la plantilla del clip desde la interfaz. Contienen los IDs y hashes que corresponden a ese momento; no inventes hashes ni reutilices los ejemplos como si identificaran tu personaje. Se pueden incluir hasta 16 referencias. Elige update para modificar destinos existentes o append para añadir frames; no mezcles ambos modos. Los esquemas completos y ejemplos están en [ANIMATION_FORMATS.md](ANIMATION_FORMATS.md).
+
+Texto para acompañar el contexto y la plantilla descargados:
+
+```text
+Trabaja sobre el personaje de los archivos adjuntos. Devuelve únicamente
+el JSON pixel-studio/animation-proposal V1 de la plantilla, sin Markdown
+ni código ejecutable. Conserva projectId, animationId, contextId y los
+hashes suministrados. Respeta el modo, las dimensiones, el orden y scope.
+No cambies paleta, proporciones ni alineación de los pies. Mantén grupos
+de píxeles claros y el mismo volumen entre frames. Usa #RRGGBBAA.
+Objetivo: [describir movimiento y frames que deben cambiar].
+Revisa también la transición del último frame al primero si hay bucle.
+No afirmes que se ha probado dentro del editor o del motor de juego.
+```
+
+Un update antiguo puede quedar invalidado tras un retoque local. Exporta un nuevo contexto en ese caso. Al importar, compara todos los destinos y confirma solo el resultado que quieras; puedes deshacer todo el lote. El [piloto Esqueleto Morado](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json) sirve como práctica local sin solicitar otra imagen de referencia.
+
 ## 1. Generar una base con comandos
 
 ```text

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { createInitialProject, INITIAL_COLOR } from "@/lib/editor/state";
 import { characterFromStatic } from "@/lib/animation/project";
@@ -52,6 +52,8 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
     if(action.type!=="edit" || action.edits.some(e=>e.type!=="pixels"&&e.type!=="metadata")){setSelection(null);setRestrict(false);}
   });
   const {state,dispatch}=editor, project=state.project, bitmap=resolveTarget(project,state.target), token=characterToken(state);
+  const saved=state.saved;
+  const dirty=useMemo(()=>isCharacterDirty({project,saved}),[project,saved]);
   const onPlaying=useCallback((playing:boolean)=>setTransport({key:editor.operationKey,playing}),[editor.operationKey]);
   const playing=transport.key===editor.operationKey&&transport.playing;
   const autosave=useCharacterAutosave(project,state.saved,initial.epoch);
@@ -104,7 +106,7 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
     <a className={styles.skip} href="#character-canvas">Ir al lienzo</a>
     <header className={styles.header}>
       <div className={ui.headerTitle}><h1>Pixel Art Studio</h1><span>Personajes · {project.name}</span></div>
-      <Link href="/" onClick={e=>{if(isCharacterDirty(state)&&!window.confirm("¿Volver al editor V1? Descarga JSON para conservar una copia de los cambios."))e.preventDefault();}}>Editor V1</Link>
+      <Link href="/" onClick={e=>{if(dirty&&!window.confirm("¿Volver al editor V1? Descarga JSON para conservar una copia de los cambios."))e.preventDefault();}}>Editor V1</Link>
     </header>
     <div className={`${styles.fileBar} ${ui.fileToolbar}`}>
       <input ref={fileInput} aria-label="Proyecto V1 o V2" hidden disabled={locked} type="file" accept=".json" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f);}}/>
@@ -125,7 +127,7 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
       </details>
       <div className={ui.undoActions}><button type="button" disabled={locked||!state.past.length} onClick={()=>dispatch({type:"undo"})}>Deshacer</button><button type="button" disabled={locked||!state.future.length} onClick={()=>dispatch({type:"redo"})}>Rehacer</button></div>
     </div>
-    <div className={styles.fileStatus}><span role="status">{autosave.status}</span><span>{isCharacterDirty(state)?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" disabled={locked} onClick={autosave.review}>Revisar borradores</button>{!autosave.ready&&<button type="button" disabled={locked} onClick={()=>void autosave.resume(true)}>Continuar en esta pestaña</button>}{error&&<span role="alert">{error}</span>}{loading&&<button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button>}</div>
+    <div className={styles.fileStatus}><span role="status">{autosave.status}</span><span>{dirty?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" disabled={locked} onClick={autosave.review}>Revisar borradores</button>{!autosave.ready&&<button type="button" disabled={locked} onClick={()=>void autosave.resume(true)}>Continuar en esta pestaña</button>}{error&&<span role="alert">{error}</span>}{loading&&<button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button>}</div>
     <div className={styles.workspace}>
       <aside className={styles.sidebar} aria-label="Herramientas y colores">
         <Toolbar tool={tool} setTool={setTool} filled={filled} setFilled={setFilled} disabled={locked}/>
@@ -160,10 +162,10 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
       </section>
       <AnimationPreview onPlaying={onPlaying} key={editor.operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
     </div>
-    {proposal&&<Modal title="Abrir personaje" onClose={()=>setProposal(null)}><Preview document={proposal.project.baseSprite} label={proposal.project.name}/><p>{proposal.project.animations.length} animaciones. Se sustituirá el personaje completo; la apertura inicia un historial nuevo.</p>{proposal.legacy&&<p>Proyecto V1: el próximo guardado usará V2.</p>}{isCharacterDirty(state)&&<label><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>Confirmo sustituir los cambios sin guardar</label>}<button onClick={()=>setProposal(null)}>Cancelar</button><button disabled={isCharacterDirty(state)&&!confirmed} onClick={()=>{dispatch(proposal.png?{type:"recover",project:proposal.project,base:null,epoch:crypto.randomUUID()}:{type:"open",project:proposal.project,epoch:crypto.randomUUID()});setProposal(null);}}>Abrir personaje</button></Modal>}
+    {proposal&&<Modal title="Abrir personaje" onClose={()=>setProposal(null)}><Preview document={proposal.project.baseSprite} label={proposal.project.name}/><p>{proposal.project.animations.length} animaciones. Se sustituirá el personaje completo; la apertura inicia un historial nuevo.</p>{proposal.legacy&&<p>Proyecto V1: el próximo guardado usará V2.</p>}{dirty&&<label><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>Confirmo sustituir los cambios sin guardar</label>}<button onClick={()=>setProposal(null)}>Cancelar</button><button disabled={dirty&&!confirmed} onClick={()=>{dispatch(proposal.png?{type:"recover",project:proposal.project,base:null,epoch:crypto.randomUUID()}:{type:"open",project:proposal.project,epoch:crypto.randomUUID()});setProposal(null);}}>Abrir personaje</button></Modal>}
     {exchange.open&&<AnimationProposalDialog flow={exchange} targetLabel={activeClip?`${activeClip.name} · Frame ${activeIndex+1} · ${state.target.kind==="frame"?state.target.frameId:""}`:"Sprite base"}/>}
     {exportOpen&&activeClip&&<ExportAnimationDialog projectId={project.id} clip={activeClip} onClose={()=>setExportOpen(false)}/>}
-    {newOpen&&<NewDocumentDialog dirty={isCharacterDirty(state)} onClose={()=>setNewOpen(false)} onCreate={p=>{dispatch({type:"open",project:characterFromStatic(p),epoch:crypto.randomUUID()});setNewOpen(false);}}/>}
+    {newOpen&&<NewDocumentDialog dirty={dirty} onClose={()=>setNewOpen(false)} onCreate={p=>{dispatch({type:"open",project:characterFromStatic(p),epoch:crypto.randomUUID()});setNewOpen(false);}}/>}
     {autosave.show&&<Modal title="Recuperación V1 y V2" onClose={autosave.close}><p>{autosave.status}</p>{autosave.draft&&<><p>V2 · {autosave.draft.project.name} · {autosave.draft.savedAt}</p><button onClick={()=>recover(autosave.draft!.project,autosave.draft!.base)}>Recuperar V2</button><button onClick={()=>void autosave.discard()}>Descartar solo V2</button></>}{autosave.legacy&&<><p>V1 · {autosave.legacy.project.name} · {autosave.legacy.savedAt}</p><button onClick={()=>{const p=characterFromStatic(autosave.legacy!.project);recover(p,autosave.legacy!.base?characterFromStatic(autosave.legacy!.base,()=>p.id):null);}}>Recuperar V1 conservando original</button><button onClick={()=>{try{localStorage.removeItem(DRAFT_KEY);void autosave.read();}catch(e){setError(String(e));}}}>Descartar solo V1</button></>}<button onClick={()=>void autosave.read()}>Volver a leer</button><button onClick={autosave.close}>Más tarde</button><button onClick={()=>void autosave.resume()}>Continuar con el personaje actual</button></Modal>}
   </main>;
 }

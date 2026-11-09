@@ -94,6 +94,9 @@
 .preview input[type="number"] { width: 64px; padding: 8px; }
 .preview p { color: #b1b2c0; font-size: 12px; line-height: 1.5; }
 @media (max-width: 1199px) {
+  .characterEditor.characterEditor { height: auto; }
+  .characterEditor .characterPanel { height: auto; }
+  .drawingArea { flex: none; height: 420px; }
   .characterEditor > div:has(> .preview) { grid-template-columns: 210px minmax(0, 1fr); }
   .preview { grid-column: 1 / -1; }
   .preview { width: 100%; border-left: 0; border-top: 1px solid #393b46; overflow: visible; }

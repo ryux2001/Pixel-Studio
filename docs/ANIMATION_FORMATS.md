@@ -1,6 +1,6 @@
 # Contratos de animación
 
-Estado: fases 0–7 implementadas en `/animation`: modelo V2, historial global, archivos, borradores, timeline, reproducción, onion skin e intercambio JSON externo. El editor `/` conserva el flujo V1.
+Estado: fases 0–8 implementadas en `/animation`: modelo V2, historial global, archivos, borradores, timeline, reproducción, onion skin, intercambio JSON externo y exportadores. Piloto y comprobaciones de cierre: [aceptación V2](ANIMACIONES_ACEPTACION.md). El editor `/` conserva el flujo V1.
 
 ## Proyecto V2
 
