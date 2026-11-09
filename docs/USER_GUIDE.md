@@ -79,3 +79,17 @@ Al recuperar un borrador, elige V1 o V2 según nombre y fecha. Recuperar V1 cons
 7. Guarda JSON V2 para conservar todas las animaciones. «PNG actual» exporta solo el bitmap seleccionado; las opciones PNG adicionales e importación están en «Más archivos».
 
 Los límites combinan dimensiones y cantidad de frames; se muestra la capacidad disponible. Este paso permite editar secuencias manualmente. La reproducción se incorporará en la fase siguiente.
+
+
+### Reproducir una animación
+
+En `/animation`, selecciona un clip y usa **Reproducir** en **Vista previa**. El lienzo mantiene su selección mientras la vista previa avanza. **Pausar** conserva la posición. **Anterior/Siguiente** pausa y selecciona el frame para editarlo. **Repetir** permite envolver la secuencia; sin repetición, termina en el último frame y Play vuelve al primero. Un solo frame no necesita reproducción.
+
+Introduce un FPS de 1 a 60 y pulsa **Aplicar FPS**. FPS y repetición se guardan y admiten Deshacer. Reproducir y pausar no generan cambios pendientes. Al dibujar, cambiar de destino, abrir archivos u ocultar la pestaña, la reproducción se detiene. Volver a la pestaña no la inicia automáticamente. Puedes plegar la vista previa desde su título.
+
+
+### Dibujar con onion skin
+
+Selecciona un frame de una animación. Encima del lienzo, activa **Anterior azul** o **Siguiente rosa** para ver las posiciones vecinas detrás del dibujo. Ajusta **Opacidad** entre 0 y 60%; comienza en 25%. Los extremos no envuelven, aunque la animación tenga Repetir activo. En un clip de un frame no hay vecinos.
+
+Las guías se ocultan durante reproducción y regresan al pausar. No aparecen en PNG ni JSON y no afectan al cuentagotas, relleno o historial. En el sprite base estos controles están deshabilitados.

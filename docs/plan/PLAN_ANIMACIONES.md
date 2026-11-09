@@ -637,3 +637,7 @@ Este ejemplo se corresponde con el proyecto del anexo A: actualiza un píxel del
   ]
 }
 ```
+
+Seguimiento: [fase 5 completada, reproducción independiente](FASE_5_ANIMACIONES.md). Siguiente fase: onion skin.
+
+Seguimiento: [fase 6 completada, onion skin](FASE_6_ANIMACIONES.md). Siguiente fase: contexto y propuestas JSON externas.

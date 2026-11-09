@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createInitialProject, INITIAL_COLOR } from "@/lib/editor/state";
 import { characterFromStatic } from "@/lib/animation/project";
@@ -22,6 +22,7 @@ import { Modal, Preview } from "./FileDialogs";
 import { NewDocumentDialog } from "./NewDocumentDialog";
 import { AnimationSelector } from "./AnimationSelector";
 import { AnimationControls, type RunCharacterEdit } from "./AnimationControls";
+import { AnimationPreview } from "./AnimationPreview";
 import { FrameTimeline } from "./FrameTimeline";
 import { editCharacter } from "@/lib/animation/actions";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
@@ -38,6 +39,8 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
   const canvas=useRef<CanvasHandle>(null);
   const [selection,setSelection]=useState<PixelRect|null>(null);
   const [restrict,setRestrict]=useState(false),[grid,setGrid]=useState(true);
+  const [onionPrevious,setOnionPrevious]=useState(false),[onionNext,setOnionNext]=useState(false),[onionOpacity,setOnionOpacity]=useState(25);
+  const [transport,setTransport]=useState({key:"",playing:false});
   const timelineRef=useRef<HTMLDivElement>(null);
   const fileInput=useRef<HTMLInputElement>(null), pngInput=useRef<HTMLInputElement>(null), frameInput=useRef<HTMLInputElement>(null), fileMenu=useRef<HTMLDetailsElement>(null);
   const editor=useCharacterEditor(initial,action=>{
@@ -45,6 +48,8 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
     if(action.type!=="edit" || action.edits.some(e=>e.type!=="pixels"&&e.type!=="metadata")){setSelection(null);setRestrict(false);}
   });
   const {state,dispatch}=editor, project=state.project, bitmap=resolveTarget(project,state.target), token=characterToken(state);
+  const onPlaying=useCallback((playing:boolean)=>setTransport({key:editor.operationKey,playing}),[editor.operationKey]);
+  const playing=transport.key===editor.operationKey&&transport.playing;
   const autosave=useCharacterAutosave(project,state.saved,initial.epoch);
   const [tool,setTool]=useState<Tool>("pencil"),[color,setColor]=useState<RGBA>(INITIAL_COLOR),[filled,setFilled]=useState(false),[zoom,setZoom]=useState(8),[busy,setBusy]=useState(false);
   const [proposal,setProposal]=useState<{project:CharacterProject;legacy:boolean;png:boolean}|null>(null),[confirmed,setConfirmed]=useState(false),[error,setError]=useState(""),[loading,setLoading]=useState(false);
@@ -130,14 +135,22 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
           </div>
         </div>
         <div className={ui.selectionBar}><label><input type="checkbox" checked={restrict&&!!selection} disabled={locked||!selection} onChange={e=>setRestrict(e.target.checked)}/>Restringir edición a selección</label><span>{selection?`${selection.width} × ${selection.height} · ${selection.x}, ${selection.y}`:"Sin selección"}</span></div>
+        <div className={ui.onionControls} role="group" aria-label="Onion skin">
+          <strong>Onion skin</strong>
+          <label className={ui.previousOnion}><input type="checkbox" checked={onionPrevious} disabled={locked||!activeClip} onChange={e=>setOnionPrevious(e.target.checked)}/>Anterior azul</label>
+          <label className={ui.nextOnion}><input type="checkbox" checked={onionNext} disabled={locked||!activeClip} onChange={e=>setOnionNext(e.target.checked)}/>Siguiente rosa</label>
+          <label>Opacidad <input aria-label="Opacidad de onion skin" type="range" min="0" max="60" step="1" value={onionOpacity} disabled={locked||!activeClip} onChange={e=>setOnionOpacity(Number(e.target.value))}/><span>{onionOpacity}%</span></label>
+          <span>{!activeClip?"Disponible en animaciones":playing?"Guías ocultas al reproducir":`Vecinos sin envolver · ${activeIndex>0?"anterior disponible":"sin anterior"} · ${activeIndex<activeClip.frames.length-1?"siguiente disponible":"sin siguiente"}`}</span>
+        </div>
         <div className={ui.drawingArea}>
-          <PixelCanvas ref={canvas} operationKey={editor.operationKey} document={bitmap} tool={tool} color={color} filled={filled} selection={selection} restrict={restrict} zoom={zoom} grid={grid} busy={locked} onZoom={setZoom} onCommit={(document,label)=>runEdit([{type:"pixels",target:state.target,document}],label)} onSelection={setSelection} onPick={setColor} onBusy={setBusy}/>
+          <PixelCanvas ref={canvas} onion={!playing&&activeClip?{previous:onionPrevious?activeClip.frames[activeIndex-1]?.document:undefined,next:onionNext?activeClip.frames[activeIndex+1]?.document:undefined,opacity:onionOpacity}:undefined} operationKey={editor.operationKey} document={bitmap} tool={tool} color={color} filled={filled} selection={selection} restrict={restrict} zoom={zoom} grid={grid} busy={locked} onZoom={setZoom} onCommit={(document,label)=>runEdit([{type:"pixels",target:state.target,document}],label)} onSelection={setSelection} onPick={setColor} onBusy={setBusy}/>
         </div>
         <div className={ui.timelinePanel}>
           {activeClip&&state.target.kind==="frame"?<FrameTimeline clip={activeClip} frameId={state.target.frameId} disabled={locked} listRef={timelineRef} onSelect={frameId=>dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId}})}/>:<p className={ui.emptyTimeline}><strong>{project.animations.length?"Estás editando el sprite base":"Tu personaje está listo para una animación"}</strong>{project.animations.length?"Elige una animación para editar sus fotogramas. Cambiar la base no modifica los frames existentes.":"Crea una animación: su primer frame copiará la base. Después podrás añadir y editar cada fotograma."}</p>}
           <AnimationControls key={JSON.stringify([state.epoch,activeClip?.id])} project={project} target={state.target} disabled={locked} onEdit={runEdit} onTimelineFocus={focusTimeline}/>
         </div>
       </section>
+      <AnimationPreview onPlaying={onPlaying} key={editor.operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
     </div>
     {proposal&&<Modal title="Abrir personaje" onClose={()=>setProposal(null)}><Preview document={proposal.project.baseSprite} label={proposal.project.name}/><p>{proposal.project.animations.length} animaciones. Se sustituirá el personaje completo; la apertura inicia un historial nuevo.</p>{proposal.legacy&&<p>Proyecto V1: el próximo guardado usará V2.</p>}{isCharacterDirty(state)&&<label><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>Confirmo sustituir los cambios sin guardar</label>}<button onClick={()=>setProposal(null)}>Cancelar</button><button disabled={isCharacterDirty(state)&&!confirmed} onClick={()=>{dispatch(proposal.png?{type:"recover",project:proposal.project,base:null,epoch:crypto.randomUUID()}:{type:"open",project:proposal.project,epoch:crypto.randomUUID()});setProposal(null);}}>Abrir personaje</button></Modal>}
     {newOpen&&<NewDocumentDialog dirty={isCharacterDirty(state)} onClose={()=>setNewOpen(false)} onCreate={p=>{dispatch({type:"open",project:characterFromStatic(p),epoch:crypto.randomUUID()});setNewOpen(false);}}/>}

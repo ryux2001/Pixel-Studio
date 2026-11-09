@@ -71,3 +71,32 @@
   .frameActions button, .clipActions button { min-height: 44px; }
   .selectionBar { padding-left: 12px; padding-right: 12px; }
 }
+
+.preview { width: 250px; flex: none; padding: 16px; border-left: 1px solid #393b46; background: #202127; overflow: auto; }
+.preview summary { cursor: pointer; font-weight: 600; padding-bottom: 12px; }
+.previewImage { display: flex; justify-content: center; padding: 12px 0; }
+.previewImage > span { width: 192px; height: 192px; }
+.preview output { display: block; text-align: center; font-variant-numeric: tabular-nums; }
+.transport { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.preview button { padding: 8px; font-size: 12px; }
+.preview form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.preview input[type="number"] { width: 64px; padding: 8px; }
+.preview p { color: #b1b2c0; font-size: 12px; line-height: 1.5; }
+@media (max-width: 1199px) {
+  .characterEditor > div:has(> .preview) { grid-template-columns: 210px minmax(0, 1fr); }
+  .preview { grid-column: 1 / -1; }
+  .preview { width: 100%; border-left: 0; border-top: 1px solid #393b46; overflow: visible; }
+  .previewImage > span { width: 128px; height: 128px; }
+}
+
+@media (min-width: 1200px) { .characterEditor > div:has(> .preview) { grid-template-columns: 210px minmax(0, 1fr) 250px; } }
+
+.onionOverlay { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; pointer-events: none; }
+.onionControls { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 4px 20px; border-bottom: 1px solid #393b46; font-size: 12px; }
+.onionControls strong { font-weight: 500; }
+.onionControls label { display: flex; align-items: center; gap: 6px; min-height: 40px; }
+.onionControls input[type="range"] { width: 90px; }
+.onionControls > span { color: #b1b2c0; }
+.previousOnion { color: #64beff; }
+.nextOnion { color: #ff8cb4; }
+@media (max-width: 600px) { .onionControls { padding: 4px 12px; } .onionControls label { min-height: 44px; } }
