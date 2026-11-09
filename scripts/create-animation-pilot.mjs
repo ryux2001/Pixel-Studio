@@ -8,13 +8,16 @@ const offsets = [0, -1, -1, 0, 1, 0];
 const frames = offsets.map((offset, index) => {
   const pixels = [...source.pixels];
   // Only the hood/head moves: feet, body and staff remain registered.
-  // The transparent perimeter and overlapping neck hide the one-pixel seam.
+  // Move only opaque hood/head pixels. Transparent pixels are not stamped over
+  // the torso, so the neck and shoulder contour stays continuous between frames.
   if (offset) {
-    for (let y = 5; y <= 33; y++) for (let x = 8; x <= 44; x++) {
-      pixels[y * width + x] = "#00000000";
+    for (let y = 5; y <= 31; y++) for (let x = 8; x <= 44; x++) {
+      const index = y * width + x;
+      if (source.pixels[index].slice(-2) !== "00") pixels[index] = "#00000000";
     }
-    for (let y = 5; y <= 33; y++) for (let x = 8; x <= 44; x++) {
-      pixels[(y + offset) * width + x] = source.pixels[y * width + x];
+    for (let y = 5; y <= 31; y++) for (let x = 8; x <= 44; x++) {
+      const pixel = source.pixels[y * width + x];
+      if (pixel.slice(-2) !== "00") pixels[(y + offset) * width + x] = pixel;
     }
   }
   return { id: `esqueleto-idle-${index + 1}`, pixels };
