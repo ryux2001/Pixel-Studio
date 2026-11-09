@@ -18,7 +18,7 @@ Límites combinados: 32 clips, 256 frames por clip, 512 frames totales y 1 048 5
 
 ### Recorrido del piloto
 
-Abre [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json), selecciona idle y reproduce a 6 FPS. Son seis frames de movimiento vertical de cabeza de un píxel; bastón y pies permanecen alineados. Guarda JSON, cierra y reabre, recupera el borrador o abre la descarga, y exporta la hoja con tres columnas: 192×128. La secuencia contiene seis PNG de 64×64. Comprueba el bucle y la unión cabeza/cuello a escala nativa; es un piloto técnico, sujeto a tu aceptación artística. Puedes regenerarlo con `node scripts/create-animation-pilot.mjs` sin sobrescribir el original.
+Abre [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/64px/esqueleto-morado-idle.project-v2.json), selecciona idle y reproduce a 6 FPS. Son seis frames de movimiento vertical de cabeza de un píxel; bastón y pies permanecen alineados. Guarda JSON, cierra y reabre, recupera el borrador o abre la descarga, y exporta la hoja con tres columnas: 192×128. La secuencia contiene seis PNG de 64×64. Comprueba el bucle y la unión cabeza/cuello a escala nativa; es un piloto técnico, sujeto a tu aceptación artística. Puedes regenerarlo con `node scripts/create-animation-pilot.mjs` sin sobrescribir el original.
 
 ## Empezar y conservar el trabajo
 

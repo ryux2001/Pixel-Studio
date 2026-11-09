@@ -28,5 +28,5 @@ const project = {
   baseSprite: { pixels: [...source.pixels] },
   animations: [{ id: "esqueleto-idle", name: "idle", fps: 6, loop: true, frames }],
 };
-await writeFile(`${directory}/esqueleto-morado-idle.project-v2.json`, JSON.stringify(project) + "\n");
+await writeFile(`${directory}/64px/esqueleto-morado-idle.project-v2.json`, JSON.stringify(project) + "\n");
 console.log("Piloto V2: seis frames, 6 FPS, base V1 intacta.");

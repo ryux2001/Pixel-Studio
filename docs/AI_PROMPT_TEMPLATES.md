@@ -22,7 +22,7 @@ Revisa también la transición del último frame al primero si hay bucle.
 No afirmes que se ha probado dentro del editor o del motor de juego.
 ```
 
-Un update antiguo puede quedar invalidado tras un retoque local. Exporta un nuevo contexto en ese caso. Al importar, compara todos los destinos y confirma solo el resultado que quieras; puedes deshacer todo el lote. El [piloto Esqueleto Morado](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json) sirve como práctica local sin solicitar otra imagen de referencia.
+Un update antiguo puede quedar invalidado tras un retoque local. Exporta un nuevo contexto en ese caso. Al importar, compara todos los destinos y confirma solo el resultado que quieras; puedes deshacer todo el lote. El [piloto Esqueleto Morado](Characters/Esqueleto%20Morado/64px/esqueleto-morado-idle.project-v2.json) sirve como práctica local sin solicitar otra imagen de referencia.
 
 ## 1. Generar una base con comandos
 

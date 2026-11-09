@@ -6,7 +6,7 @@ import { exportAnimation } from "@/lib/io/animation-export";
 
 it("preserves the original skeleton, registered staff/feet and all six pilot frames through JSON and PNG", async () => {
   const original = parseCharacterProject(await readFile("docs/Characters/Esqueleto Morado/personaje-capa-morada-v2.json", "utf8"));
-  const pilot = parseCharacterProject(await readFile("docs/Characters/Esqueleto Morado/esqueleto-morado-idle.project-v2.json", "utf8"));
+  const pilot = parseCharacterProject(await readFile("docs/Characters/Esqueleto Morado/64px/esqueleto-morado-idle.project-v2.json", "utf8"));
   expect(pilot.baseSprite.rgba).toEqual(original.baseSprite.rgba);
   expect(parseCharacterProject(serializeCharacterProject(pilot))).toEqual(pilot);
   const clip = pilot.animations[0];

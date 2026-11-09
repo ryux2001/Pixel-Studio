@@ -15,7 +15,7 @@ Fecha: 9 de noviembre de 2026. Alcance: fases 0–9 del [plan de animaciones](pl
 
 Fuente conservada: `docs/Characters/Esqueleto Morado/personaje-capa-morada-v2.json`. Aunque termina en `-v2`, su campo version es 1: es una revisión artística, no un archivo del contrato V2.
 
-Entrega: [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/esqueleto-morado-idle.project-v2.json). Se regenera con `node scripts/create-animation-pilot.mjs`. El generador solo escribe la nueva entrega. Base y paleta son copias exactas del original; hay seis IDs de frame distintos, idle a 6 FPS y loop activado.
+Entrega: [esqueleto-morado-idle.project-v2.json](Characters/Esqueleto%20Morado/64px/esqueleto-morado-idle.project-v2.json). Se regenera con `node scripts/create-animation-pilot.mjs`. El generador solo escribe la nueva entrega. Base y paleta son copias exactas del original; hay seis IDs de frame distintos, idle a 6 FPS y loop activado.
 
 El movimiento usa desplazamientos verticales de cabeza/capucha `[0,-1,-1,0,1,0]`. Cada transición, incluido el cierre, recorre como máximo un píxel. Cuerpo, pies y bastón permanecen alineados. La región del movimiento está declarada en el generador. No se añade otra referencia ilustrada ni se promete continuidad artística automática. Es un idle mínimo para probar el flujo; su uso final en el juego requiere la valoración artística del usuario.
 

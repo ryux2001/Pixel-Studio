@@ -9,7 +9,7 @@ async function save(page: Page) {
 }
 
 test("pilot survives save, close, reopen and recovery, exports exact pixels and keeps keyboard focus", async ({ page, context }, info) => {
-  const path = "docs/Characters/Esqueleto Morado/esqueleto-morado-idle.project-v2.json";
+  const path = "docs/Characters/Esqueleto Morado/64px/esqueleto-morado-idle.project-v2.json";
   const fixture = JSON.parse(await readFile(path, "utf8"));
   await page.goto("/animation");
   await expect(page.getByText("Borrador V2 disponible", { exact: true })).toBeVisible();
