@@ -5,7 +5,7 @@ import { characterEditorReducer, type CharacterEditorAction } from "@/lib/animat
 export { characterEditorReducer } from "@/lib/animation/reducer";
 
 /** Epochs and IDs are supplied by event handlers, never generated during render. */
-export function useCharacterEditor(initial: { project: CharacterProject; epoch: string }, beforeTransition?: () => void) {
+export function useCharacterEditor(initial: { project: CharacterProject; epoch: string }, beforeTransition?: (action: CharacterEditorAction) => void) {
   const [state, dispatch] = useReducer(characterEditorReducer, initial, value => createCharacterState(value.project, value.epoch));
   return {
     state,
@@ -13,7 +13,7 @@ export function useCharacterEditor(initial: { project: CharacterProject; epoch: 
     dispatch: (action: CharacterEditorAction) => {
       // The shell binds cancellation + selection cleanup here before any change
       // of destination/project/history. A finished pixel commit is already idle.
-      if (action.type !== "saved") beforeTransition?.();
+      if (action.type !== "saved") beforeTransition?.(action);
       dispatch(action);
     },
   };

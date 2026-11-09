@@ -1,0 +1,73 @@
+.characterEditor { min-height: 760px; }
+.characterEditor .fileToolbar { align-items: center; gap: 8px; }
+.characterEditor .fileToolbar > button { min-height: 40px; }
+.characterEditor .fileToolbar > button:first-of-type { color: #131826; background: #bdcdff; border-color: #bdcdff; font-weight: 600; }
+.fileMenu { position: relative; }
+.fileMenu > summary { cursor: pointer; padding: 10px 12px; border: 1px solid #626573; border-radius: 5px; }
+.fileMenu > div { position: absolute; top: calc(100% + 8px); left: 0; z-index: 5; width: 238px; display: grid; gap: 6px; padding: 10px; background: #23242c; border: 1px solid #626573; border-radius: 5px; box-shadow: 0 8px 24px #0005; }
+.fileMenu button { justify-content: flex-start; }
+.fileToolbar .undoActions { display: flex; gap: 8px; margin-left: auto; }
+.contextBar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; padding: 12px 20px; border-bottom: 1px solid #393b46; background: #202127; }
+.clipSelector { display: flex; align-items: center; gap: 10px; color: #b1b2c0; min-width: 0; }
+.characterEditor select { color: #ededf0; background: #17181e; border: 1px solid #626573; border-radius: 4px; min-height: 40px; max-width: 100%; padding: 6px 10px; font: inherit; }
+.clipSelector select { width: 240px; min-width: 0; }
+.targetLabel { color: #b1b2c0; overflow-wrap: anywhere; }
+.targetLabel strong { color: #ededf0; font-weight: 500; }
+.viewTools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; }
+.viewTools output { min-width: 32px; text-align: center; font-variant-numeric: tabular-nums; }
+.viewTools button { padding: 6px 10px; }
+.drawingArea { display: flex; flex-direction: column; flex: 1; min-height: 200px; min-width: 0; }
+.selectionBar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 4px 20px; color: #b1b2c0; border-bottom: 1px solid #30323b; }
+.selectionBar label { display: flex; align-items: center; min-height: 32px; gap: 8px; }
+.timelinePanel { flex: none; min-width: 0; border-top: 1px solid #555866; background: #202127; }
+.timelineHeading { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; padding: 12px 20px 8px; font-size: 12px; }
+.timelineHeading strong { color: #ededf0; font-weight: 600; }
+.timelineHeading span { color: #b1b2c0; }
+.timelineHeading span:last-child { margin-left: auto; font-size: 11px; }
+.timeline { min-width: 0; }
+.frameList { overflow-x: auto; overflow-y: hidden; padding: 4px; margin: 0 16px 8px; border: 1px solid #555866; border-radius: 4px; overscroll-behavior-x: contain; }
+.frameList:focus-visible { outline: 2px solid #bdcdff; outline-offset: 2px; }
+.frameList[aria-disabled="true"] { opacity: .5; }
+.frameStrip { position: relative; height: 96px; }
+.frameOption { position: absolute; top: 0; width: 88px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; background: #17181e; border: 1px solid #555866; border-radius: 4px; cursor: pointer; color: #b1b2c0; font-size: 11px; font-variant-numeric: tabular-nums; }
+.frameOption:hover { border-color: #81869c; }
+.frameOption[aria-selected="true"] { border: 2px solid #bdcdff; background: #343c56; color: #e0e8ff; }
+.thumbnail { display: flex; align-items: center; justify-content: center; width: 58px; height: 58px; background: repeating-conic-gradient(#35363e 0% 25%, #2d2e35 0% 50%) 0 / 8px 8px; }
+.thumbnail canvas { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.clipActions, .frameActions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 20px; }
+.frameActions { border-top: 1px solid #393b46; }
+.clipActions button, .frameActions button { font-size: 12px; padding: 6px 10px; }
+.budget { margin-left: auto; color: #b1b2c0; font-size: 11px; }
+.actionDivider { width: 1px; height: 24px; margin: 0 4px; background: #555866; }
+.emptyTimeline { margin: 0; padding: 14px 20px 4px; color: #b1b2c0; line-height: 1.6; }
+.emptyTimeline strong { display: block; color: #ededf0; font-weight: 500; }
+.modalActions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+.renameForm { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%; padding: 6px 0; }
+.renameForm input { max-width: 260px; }
+.characterEditor button:focus-visible, .characterEditor summary:focus-visible, .characterEditor input:focus-visible, .characterEditor select:focus-visible { outline: 2px solid #bdcdff; outline-offset: 2px; }
+.characterEditor .headerTitle { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.headerTitle h1 { font-size: 17px; font-weight: 600; }
+.headerTitle span { color: #b1b2c0; overflow-wrap: anywhere; }
+@media (max-width: 1100px) {
+  .characterEditor { min-height: 1040px; }
+  .drawingArea { min-height: 300px; }
+  .contextBar { gap: 8px 12px; padding: 10px 12px; }
+  .clipSelector select { width: 180px; }
+  .timelineHeading, .clipActions, .frameActions { padding-left: 12px; padding-right: 12px; }
+  .timelineHeading span:last-child { display: none; }
+  .frameList { margin-left: 10px; margin-right: 10px; }
+  .budget { width: 100%; margin-left: 0; }
+}
+@media (max-width: 600px) {
+  .characterEditor { height: auto; min-height: 100dvh; }
+  .characterEditor .characterPanel { height: auto; min-height: 0; }
+  .drawingArea { flex: none; height: 420px; min-height: 320px; }
+  .fileToolbar .undoActions { margin-left: 0; }
+  .fileMenu > div { width: min(238px, calc(100vw - 32px)); }
+  .contextBar { align-items: flex-start; }
+  .clipSelector { width: 100%; }
+  .clipSelector select { flex: 1; width: auto; }
+  .viewTools { margin-left: 0; }
+  .frameActions button, .clipActions button { min-height: 44px; }
+  .selectionBar { padding-left: 12px; padding-right: 12px; }
+}

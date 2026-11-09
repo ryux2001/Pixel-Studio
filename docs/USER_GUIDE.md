@@ -62,3 +62,20 @@ Después de aplicar un lote, pulsa Deshacer una vez para restaurar el dibujo ant
 | Borrador inaccesible o lleno | Sigue trabajando y descarga un JSON. No dependas exclusivamente del almacenamiento local. |
 
 Límites y particularidades PNG: [formatos](JSON_FORMATS.md). Plantillas completas: [prompts](AI_PROMPT_TEMPLATES.md). Entrega al motor: [Godot](GODOT_EXPORT.md). Evidencia y pasos de revisión final: [aceptación V1](V1_ACCEPTANCE.md).
+## Acceso al editor de personajes V2
+
+Desde «Abrir editor V2 de personajes» o `/animation` puedes abrir proyectos V1/V2, guardar el personaje completo en JSON V2 y recuperar borradores IndexedDB. El selector «Editando» permite elegir la base o una animación. El timeline muestra sus frames y el lienzo edita solo el seleccionado.
+
+Al recuperar un borrador, elige V1 o V2 según nombre y fecha. Recuperar V1 conserva su copia original. «Más tarde» pausa el autosave. «Continuar con el personaje actual» activa el guardado V2 del trabajo visible; si otra pestaña escribe, usa «Continuar en esta pestaña» para tomar el control. Descarga JSON para conservar una copia portable.
+
+### Crear y editar una secuencia
+
+1. Abre el personaje y pulsa «Nueva animación». Su primer frame será una copia independiente de la base.
+2. Usa «Añadir vacío», «Desde base» o «Duplicar frame». Las copias se añaden al final y quedan seleccionadas.
+3. Dibuja en el lienzo. Cada frame conserva sus propios píxeles. Cambiar la base no modifica los frames existentes.
+4. Selecciona miniaturas con el ratón o entra al timeline con Tab y navega con flechas, Inicio y Fin. El timeline desplaza el resto de la secuencia; el número visible depende del espacio disponible.
+5. Usa «Mover antes/después» para ordenar. «Borrar frame» pide confirmación y se puede deshacer; no permite eliminar el último frame de un clip.
+6. «Renombrar» abre un campo contextual: Enter guarda y Escape cancela. También puedes duplicar o borrar una animación completa.
+7. Guarda JSON V2 para conservar todas las animaciones. «PNG actual» exporta solo el bitmap seleccionado; las opciones PNG adicionales e importación están en «Más archivos».
+
+Los límites combinan dimensiones y cantidad de frames; se muestra la capacidad disponible. Este paso permite editar secuencias manualmente. La reproducción se incorporará en la fase siguiente.

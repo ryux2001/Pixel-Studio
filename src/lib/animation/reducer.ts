@@ -7,6 +7,7 @@ export type CharacterEditorAction =
   | { type: "select"; target: TargetRef }
   | { type: "undo" | "redo" }
   | { type: "saved"; token: CharacterToken }
+  | { type: "recover"; project: CharacterProject; base: CharacterProject | null; epoch: string }
   | { type: "open"; project: CharacterProject; epoch: string };
 export function characterEditorReducer(state: CharacterState, action: CharacterEditorAction): CharacterState {
   switch (action.type) {
@@ -15,6 +16,11 @@ export function characterEditorReducer(state: CharacterState, action: CharacterE
     case "undo": return undoCharacter(state);
     case "redo": return redoCharacter(state);
     case "saved": return markCharacterSaved(state, action.token);
+    case "recover": {
+      if(action.epoch===state.epoch)throw new Error("Recuperar requiere una nueva sesión.");
+      const next=createCharacterState(action.project,action.epoch);
+      return {...next,saved:action.base ? createCharacterState(action.base,action.epoch).project : null};
+    }
     case "open":
       if (action.epoch === state.epoch) throw new Error("Abrir requiere una nueva identidad de sesión.");
       return createCharacterState(action.project, action.epoch);

@@ -11,7 +11,7 @@ type Entry = { target: TargetRef; undoTarget: TargetRef; label: string; bytes: n
   { kind: "pixels"; changes: PixelChange[] }
 );
 export type CharacterState = {
-  project: CharacterProject; target: TargetRef; saved: CharacterProject;
+  project: CharacterProject; target: TargetRef; saved: CharacterProject | null;
   epoch: string; generation: number; navigation: number; past: Entry[]; future: Entry[];
 };
 export type CharacterToken = { epoch: string; generation: number; navigation: number };
@@ -67,7 +67,11 @@ export function commitCharacter(s: CharacterState, edits: readonly CharacterEdit
   for (const edit of edits) project = editCharacter(project, edit);
   if (equal(s.project, project)) return s;
   const pixel = edits.find(e => e.type === "pixels");
-  const target = fallback(project, pixel?.type === "pixels" ? pixel.target : s.target, s.project);
+  const created = edits.findLast(e => e.type === "create-clip" || e.type === "duplicate-clip" || e.type === "add-frame");
+  const createdTarget: TargetRef | undefined = created?.type === "create-clip" ? {kind:"frame",animationId:created.id,frameId:created.frameId}
+    : created?.type === "duplicate-clip" ? {kind:"frame",animationId:created.id,frameId:created.frameIds[0]}
+    : created?.type === "add-frame" ? {kind:"frame",animationId:created.clipId,frameId:created.id} : undefined;
+  const target = fallback(project, pixel?.type === "pixels" ? pixel.target : createdTarget ?? s.target, s.project);
   // Immutable structural snapshots share unchanged bitmaps. Count their full size
   // conservatively, including shared buffers, so history never exceeds its budget.
   let undoTarget = target;
@@ -97,7 +101,7 @@ function restore(s: CharacterState, e: Entry, forward: boolean): CharacterProjec
   for (const change of e.changes) document.rgba.set(forward ? change.after : change.before,change.index * 4);
   return editCharacter(s.project,{ type: "pixels", target: e.target, document });
 }
-export function isCharacterDirty(s: CharacterState): boolean { return !equal(s.project,s.saved); }
+export function isCharacterDirty(s: CharacterState): boolean { return !s.saved || !equal(s.project,s.saved); }
 export function markCharacterSaved(s: CharacterState, token: CharacterToken): CharacterState {
   assertCharacterToken(s,token); return { ...s,saved: copy(s.project) };
 }

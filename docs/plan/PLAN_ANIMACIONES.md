@@ -6,6 +6,10 @@ Seguimiento: [fases 0 y 1 completadas](FASES_0_1_ANIMACIONES.md). El contrato im
 
 Seguimiento adicional: [fase 2, estado e historial implementados](FASE_2_ANIMACIONES.md). La conexión visual se realizará tras adaptar persistencia y controles en fases 3–4.
 
+Seguimiento: [fase 3, archivos y recuperación V2](FASE_3_ANIMACIONES.md), disponible en `/animation`. Timeline y controles completos de clips pendientes de fase 4.
+
+Seguimiento: [fase 4 completada, clips y timeline](FASE_4_ANIMACIONES.md). El editor manual multifotograma ya está conectado a V2; reproducción pendiente de fase 5.
+
 ## 1. Fuentes, alcance y convenciones
 
 Fuentes: especificación del usuario `PIXEL_STUDIO_ESPECIFICACION_ANIMACIONES_PARA_PLANIFICACION.md`, informe [ESTADO_ACTUAL_PROYECTO](../ESTADO_ACTUAL_PROYECTO.md), [aceptación V1](../V1_ACCEPTANCE.md), [formatos actuales](../JSON_FORMATS.md) e inspección del código real. La especificación se leyó desde Downloads; no se presupone que ese archivo esté versionado en el repositorio.

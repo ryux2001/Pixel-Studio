@@ -35,7 +35,8 @@ it("revierte y rehace dibujos, duplicación, orden y borrado sin perder otros fr
 it("navegar y undo de ida/vuelta invalidan tokens; no hay cambio parcial", () => {
   let s=apply(initial(),{type:"create-clip",id:"idle",name:"idle",frameId:"a"});
   const token=characterToken(s);
-  s=selectCharacterTarget(s,{kind:"frame",animationId:"idle",frameId:"a"});
+  expect(s.target).toEqual({kind:"frame",animationId:"idle",frameId:"a"});
+  s=selectCharacterTarget(s,{kind:"base"});
   expect(()=>commitCharacter(s,[],"vieja",token)).toThrow();
   const current=characterToken(s); s=redoCharacter(undoCharacter(s));
   expect(()=>commitCharacter(s,[],"vieja",current)).toThrow();

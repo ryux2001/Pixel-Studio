@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { usePixelEditor } from "@/hooks/usePixelEditor";
 import { useProjectFiles } from "@/hooks/useProjectFiles";
 import { useDrawCommands } from "@/hooks/useDrawCommands";
@@ -44,6 +45,7 @@ export function EditorShell() {
       <div className={styles.documentTitle}><span>{name}</span><span className={styles.dirtyDot} data-dirty={editor.dirty} aria-hidden="true" /></div>
       <div className={styles.headerActions}><button type="button" disabled={locked} onClick={() => setNewOpen(true)}><EditorIcon name="file" />Nuevo</button><span className={styles.divider} /><button type="button" disabled={locked || !editor.history.past.length} onClick={editor.undo} title="Deshacer (Ctrl/Cmd + Z)"><EditorIcon name="undo" /><span>Deshacer</span></button><button type="button" disabled={locked || !editor.history.future.length} onClick={editor.redo} title="Rehacer (Ctrl/Cmd + Shift + Z)"><EditorIcon name="redo" /><span>Rehacer</span></button></div>
     </header>
+    <Link href="/animation">Abrir editor V2 de personajes</Link>
     <FileActions disabled={locked || newOpen} load={files.load} save={files.save} exportPng={files.exportPng} />
     <RegionActions selection={editor.selection} width={document.width} height={document.height} disabled={locked || newOpen} onExport={region.exportSelection} onImport={region.begin} onCommands={commands.begin} onPrompts={() => setPromptsOpen(true)} />
     <div className={styles.fileStatus}>
