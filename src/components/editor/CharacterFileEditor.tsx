@@ -32,6 +32,7 @@ import { editCharacter } from "@/lib/animation/actions";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import ui from "./CharacterEditor.module.css";
 import { EditorIcon } from "./EditorIcon";
+import { PanelDivider } from "./PanelDivider";
 import styles from "./EditorShell.module.css";
 
 export function CharacterFileEditor(){
@@ -40,6 +41,10 @@ export function CharacterFileEditor(){
   return initial?<ReadyEditor initial={initial}/>:<p role="status">Preparando editor V2…</p>;
 }
 function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}){
+  const [panel, setPanel] = useState({ width: 210, visible: true, previewWidth: 250, previewVisible: true, topOpen: true, timelineOpen: true, timelineHeight: 250 });
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { try { const saved = localStorage.getItem("pixel-studio-animation-layout-v1"); if (saved) setPanel(value => ({ ...value, ...JSON.parse(saved) })); } catch { /* Preferencias opcionales. */ } }, []);
+  useEffect(() => { try { localStorage.setItem("pixel-studio-animation-layout-v1", JSON.stringify(panel)); } catch { /* Preferencias opcionales. */ } }, [panel]);
   const canvas=useRef<CanvasHandle>(null);
   const [selection,setSelection]=useState<PixelRect|null>(null);
   const [restrict,setRestrict]=useState(false),[grid,setGrid]=useState(true);
@@ -128,12 +133,15 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
       <div className={ui.undoActions}><button type="button" disabled={locked||!state.past.length} onClick={()=>dispatch({type:"undo"})}>Deshacer</button><button type="button" disabled={locked||!state.future.length} onClick={()=>dispatch({type:"redo"})}>Rehacer</button></div>
     </div>
     <div className={styles.fileStatus}><span role="status">{autosave.status}</span><span>{dirty?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" disabled={locked} onClick={autosave.review}>Revisar borradores</button>{!autosave.ready&&<button type="button" disabled={locked} onClick={()=>void autosave.resume(true)}>Continuar en esta pestaña</button>}{error&&<span role="alert">{error}</span>}{loading&&<button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button>}</div>
-    <div className={styles.workspace}>
-      <aside className={styles.sidebar} aria-label="Herramientas y colores">
+    <div className={styles.workspace} style={{ gridTemplateColumns: `${panel.visible ? `${panel.width}px 8px` : "40px"} minmax(0, 1fr) ${panel.previewVisible ? `8px ${panel.previewWidth}px` : "40px"}` }}>
+      {panel.visible ? <aside className={styles.sidebar} aria-label="Herramientas y colores">
+        <button type="button" onClick={() => setPanel(p => ({ ...p, visible: false }))}>Ocultar herramientas</button>
         <Toolbar tool={tool} setTool={setTool} filled={filled} setFilled={setFilled} disabled={locked}/>
         <ColorPalette color={color} palette={project.palette} onColor={setColor} onPalette={palette=>runEdit([{type:"metadata",name:project.name,palette:[...palette]}],"Editar paleta")} disabled={locked}/>
-      </aside>
+      </aside> : <button type="button" onClick={() => setPanel(p => ({ ...p, visible: true }))} aria-label="Mostrar herramientas">›</button>}
+      {panel.visible && <PanelDivider orientation="vertical" label="Ancho de herramientas" value={panel.width} min={170} max={420} onChange={width => setPanel(p => ({ ...p, width }))} />}
       <section id="character-canvas" tabIndex={-1} className={`${styles.canvasPanel} ${ui.characterPanel}`} aria-label="Editor de fotogramas">
+        <details className={ui.topPanels} open={panel.topOpen} onToggle={event => { const open = event.currentTarget.open; setPanel(p => p.topOpen === open ? p : ({ ...p, topOpen: open })); }}><summary>Controles del lienzo</summary><div>
         <div className={ui.contextBar}>
           <AnimationSelector project={project} target={state.target} disabled={locked} onSelect={target=>dispatch({type:"select",target})}/>
           <span className={ui.targetLabel} role="status">{activeClip?<><strong>{activeClip.name}</strong> · Frame {activeIndex+1} de {activeClip.frames.length}</>:"Sprite base · independiente de las animaciones"}</span>
@@ -151,16 +159,20 @@ function ReadyEditor({initial}:{initial:{project:CharacterProject;epoch:string}}
           <label>Opacidad <input aria-label="Opacidad de onion skin" type="range" min="0" max="60" step="1" value={onionOpacity} disabled={locked||!activeClip} onChange={e=>setOnionOpacity(Number(e.target.value))}/><span>{onionOpacity}%</span></label>
           <span>{!activeClip?"Disponible en animaciones":playing?"Guías ocultas al reproducir":`Vecinos sin envolver · ${activeIndex>0?"anterior disponible":"sin anterior"} · ${activeIndex<activeClip.frames.length-1?"siguiente disponible":"sin siguiente"}`}</span>
         </div>
+        </div></details>
         <div className={ui.drawingArea}>
           <PixelCanvas ref={canvas} onion={!playing&&activeClip?{previous:onionPrevious?activeClip.frames[activeIndex-1]?.document:undefined,next:onionNext?activeClip.frames[activeIndex+1]?.document:undefined,opacity:onionOpacity}:undefined} operationKey={editor.operationKey} document={bitmap} tool={tool} color={color} filled={filled} selection={selection} restrict={restrict} zoom={zoom} grid={grid} busy={locked} onZoom={setZoom} onCommit={(document,label)=>runEdit([{type:"pixels",target:state.target,document}],label)} onSelection={setSelection} onPick={setColor} onBusy={setBusy}/>
         </div>
-        <div className={ui.timelinePanel}>
+        {panel.timelineOpen && <PanelDivider orientation="horizontal" label="Alto de la línea de tiempo" value={panel.timelineHeight} min={120} max={520} onChange={timelineHeight => setPanel(p => ({ ...p, timelineHeight }))} />}
+        <details className={ui.timelinePanel} open={panel.timelineOpen} onToggle={event => { const open = event.currentTarget.open; setPanel(p => p.timelineOpen === open ? p : ({ ...p, timelineOpen: open })); }} style={{ height: panel.timelineOpen ? panel.timelineHeight : "auto" }}>
+          <summary>Línea de tiempo y herramientas de animación</summary><div className={ui.timelineContents}>
           {activeClip&&state.target.kind==="frame"?<FrameTimeline clip={activeClip} frameId={state.target.frameId} disabled={locked} listRef={timelineRef} onSelect={frameId=>dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId}})}/>:<p className={ui.emptyTimeline}><strong>{project.animations.length?"Estás editando el sprite base":"Tu personaje está listo para una animación"}</strong>{project.animations.length?"Elige una animación para editar sus fotogramas. Cambiar la base no modifica los frames existentes.":"Crea una animación: su primer frame copiará la base. Después podrás añadir y editar cada fotograma."}</p>}
           <AnimationControls key={JSON.stringify([state.epoch,activeClip?.id])} project={project} target={state.target} disabled={locked} onEdit={runEdit} onTimelineFocus={focusTimeline}/>
           <AnimationExchange key={JSON.stringify(["exchange",state.epoch,activeClip?.id])} project={project} clip={activeClip} frameId={state.target.kind==="frame"?state.target.frameId:undefined} bitmap={bitmap} selection={selection} disabled={locked} onImport={()=>{canvas.current?.cancel();exchange.begin();}}/>
-        </div>
+          </div>
+        </details>
       </section>
-      <AnimationPreview onPlaying={onPlaying} key={editor.operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
+      {panel.previewVisible ? <><PanelDivider orientation="vertical" label="Ancho de vista previa" value={panel.previewWidth} min={180} max={420} fromEnd onChange={previewWidth => setPanel(p => ({ ...p, previewWidth }))} /><div className={ui.previewWrap}><button type="button" onClick={() => setPanel(p => ({ ...p, previewVisible: false }))}>Ocultar vista previa</button><AnimationPreview onPlaying={onPlaying} key={editor.operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/></div></> : <button type="button" onClick={() => setPanel(p => ({ ...p, previewVisible: true }))} aria-label="Mostrar vista previa">Vista previa ›</button>}
     </div>
     {proposal&&<Modal title="Abrir personaje" onClose={()=>setProposal(null)}><Preview document={proposal.project.baseSprite} label={proposal.project.name}/><p>{proposal.project.animations.length} animaciones. Se sustituirá el personaje completo; la apertura inicia un historial nuevo.</p>{proposal.legacy&&<p>Proyecto V1: el próximo guardado usará V2.</p>}{dirty&&<label><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>Confirmo sustituir los cambios sin guardar</label>}<button onClick={()=>setProposal(null)}>Cancelar</button><button disabled={dirty&&!confirmed} onClick={()=>{dispatch(proposal.png?{type:"recover",project:proposal.project,base:null,epoch:crypto.randomUUID()}:{type:"open",project:proposal.project,epoch:crypto.randomUUID()});setProposal(null);}}>Abrir personaje</button></Modal>}
     {exchange.open&&<AnimationProposalDialog flow={exchange} targetLabel={activeClip?`${activeClip.name} · Frame ${activeIndex+1} · ${state.target.kind==="frame"?state.target.frameId:""}`:"Sprite base"}/>}

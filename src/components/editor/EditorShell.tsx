@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePixelEditor } from "@/hooks/usePixelEditor";
 import { useProjectFiles } from "@/hooks/useProjectFiles";
@@ -21,9 +21,14 @@ import { ColorPalette } from "./ColorPalette";
 import { PixelCanvas, type CanvasHandle } from "./PixelCanvas";
 import { NewDocumentDialog } from "./NewDocumentDialog";
 import { EditorIcon } from "./EditorIcon";
+import { PanelDivider } from "./PanelDivider";
 import styles from "./EditorShell.module.css";
 
 export function EditorShell() {
+  const [panel, setPanel] = useState({ width: 238, visible: true });
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { try { const saved = localStorage.getItem("pixel-studio-layout-v1"); if (saved) setPanel(value => ({ ...value, ...JSON.parse(saved) })); } catch { /* Preferencias opcionales. */ } }, []);
+  useEffect(() => { try { localStorage.setItem("pixel-studio-layout-v1", JSON.stringify(panel)); } catch { /* Almacenamiento opcional. */ } }, [panel]);
   const editor = usePixelEditor();
   const [newOpen, setNewOpen] = useState(false);
   const [promptsOpen, setPromptsOpen] = useState(false);
@@ -54,8 +59,9 @@ export function EditorShell() {
       {autosave.pending && !autosave.show && <button type="button" disabled={locked || newOpen} onClick={autosave.review}>Revisar borrador</button>}
       {files.error && <span role="alert" className={styles.error}>{files.error}</span>}
     </div>
-    <div className={styles.workspace}>
-      <aside className={styles.sidebar} aria-label="Herramientas y colores">
+    <div className={styles.workspace} style={{ gridTemplateColumns: panel.visible ? `${panel.width}px 8px minmax(0, 1fr)` : "40px minmax(0, 1fr)" }}>
+      {panel.visible ? <aside className={styles.sidebar} aria-label="Herramientas y colores">
+        <button type="button" onClick={() => setPanel(p => ({ ...p, visible: false }))} aria-label="Ocultar herramientas y colores">Ocultar panel</button>
         <Toolbar tool={editor.tool} setTool={editor.setTool} filled={editor.filled} setFilled={editor.setFilled} disabled={locked} />
         <ColorPalette key={rgbaToHex(editor.color)} color={editor.color} palette={palette} onColor={editor.setColor} onPalette={(value) => editor.updateProject({ ...editor.project, palette: value }, "Editar paleta")} disabled={locked} />
         <details className={styles.shortcuts}><summary>Atajos de teclado</summary><dl>{TOOLS.map((item) => <div key={item.id}><dt>{item.label}</dt><dd><kbd>{item.key}</kbd></dd></div>)}<div><dt>Deshacer</dt><dd>Ctrl/Cmd Z</dd></div><div><dt>Rehacer</dt><dd>Ctrl/Cmd ⇧ Z</dd></div><div><dt>Cancelar</dt><dd>Esc</dd></div></dl></details>
@@ -68,7 +74,8 @@ export function EditorShell() {
           <img src={files.reference.url} alt={`Referencia: ${files.reference.name}`} /><p className={styles.longName}>{files.reference.name}</p><button type="button" disabled={locked || newOpen} onClick={files.removeReference}>Quitar referencia</button></> : <p className={styles.regionHelp}>Añade un PNG para consultar mientras dibujas. No cambia los píxeles ni se guarda en el proyecto.</p>}
           <button type="button" disabled={locked || newOpen} onClick={() => referenceInput.current?.click()}>{files.reference ? "Cambiar referencia" : "Añadir referencia PNG"}</button>
         </section>
-      </aside>
+      </aside> : <button type="button" className={styles.restorePanel} onClick={() => setPanel(p => ({ ...p, visible: true }))} aria-label="Mostrar herramientas y colores">›</button>}
+      {panel.visible && <PanelDivider orientation="vertical" label="Ancho del panel de herramientas" value={panel.width} min={170} max={420} onChange={width => setPanel(p => ({ ...p, width }))} />}
       <section id="drawing-canvas" tabIndex={-1} className={styles.canvasPanel} aria-label="Editor de píxeles">
         <div className={styles.canvasControls}>
           <div className={styles.viewControls}><button type="button" disabled={locked} aria-pressed={editor.grid} onClick={() => editor.setGrid(!editor.grid)}><EditorIcon name="grid" />Cuadrícula</button><button type="button" disabled={locked} onClick={() => canvas.current?.fit()} title="Ajustar lienzo al espacio disponible"><EditorIcon name="fit" />Ajustar</button></div>
