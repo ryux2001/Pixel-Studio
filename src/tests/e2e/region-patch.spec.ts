@@ -1,3 +1,4 @@
+import { saveStaticPart, readDraft } from "./helpers/project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import type { RegionPatchFileV1 } from "@/types/region-patch";
@@ -9,9 +10,9 @@ async function downloaded(page: Page, button: string) {
   const event=page.waitForEvent("download"); await page.getByRole("button",{name:button,exact:true}).click();
   return JSON.parse(await readFile((await (await event).path())!,"utf8"));
 }
-async function project(page: Page) { return downloaded(page,"Guardar JSON"); }
+async function project(page: Page) { return saveStaticPart(page); }
 async function point(page: Page,x:number,y:number) {
-  return page.locator("#drawing-canvas canvas").evaluate((c:HTMLCanvasElement,p)=>{
+  return page.locator("#character-canvas canvas").evaluate((c:HTMLCanvasElement,p)=>{
     const r=c.getBoundingClientRect();return {x:r.x+(p.x+.5)*r.width/c.width,y:r.y+(p.y+.5)*r.height/c.height};
   },{x,y});
 }
@@ -32,8 +33,8 @@ test.beforeEach(async({page})=>{await page.goto("/");await expect(page.getByRole
 test("cabeza 48×48: exportar selección, importar dos cambios, cuerpo intacto y undo/redo",async({page})=>{
   const pixels=Array.from({length:48*48},(_,i)=>{const x=i%48,y=Math.floor(i/48);return x>=10&&x<=17&&y>=8&&y<=15?"#F1C27DFF":x>=10&&x<=17&&y>=16&&y<=30?"#557E9FFF":"#00000000";});
   const original={kind:"pixel-studio/project",version:1,name:"Personaje",width:48,height:48,palette:[],pixels};
-  await page.getByLabel("Archivo de proyecto JSON",{exact:true}).setInputFiles({name:"sprite.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(original))});
-  await page.getByRole("button",{name:"Abrir documento",exact:true}).click();
+  await page.getByLabel("Proyecto V1 o V2",{exact:true}).setInputFiles({name:"sprite.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(original))});
+  await page.getByRole("button",{name:"Abrir personaje",exact:true}).click();
   await page.getByRole("button",{name:/^Selección/}).click();await drag(page,[13,11],[10,8]);
   const patch=await downloaded(page,"Exportar selección") as RegionPatchFileV1;
   expect(patch.region).toEqual({x:10,y:8,width:4,height:4});expect(patch.basePixels).toEqual(new Array(16).fill("#F1C27DFF"));
@@ -41,9 +42,9 @@ test("cabeza 48×48: exportar selección, importar dos cambios, cuerpo intacto y
   await begin(page);await page.getByLabel("Archivo de modificación regional",{exact:true}).setInputFiles({name:"cabeza.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(patch))});
   await expect(page.getByRole("region",{name:"Previsualización regional"})).toContainText("2 aplicables");
   // Preview never paints the active canvas.
-  expect(await page.locator("#drawing-canvas canvas").evaluate((c:HTMLCanvasElement)=>Array.from(c.getContext("2d")!.getImageData(10,8,1,1).data))).toEqual([241,194,125,255]);
+  expect(await page.locator("#character-canvas canvas").evaluate((c:HTMLCanvasElement)=>Array.from(c.getContext("2d")!.getImageData(10,8,1,1).data))).toEqual([241,194,125,255]);
   await apply(page,2);
-  await expect(page.getByText("Cambios sin exportar",{exact:true})).toBeVisible();
+  await expect(page.getByText("Cambios sin guardar",{exact:true})).toBeVisible();
   await expect(page.getByText("4 × 4 · origen 10, 8",{exact:true}).first()).toBeVisible();
   const changed=await project(page);const expected: string[]=[...pixels];expected[8*48+10]="#FF0000FF";expected[11*48+13]="#0000FFFF";expect(changed.pixels).toEqual(expected);
   await page.getByRole("button",{name:"Deshacer",exact:true}).click();expect((await project(page)).pixels).toEqual(pixels);
@@ -100,11 +101,11 @@ test("autosave conserva solo la región confirmada y la recupera tras recargar",
   const patch=blankPatch();patch.pixels[0]="#FF000080";
   await paste(page,patch);
   await page.waitForTimeout(850);
-  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem("pixel-studio:draft:v1")!).project.pixels[0])).toBe("#00000000");
+  expect(await readDraft(page).then(d=>d?.project.pixels[0])).toBe("#00000000");
   await apply(page,1);
-  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pixel-studio:draft:v1")!).project.pixels[0])).toBe("#FF000080");
-  await page.reload();await page.getByRole("button",{name:"Recuperar borrador",exact:true}).click();
-  await expect(page.getByText("Cambios sin exportar",{exact:true})).toBeVisible();expect((await project(page)).pixels[0]).toBe("#FF000080");
+  await expect.poll(()=>readDraft(page).then(d=>d?.project.pixels[0])).toBe("#FF000080");
+  await page.reload();await page.getByRole("button",{name:"Restaurar espacio de trabajo",exact:true}).click();
+  await expect(page.getByText("Cambios sin guardar",{exact:true})).toBeVisible();expect((await project(page)).pixels[0]).toBe("#FF000080");
 });
 
 test("teclado, Escape y diálogos estrechos; conflictos grandes con listado acotado",async({page})=>{
@@ -116,7 +117,7 @@ test("teclado, Escape y diálogos estrechos; conflictos grandes con listado acot
     await close(page);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(width);
   }
   const original={kind:"pixel-studio/project",version:1,name:"Conflictos",width:48,height:48,palette:[],pixels:new Array(2304).fill("#0000FFFF")};
-  await page.getByLabel("Archivo de proyecto JSON",{exact:true}).setInputFiles({name:"base.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(original))});await page.getByRole("button",{name:"Abrir documento",exact:true}).click();
+  await page.getByLabel("Proyecto V1 o V2",{exact:true}).setInputFiles({name:"base.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(original))});await page.getByRole("button",{name:"Abrir personaje",exact:true}).click();
   const patch=blankPatch();patch.region={x:0,y:0,width:8,height:8};patch.basePixels=new Array(64).fill("#00000000");patch.pixels=new Array(64).fill("#FF0000FF");patch.note="Nota larga ".repeat(100);
   await paste(page,patch);await expect(page.getByRole("region",{name:"Detalle de conflictos"}).locator("tbody tr")).toHaveCount(50);await expect(page.getByRole("dialog")).toContainText("64 conflictos");await expect(page.getByRole("button",{name:"Aplicar 0 cambios",exact:true})).toBeDisabled();
 });

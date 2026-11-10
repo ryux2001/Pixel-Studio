@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- This Node.js utility uses CommonJS (.cjs). */
 const fs = require('node:fs');
 const { encode } = require('fast-png');
 

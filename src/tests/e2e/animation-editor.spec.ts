@@ -16,7 +16,7 @@ async function create(page: Page, name="idle") {
 }
 test.beforeEach(async({page})=>{
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
 });
 
 test("personaje V1, seis frames, edición aislada, reordenado, borrado y undo/redo",async({page})=>{

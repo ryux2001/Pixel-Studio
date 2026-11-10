@@ -4,7 +4,8 @@ import { rgbaToHex } from "@/lib/pixels/colors";
 import { Modal, Preview } from "./FileDialogs";
 import styles from "./EditorShell.module.css";
 
-export function RegionPatchDialog({ flow, name }: { flow: ReturnType<typeof useRegionPatch>; name: string }) {
+type Flow = Pick<ReturnType<typeof useRegionPatch>, "text" | "loading" | "error" | "stale" | "close" | "edit" | "load" | "inspect" | "cancelRead" | "apply"> & { preview: Pick<NonNullable<ReturnType<typeof useRegionPatch>["preview"]>, "patch" | "analysis" | "document"> | null };
+export function RegionPatchDialog({ flow, name }: { flow: Flow; name: string }) {
   const input = useRef<HTMLInputElement>(null);
   const analysis = flow.preview?.analysis;
   const conflicts = analysis?.conflicts.length ?? 0;

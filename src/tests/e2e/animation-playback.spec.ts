@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 test("preview leaves saved project unchanged, steps select, settings undo and responsive layout",async({page})=>{
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
   await page.getByRole("button",{name:"Nueva animación",exact:true}).click();
   await page.getByRole("button",{name:"Crear animación",exact:true}).click();
   await expect(page.getByRole("button",{name:"Reproducir",exact:true})).toBeDisabled();
@@ -34,7 +34,7 @@ test("preview leaves saved project unchanged, steps select, settings undo and re
 
 test("non-loop stops, restarts and visibility pauses without auto resume",async({page})=>{
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
   await page.getByRole("button",{name:"Nueva animación",exact:true}).click();
   await page.getByRole("button",{name:"Crear animación",exact:true}).click();
   await page.getByRole("button",{name:"Duplicar frame",exact:true}).click();

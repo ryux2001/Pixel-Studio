@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const development = process.env.PIXEL_DEV === "1";
-const port = development ? 3000 : 3100;
+const port = Number(process.env.PIXEL_TEST_PORT ?? (development ? 3000 : 3100));
 const baseURL = `http://${development ? "localhost" : "127.0.0.1"}:${port}`;
 
 export default defineConfig({

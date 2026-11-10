@@ -9,6 +9,9 @@ export type CanvasHandle = { cancel: () => boolean; fit: () => void };
 type Props = {
   onion?: { previous?: PixelDocument; next?: PixelDocument; opacity: number };
   operationKey?: string;
+  fitOnMount?: boolean;
+  initialScroll?: { left: number; top: number };
+  onViewportScroll?: (position: { left: number; top: number }) => void;
   document: PixelDocument; tool: Tool; color: RGBA; filled: boolean;
   selection: PixelRect | null; restrict: boolean; zoom: number; grid: boolean; busy: boolean;
   onZoom: (zoom: number) => void; onCommit: (document: PixelDocument, label: string) => void;
@@ -42,7 +45,9 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
     onZoom(Math.max(1, Math.min(32, Math.floor(Math.min((element.clientWidth - 80) / width, (element.clientHeight - 80) / height)))));
   }, [onZoom, width, height]);
   useEffect(() => { render(props.document); }, [props.document, render]);
-  useEffect(() => { fit(); }, [fit]);
+  useEffect(() => { if(props.fitOnMount!==false)fit(); }, [fit,props.fitOnMount]);
+  const [initialScroll] = useState(props.initialScroll);
+  useEffect(()=>{if(initialScroll&&viewport.current){viewport.current.scrollLeft=initialScroll.left;viewport.current.scrollTop=initialScroll.top;}},[initialScroll]);
   useEffect(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     // Strict Mode restarts effects: a cancelled frame must not block the next render.
@@ -65,7 +70,7 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
   useImperativeHandle(handleRef, () => ({ cancel: pointer.cancel, fit }));
   const selection = pointer.provisional ?? props.selection;
   return <>
-    <div className={styles.viewport} ref={viewport} aria-label="Área de dibujo desplazable">
+    <div className={styles.viewport} ref={viewport} aria-label="Área de dibujo desplazable" onScroll={event=>props.onViewportScroll?.({left:event.currentTarget.scrollLeft,top:event.currentTarget.scrollTop})}>
       <div className={styles.canvasCenter}>
         <div className={styles.canvasGroup}>
           <div className={styles.canvasRuler}><span>0, 0</span><span>{width} × {height} px</span></div>

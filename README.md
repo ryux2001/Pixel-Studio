@@ -4,11 +4,13 @@ Editor web local de pixel art con Next.js App Router, React, TypeScript y Canvas
 
 ## Estado
 
-V1 disponible en `/`. El editor de personajes y animaciones V2 está en `/animation`: base independiente, clips, timeline, reproducción, onion skin, propuestas JSON externas y exportación PNG/ZIP con manifiesto. Ambos admiten documentos de 8–128 píxeles por eje y hasta 100 acciones de historial; V2 también limita su memoria estimada a 64 MiB.
+El editor unificado está en `/`; `/animation` mantiene acceso a la misma implementación durante la transición. Permite editar la base y las animaciones de varios personajes en pestañas, usar comandos y regiones JSON, consultar referencias PNG, reproducir, usar onion skin y exportar PNG/ZIP con manifiesto. Admite documentos de 8–128 píxeles por eje, hasta 100 acciones de historial y 64 MiB estimados de historial por personaje.
 
-Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar un borrador local. También permite intercambiar modificaciones de regiones JSON con detección de conflictos e importar lotes de comandos JSON de dibujo. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
+Disponible: guardar/abrir proyectos JSON, exportar PNG nativo y 8×, abrir PNG editable, cargar referencia y recuperar los borradores locales de varios personajes. También permite intercambiar modificaciones de regiones JSON con detección de conflictos e importar lotes de comandos JSON de dibujo. Descarga JSON para conservar una copia portable; el autosave no sustituye esa copia.
 
-«Prompts para IA» ofrece plantillas adaptadas al lienzo. V2 añade contexto y propuestas para modificar o añadir frames mediante una IA externa. La referencia PNG se puede añadir desde su propio panel. No incluye capas, cuentas ni agentes integrados.
+«Prompts para IA» ofrece plantillas adaptadas al destino. El intercambio de animación añade contexto y propuestas para modificar o añadir frames mediante una IA externa. El selector «Panel derecho» alterna Vista previa y Referencias; la referencia se conserva en el borrador de su personaje, incluso al plegar el panel. No incluye capas, cuentas ni agentes integrados.
+
+«Guardar JSON V2» conserva el personaje completo; «Más archivos → Exportar base JSON V1» conserva una copia estática compatible. Abrir o crear añade una pestaña con su propio historial. Puedes reordenar, duplicar o cerrar hasta ocho sesiones abiertas. «Recuperar personajes» restaura documentos, referencias y orden; el historial empieza vacío. Los borradores anteriores V1/V2 se copian conservando su origen. Si otra ventana escribe una sesión, tomar control exige una acción explícita. Espera «Borrador local actualizado» antes de recargar y conserva también una descarga JSON.
 
 Piloto reproducible: [Esqueleto Morado idle, proyecto V2](docs/Characters/Esqueleto%20Morado/64px/esqueleto-morado-idle.project-v2.json), seis frames a 6 FPS. Abrirlo con «Proyecto V1 o V2» en `/animation` y seleccionar idle. [Aceptación de animaciones y límites comprobados](docs/ANIMACIONES_ACEPTACION.md). El archivo original V1 se conserva. El sufijo artístico `-v2` de los personajes antiguos no indica la versión del formato JSON.
 
@@ -148,21 +150,21 @@ Las entradas inválidas lanzan `PixelError` con `code` estable y contexto. Se va
 
 - «Guardar JSON» descarga el proyecto y actualiza la base exportada. «Abrir JSON» valida, previsualiza y solicita confirmación antes de sustituirlo. Se puede deshacer la apertura.
 - «PNG nativo» y «PNG 8×» exportan RGBA sin overlays y sin suavizado; no cambian los pendientes de guardar JSON.
-- «Importar PNG» ofrece dos acciones distintas: abrir editable (sustituye el documento) y cargar como referencia (solo visual, no se persiste).
-- Autosave local tras 750 ms de cambios confirmados. Al recargar, elegir recuperar, descartar o «Más tarde». Posponer pausa autosave para proteger el borrador anterior.
+- «Importar PNG» ofrece dos acciones distintas: abrir editable (otra pestaña) y cargar como referencia (solo visual, en el borrador de la sesión).
+- Autosave local por personaje tras 750 ms de cambios confirmados. Al recargar, usa «Recuperar personajes» para restaurar el espacio, elegir borradores o posponer.
 - Los fallos de almacenamiento no impiden dibujar ni descargar JSON. Solo se admite una pestaña escritora; los cambios desde otra pestaña pausan autosave.
 
-Límites: JSON 1 MiB; PNG editable 5 MiB, estático de 8 bits sin entrelazado, 8–128 por eje; referencia PNG 10 MiB, 4096 por eje y 16 millones de píxeles. El editor conserva los bytes RGBA; los perfiles de color externos no se aplican al documento editable. La referencia se pierde al cerrar y el último intervalo de autosave puede perderse ante un cierre abrupto.
+Límites: JSON 1 MiB; PNG editable 5 MiB, estático de 8 bits sin entrelazado, 8–128 por eje; referencia PNG 10 MiB, 4096 por eje y 16 millones de píxeles. El editor conserva los bytes RGBA; los perfiles de color externos no se aplican al documento editable. La referencia queda en el borrador si eliges conservarlo. El último intervalo de autosave puede perderse ante un cierre abrupto.
 
 Contrato, ejemplo JSON válido y detalles: [Formatos de archivo](docs/JSON_FORMATS.md). La dependencia MIT `fast-png` evita pérdidas de muestras de color por premultiplicación de Canvas; se carga al usar PNG y funciona localmente.
 
 ### Comprobar la fase 3
 
 1. Dibujar, guardar JSON y exportar ambos PNG; confirmar sus dimensiones reales.
-2. Recargar, descartar el borrador para probar la apertura del archivo y abrir el JSON descargado; confirmar y comprobar el mismo dibujo.
+2. Recargar, recuperar el personaje y abrir el JSON descargado como copia independiente para comprobar el mismo dibujo.
 3. Deshacer/rehacer la apertura. Cancelar otra importación y comprobar que conserva el proyecto.
 4. Cargar un PNG editable y otro como referencia; exportar para comprobar que la referencia no aparece.
-5. Editar, esperar el aviso de borrador actualizado, recargar y recuperarlo. Probar «Más tarde» y volver con «Revisar borrador».
+5. Editar, esperar el aviso de borrador actualizado, recargar y recuperarlo. Probar «Más tarde» y volver con «Recuperar personajes».
 
 Validación de cierre: ESLint, TypeScript, 144 pruebas unitarias, build de producción y 19 E2E. Revisión visual de editor, preview, error y recuperación en 390, 768 y 1440 píxeles, sin desbordamiento horizontal ni errores de ejecución.
 

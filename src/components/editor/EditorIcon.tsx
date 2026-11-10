@@ -1,5 +1,3 @@
-import type { Tool } from "@/lib/editor/state";
-
 const paths = {
   pencil: "m4 16 12-12 4 4L8 20H4v-4Z M13 7l4 4",
   eraser: "m4 14 9-10 7 7-8 9H8l-4-4v-2Z M9 9l7 7 M12 20h9",
@@ -12,10 +10,11 @@ const paths = {
   redo: "m15 6 5 5-5 5 M20 11H10a6 6 0 0 0-6 6v2",
   plus: "M12 5v14 M5 12h14",
   minus: "M5 12h14",
+  close: "m6 6 12 12M6 18 18 6",
   grid: "M4 4h16v16H4z M4 10h16 M4 15h16 M10 4v16 M15 4v16",
   fit: "M8 4H4v4 M16 4h4v4 M20 16v4h-4 M8 20H4v-4 M9 9h6v6H9z",
   file: "M5 3h9l5 5v13H5z M14 3v6h5 M9 14h6 M12 11v6",
 };
-export function EditorIcon({ name }: { name: Tool | "undo" | "redo" | "plus" | "minus" | "grid" | "fit" | "file" }) {
+export function EditorIcon({ name }: { name: keyof typeof paths }) {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]} /></svg>;
 }

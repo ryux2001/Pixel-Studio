@@ -2,7 +2,8 @@ import { useRef } from "react";
 import type { useDrawCommands } from "@/hooks/useDrawCommands";
 import { Modal, Preview } from "./FileDialogs";
 import styles from "./EditorShell.module.css";
-export function CommandsDialog({ flow, name, width, height }: { flow: ReturnType<typeof useDrawCommands>; name: string; width: number; height: number }) {
+type Flow = Pick<ReturnType<typeof useDrawCommands>, "text" | "loading" | "error" | "stale" | "close" | "edit" | "load" | "simulate" | "cancel" | "apply"> & { preview: Pick<NonNullable<ReturnType<typeof useDrawCommands>["preview"]>, "file" | "analysis" | "document" | "elapsedMs"> | null };
+export function CommandsDialog({ flow, name, width, height }: { flow: Flow; name: string; width: number; height: number }) {
   const input = useRef<HTMLInputElement>(null), analysis = flow.preview?.analysis;
   const count = analysis?.changes.length ?? 0;
   return <Modal title="Importar comandos de dibujo" onClose={flow.close} wide>

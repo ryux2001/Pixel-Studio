@@ -1,10 +1,11 @@
+import { readDraft } from "./helpers/project";
 import { test, expect } from "@playwright/test";
 
 test("el lienzo muestra el trazo y actualiza deshacer y rehacer", async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/");
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("pixel-studio:draft:v1"))).not.toBeNull();
-  const canvas = page.locator("#drawing-canvas canvas");
+  await expect.poll(() => readDraft(page)).not.toBeNull();
+  const canvas = page.locator("#character-canvas canvas");
   await expect(page.getByRole("button", { name: "Nuevo", exact: true })).toBeEnabled();
   await page.getByLabel("Hexadecimal con alfa").fill("#FF0000FF");
   await page.getByRole("button", { name: "Usar", exact: true }).click();

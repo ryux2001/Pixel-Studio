@@ -1,2 +1,2 @@
-import { CharacterFileEditor } from "@/components/editor/CharacterFileEditor";
-export default function AnimationPage(){return <CharacterFileEditor />;}
+import { CharacterEditor } from "@/components/editor/CharacterEditor";
+export default function AnimationPage(){return <CharacterEditor />;}

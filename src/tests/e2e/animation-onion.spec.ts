@@ -4,7 +4,7 @@ import { decode } from "fast-png";
 const clear=()=>Array(64).fill("#00000000");
 async function setup(page:Page) {
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
   const previous=clear(), next=clear(); previous[18]="#FF0000FF";next[36]="#00FF0080";
   const project={kind:"pixel-studio/project",version:2,id:"onion-test",name:"Guías",width:8,height:8,palette:["#123456FF"],baseSprite:{pixels:clear()},animations:[{id:"idle",name:"idle",fps:1,loop:true,frames:[{id:"a",pixels:previous},{id:"b",pixels:clear()},{id:"c",pixels:next}]}]};
   await page.getByLabel("Proyecto V1 o V2").setInputFiles({name:"onion.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(project))});

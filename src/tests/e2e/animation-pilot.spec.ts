@@ -12,23 +12,23 @@ test("pilot survives save, close, reopen and recovery, exports exact pixels and 
   const path = "docs/Characters/Esqueleto Morado/64px/esqueleto-morado-idle.project-v2.json";
   const fixture = JSON.parse(await readFile(path, "utf8"));
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible", { exact: true })).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado", { exact: true })).toBeVisible();
   await page.getByLabel("Proyecto V1 o V2").setInputFiles(path);
   await page.getByRole("button", { name: "Abrir personaje", exact: true }).click();
   expect(JSON.parse(await save(page))).toEqual(fixture);
-  await expect(page.getByText("Borrador V2 actualizado", { exact: true })).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado", { exact: true })).toBeVisible();
   const url = page.url();
   await page.close();
   page = await context.newPage();
   await page.goto(url);
-  await page.getByRole("button", { name: "Recuperar V2", exact: true }).click();
-  const takeover=page.getByRole("button", { name: "Continuar en esta pestaña", exact: true });
-  if(await takeover.isVisible()) await takeover.click();
-  await expect(page.getByText("Borrador V2 actualizado", { exact: true })).toBeVisible();
+  const recovery=page.getByRole("dialog",{name:"Recuperar personajes"});
+  await recovery.locator("section").filter({hasText:fixture.name}).getByRole("button",{name:"Tomar control y recuperar",exact:true}).click();
+  await expect(page.getByText("Borrador local actualizado", { exact: true })).toBeVisible();
   expect(JSON.parse(await save(page))).toEqual(fixture);
-  // Reopen the portable file as well as checking recovery.
+  // Reopening the same portable file offers the current session.
   await page.getByLabel("Proyecto V1 o V2").setInputFiles(path);
   await page.getByRole("button", { name: "Abrir personaje", exact: true }).click();
+  await page.getByRole("button",{name:"Activar pestaña existente"}).click();
   await page.getByLabel("Animación activa").selectOption({ label: "idle · 6 frames" });
   const list = page.getByRole("listbox");
   await list.focus(); await list.press("End");
@@ -42,7 +42,7 @@ test("pilot survives save, close, reopen and recovery, exports exact pixels and 
     await page.setViewportSize({ width, height: 1000 });
     await page.getByRole("button", { name: "Ajustar", exact: true }).click();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    const editorBox=await page.getByRole("region",{name:"Editor de fotogramas",exact:true}).boundingBox();
+    const editorBox=await page.locator("#character-canvas").boundingBox();
     const previewBox=await page.getByRole("complementary",{name:"Vista previa de animación",exact:true}).boundingBox();
     expect(editorBox).not.toBeNull();expect(previewBox).not.toBeNull();
     const overlap=editorBox!.x<previewBox!.x+previewBox!.width&&editorBox!.x+editorBox!.width>previewBox!.x&&editorBox!.y<previewBox!.y+previewBox!.height&&editorBox!.y+editorBox!.height>previewBox!.y;
@@ -87,7 +87,7 @@ test("maximum pixel budget: frame latency and five worker cancellation cycles", 
   const pixels = Array(128 * 128).fill("#42065EFF");
   const fixture = { kind: "pixel-studio/project", version: 2, id: "max-pilot", name: "Maximum", width: 128, height: 128, palette: [], baseSprite: { pixels }, animations: [{ id: "idle", name: "idle", fps: 8, loop: true, frames: Array.from({ length: 63 }, (_, i) => ({ id: `f-${i}`, pixels })) }] };
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible", { exact: true })).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado", { exact: true })).toBeVisible();
   await page.getByLabel("Proyecto V1 o V2").setInputFiles({ name: "max.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fixture)) });
   await page.getByRole("button", { name: "Abrir personaje", exact: true }).click();
   await page.getByLabel("Animación activa").selectOption({ label: "idle · 63 frames" });

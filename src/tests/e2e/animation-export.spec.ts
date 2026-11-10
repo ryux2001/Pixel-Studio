@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
 async function setup(page:Page){
-  await page.goto("/animation");await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await page.goto("/animation");await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
   const project={kind:"pixel-studio/project",version:2,id:"export-test",name:"Exportación",width:8,height:8,palette:[],baseSprite:{pixels:Array(64).fill("#00000000")},animations:[{id:"idle",name:"idle",fps:8,loop:true,frames:Array.from({length:7},(_,i)=>({id:`frame-${i}`,pixels:Array(64).fill(`#123456${i===0?"00":"80"}`)}))}]};
   await expect(page.getByRole("button",{name:"Exportar animación",exact:true})).toBeDisabled();
   await page.getByLabel("Proyecto V1 o V2").setInputFiles({name:"project.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(project))});

@@ -1,5 +1,5 @@
+import { saveStaticPart, readDraft } from "./helpers/project";
 import { test, expect, type Page } from "@playwright/test";
-import { readFile } from "node:fs/promises";
 import type { DrawCommandsFileV1, DrawCommandV1 } from "@/types/draw-commands";
 function file(commands:DrawCommandV1[]=[],size=48):DrawCommandsFileV1{return {kind:"pixel-studio/commands",version:1,canvas:{width:size,height:size},commands};}
 const example:DrawCommandsFileV1={...file([
@@ -13,13 +13,13 @@ async function paste(page:Page,batch:DrawCommandsFileV1){await begin(page);await
 async function preview(page:Page){await expect(page.getByRole("region",{name:"Previsualización de comandos"})).toBeVisible({timeout:30000});}
 async function apply(page:Page){await page.getByRole("button",{name:/^Aplicar \d+ cambios$/}).click();await expect(page.getByRole("dialog")).toHaveCount(0);}
 async function close(page:Page){await page.getByRole("button",{name:"Cancelar",exact:true}).click();await expect(page.getByRole("dialog")).toHaveCount(0);}
-async function project(page:Page){const event=page.waitForEvent("download");await page.getByRole("button",{name:"Guardar JSON",exact:true}).click();return JSON.parse(await readFile((await (await event).path())!,"utf8"));}
+async function project(page:Page){return saveStaticPart(page); }
 test.beforeEach(async({page})=>{await page.goto("/");await expect(page.getByRole("button",{name:"Importar comandos JSON",exact:true})).toBeEnabled();});
 
 test("ejemplo maestro por texto y archivo, preview no muta y lote undo/redo exacto",async({page})=>{
   await paste(page,example);await preview(page);
-  expect(await page.locator("#drawing-canvas canvas").evaluate((c:HTMLCanvasElement)=>Array.from(c.getContext("2d")!.getImageData(0,0,48,48).data).every(v=>v===0))).toBe(true);
-  await apply(page);await expect(page.getByText("Cambios sin exportar",{exact:true})).toBeVisible();
+  expect(await page.locator("#character-canvas canvas").evaluate((c:HTMLCanvasElement)=>Array.from(c.getContext("2d")!.getImageData(0,0,48,48).data).every(v=>v===0))).toBe(true);
+  await apply(page);await expect(page.getByText("Cambios sin guardar",{exact:true})).toBeVisible();
   const result=await project(page);expect(result.pixels[10*48+19]).toBe("#E8E1CDFF");expect(result.pixels[12*48+20]).toBe("#16141FFF");expect(result.pixels[19*48+16]).toBe("#35313FFF");expect(result.pixels[0]).toBe("#00000000");
   await page.getByRole("button",{name:"Deshacer",exact:true}).click();await expect(page.getByRole("button",{name:"Deshacer",exact:true})).toBeDisabled();expect((await project(page)).pixels.every((c:string)=>c==="#00000000")).toBe(true);
   await page.getByRole("button",{name:"Rehacer",exact:true}).click();expect(await project(page)).toEqual(result);
@@ -56,13 +56,13 @@ test("cancelar lectura y simulación real permite una solicitud nueva sin result
 });
 
 test("ámbito independiente de selección manual y autosave solo de resultado confirmado",async({page})=>{
-  const canvas=page.locator("#drawing-canvas canvas");await page.getByRole("button",{name:/^Selección/}).click();
+  const canvas=page.locator("#character-canvas canvas");await page.getByRole("button",{name:/^Selección/}).click();
   const box=(await canvas.boundingBox())!;await page.mouse.click(box.x+box.width*.75,box.y+box.height*.75);await page.getByLabel("Restringir edición a selección").check();
   await paste(page,file([{op:"setPixel",x:0,y:0,color:"#123ABC01"}]));await preview(page);await expect(page.getByText("Lienzo completo autorizado",{exact:true})).toBeVisible();
-  await page.waitForTimeout(850);expect(await page.evaluate(()=>JSON.parse(localStorage.getItem("pixel-studio:draft:v1")!).project.pixels[0])).toBe("#00000000");
+  await page.waitForTimeout(850);expect(await readDraft(page).then(d=>d?.project.pixels[0])).toBe("#00000000");
   await apply(page);await expect(page.getByLabel("Restringir edición a selección")).toBeChecked();
-  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pixel-studio:draft:v1")!).project.pixels[0])).toBe("#123ABC01");
-  await page.reload();await page.getByRole("button",{name:"Recuperar borrador",exact:true}).click();await expect(page.getByText("Cambios sin exportar",{exact:true})).toBeVisible();expect((await project(page)).pixels[0]).toBe("#123ABC01");
+  await expect.poll(()=>readDraft(page).then(d=>d?.project.pixels[0])).toBe("#123ABC01");
+  await page.reload();await page.getByRole("button",{name:"Restaurar espacio de trabajo",exact:true}).click();await expect(page.getByText("Cambios sin guardar",{exact:true})).toBeVisible();expect((await project(page)).pixels[0]).toBe("#123ABC01");
 });
 
 test("teclado, errores con campo y presentación estrecha",async({page})=>{

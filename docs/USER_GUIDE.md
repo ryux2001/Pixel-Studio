@@ -1,8 +1,8 @@
 # Guía de Pixel Art Studio
 
-## Personajes y animaciones V2
+## Editor unificado: base y animaciones
 
-Abre `http://localhost:3000/animation`. La ruta `/` conserva el editor estático V1; sus instrucciones aparecen después de esta sección.
+Abre `http://localhost:3000/`. `/animation` ofrece la misma pantalla durante la transición. Puedes abrir hasta ocho personajes en pestañas. El selector «Animación activa» alterna Base y clips del personaje seleccionado.
 
 1. Usa «Abrir JSON» para elegir un proyecto V1 o V2 y confirma la previsualización. V1 se convierte a una base sin clips, sin alterar el archivo original. «Guardar JSON V2» descarga el personaje completo. «Más archivos → Exportar base JSON V1» es una copia estática independiente.
 2. Crea una animación. Su primer frame copia la base; los cambios posteriores en base y frames son independientes. Usa «Añadir vacío» para uno transparente, «Desde base» para copiar la base o «Duplicar frame» para copiar el seleccionado. El selector «Animación activa» permite volver a la base.
@@ -12,7 +12,17 @@ Abre `http://localhost:3000/animation`. La ruta `/` conserva el editor estático
 6. Para trabajar con otra IA, exporta contexto y plantilla desde el intercambio de animación. Revisa identidad, ámbitos, hashes y cada antes/después al cargar su propuesta. Aplicar es una sola acción de historial; un conflicto bloquea el lote. Consulta [los contratos](ANIMATION_FORMATS.md).
 7. «Exportar animación» prepara la hoja o los PNG de cada frame, manifiesto y ZIP. Revisa distribución, FPS y bucle; prepara y descarga. Cancelar descarta la preparación. Guardar JSON sigue siendo necesario para conservar el proyecto editable. [Uso en Godot](GODOT_EXPORT.md).
 
-El autosave V2 usa IndexedDB y solicita recuperar o descartar borradores al volver. El borrador V1 se mantiene separado. «Más tarde» pausa la escritura; «Continuar en esta pestaña» toma el control explícitamente si otra pestaña es escritora. Conserva siempre una descarga JSON: el almacenamiento del navegador puede fallar o borrarse. Undo, selección y reproducción no se recuperan.
+El guardado automático conserva cada personaje por separado. Al recargar, pulsa **Restaurar espacio de trabajo** para recuperar el orden y la pestaña activa, o elige un personaje del listado. Se conservan documentos, referencias y ajustes de vista; deshacer y rehacer empiezan vacíos.
+
+- **Nuevo personaje** y **Abrir JSON** añaden pestañas. Si el archivo ya está abierto, activa su pestaña o abre una copia independiente.
+- Para reordenar, arrastra una pestaña o usa **Organizar personajes → Mover a la izquierda/derecha**. Las flechas recorren las pestañas y Enter activa la enfocada.
+- Al cerrar con cambios, elige **Conservar para recuperar y cerrar**, descargar JSON y cerrar, descartar o cancelar. Las sesiones conservadas aparecen en **Recuperar personajes**.
+- Si otra ventana controla un personaje, puedes abrir una copia o tomar control explícitamente. La otra ventana mantiene en memoria los cambios que aún no haya guardado.
+- Los borradores antiguos V1/V2 se pueden migrar sin borrar sus originales.
+
+El guardado automático espera 750 ms tras los cambios confirmados. Espera «Borrador V2 actualizado» antes de recargar; una escritura pendiente puede no terminar al cerrar el navegador. Conserva siempre una descarga JSON: el almacenamiento puede fallar o borrarse.
+
+El selector «Panel derecho» alterna **Vista previa** y **Referencias**. Puedes plegar el panel o cambiar de personaje sin perder la referencia. La imagen se recupera con el borrador local de su personaje y no se incluye en el JSON. El agente aparece como «Próximamente» y todavía no está conectado.
 
 Límites combinados: 32 clips, 256 frames por clip, 512 frames totales y 1 048 576 píxeles contando la base. A 64×64 caben 255 frames más base; a 128×128, 63. Proyecto JSON hasta 16 MiB. No existe redimensionado global ni continuidad artística automática.
 
@@ -26,9 +36,9 @@ Instala Node 24 y pnpm 12.4.1, ejecuta `pnpm install` y `pnpm dev` y abre `http:
 
 El lienzo inicial es 48×48 transparente. «Nuevo» ofrece 32, 48 y 64, o dimensiones enteras de 8–128 por eje. No reescala el documento anterior. Cambiar zoom, cuadrícula, referencia o selección tampoco cambia los píxeles.
 
-«Guardar JSON» descarga el proyecto y establece la base exportada. Conserva esa descarga: iniciar una descarga no garantiza que el navegador la haya guardado donde esperabas. PNG es la entrega visual, no sustituye al proyecto con nombre y paleta. Exportar región tampoco guarda el proyecto completo.
+«Guardar JSON V2» descarga el proyecto y establece la base exportada. Conserva esa descarga: iniciar una descarga no garantiza que el navegador la haya guardado donde esperabas. PNG es la entrega visual, no sustituye al proyecto con nombre y paleta. Exportar región tampoco guarda el proyecto completo.
 
-El borrador se guarda localmente tras 750 ms de cambios confirmados; puede fallar por cuota o permisos. Al volver, elige recuperar, descartar o «Más tarde». Posponer pausa la escritura para proteger el borrador anterior; «Revisar borrador» vuelve a abrirlo. Otra pestaña escritora también pausa autosave. El historial de hasta 100 acciones y la referencia solo duran esta sesión; no se recuperan del archivo ni del borrador.
+El borrador de cada personaje se guarda localmente tras 750 ms de cambios confirmados. Espera «Borrador local actualizado» antes de recargar. Si falta espacio o el navegador bloquea el almacenamiento, puedes seguir editando en memoria y descargar JSON. El historial de hasta 100 acciones dura mientras la pestaña siga abierta.
 
 ## A. Dibujar a mano
 
@@ -60,9 +70,9 @@ Sin selección, «Exportar todo como región» autoriza explícitamente una regi
 
 ## D. Reabrir y continuar
 
-Guarda JSON, recarga y descarta el borrador solo si quieres probar el archivo guardado. Usa «Abrir JSON», revisa la preview y confirma la sustitución. Los colores/alfa, dimensiones, nombre y paleta se conservan exactamente. Abrir otro proyecto se puede deshacer durante la sesión. Alternativamente, recupera el borrador al arrancar.
+Guarda JSON y usa «Abrir JSON» para comprobar el archivo. Revisa la vista previa y abre otra pestaña. Los colores, alfa, dimensiones, nombre y paleta se conservan. Si ya está abierto, elige activar su pestaña o abrir una copia. También puedes restaurar el borrador al arrancar.
 
-«Abrir PNG editable» sustituye el documento y requiere confirmación; «Cargar PNG de referencia» o «Añadir referencia PNG» muestra una ayuda visual sin tocarlo. Cambiar o quitar referencia no genera historial ni se exporta. Una referencia inválida conserva la anterior.
+«Abrir PNG editable» abre otra pestaña tras la confirmación; «Panel derecho → Referencias → Añadir referencia PNG» muestra una ayuda visual sin tocarlo. Cambiar o quitar referencia no genera historial ni se exporta. Una referencia inválida conserva la anterior.
 
 ## E. Corregir una importación
 
@@ -82,11 +92,11 @@ Después de aplicar un lote, pulsa Deshacer una vez para restaurar el dibujo ant
 | Borrador inaccesible o lleno | Sigue trabajando y descarga un JSON. No dependas exclusivamente del almacenamiento local. |
 
 Límites y particularidades PNG: [formatos](JSON_FORMATS.md). Plantillas completas: [prompts](AI_PROMPT_TEMPLATES.md). Entrega al motor: [Godot](GODOT_EXPORT.md). Evidencia y pasos de revisión final: [aceptación V1](V1_ACCEPTANCE.md).
-## Acceso al editor de personajes V2
+## Destinos de edición y archivos compatibles
 
-Desde «Abrir editor V2 de personajes» o `/animation` puedes abrir proyectos V1/V2, guardar el personaje completo en JSON V2 y recuperar borradores IndexedDB. El selector «Editando» permite elegir la base o una animación. El timeline muestra sus frames y el lienzo edita solo el seleccionado.
+Desde `/` o `/animation` puedes abrir proyectos V1/V2, guardar el personaje completo en JSON V2 y recuperar borradores IndexedDB. El selector «Editando» permite elegir la base o una animación. El timeline muestra sus frames y el lienzo edita solo el seleccionado. Las dos rutas usan la misma implementación.
 
-Al recuperar un borrador, elige V1 o V2 según nombre y fecha. Recuperar V1 conserva su copia original. «Más tarde» pausa el autosave. «Continuar con el personaje actual» activa el guardado V2 del trabajo visible; si otra pestaña escribe, usa «Continuar en esta pestaña» para tomar el control. Descarga JSON para conservar una copia portable.
+En «Recuperar personajes», elige un borrador por nombre y fecha. «Más tarde» conserva los borradores disponibles. Si aparece un borrador V1 o V2 antiguo, migra una copia. Descarga JSON para conservar una copia portable.
 
 ### Crear y editar una secuencia
 
@@ -103,7 +113,7 @@ Los límites combinan dimensiones y cantidad de frames; se muestra la capacidad 
 
 ### Reproducir una animación
 
-En `/animation`, selecciona un clip y usa **Reproducir** en **Vista previa**. El lienzo mantiene su selección mientras la vista previa avanza. **Pausar** conserva la posición. **Anterior/Siguiente** pausa y selecciona el frame para editarlo. **Repetir** permite envolver la secuencia; sin repetición, termina en el último frame y Play vuelve al primero. Un solo frame no necesita reproducción.
+En el editor, selecciona un clip y usa **Reproducir** en **Vista previa**. El lienzo mantiene su selección mientras la vista previa avanza. **Pausar** conserva la posición. **Anterior/Siguiente** pausa y selecciona el frame para editarlo. **Repetir** permite envolver la secuencia; sin repetición, termina en el último frame y Play vuelve al primero. Un solo frame no necesita reproducción.
 
 Introduce un FPS de 1 a 60 y pulsa **Aplicar FPS**. FPS y repetición se guardan y admiten Deshacer. Reproducir y pausar no generan cambios pendientes. Al dibujar, cambiar de destino, abrir archivos u ocultar la pestaña, la reproducción se detiene. Volver a la pestaña no la inicia automáticamente. Puedes plegar la vista previa desde su título.
 
@@ -131,8 +141,10 @@ Si un origen cambió, se borró o el orden de un append quedó antiguo, el lote 
 
 Los comandos V1 y parches regionales V1 se aceptan en el mismo diálogo y afectan **solo al destino activo**, sea base o frame. Para preparar un parche, selecciona una región y pulsa **Exportar región del destino activo V1**. Si restringiste manualmente la selección, los cambios V1 deben permanecer dentro de ella. Los parches con conflictos no se aplican.
 
+Los accesos directos **Importar comandos JSON** e **Importar región JSON** conservan los diálogos detallados de comparación y conflictos. En esos accesos, la autorización es el ámbito del archivo y es independiente de la selección manual. **Exportar selección** produce el parche del destino actual; **Exportar todo como región** usa todo el lienzo. **Prompts para IA** ofrece las plantillas correspondientes sin conectarse a un proveedor.
+
 Límites de propuestas de animación: 8 MiB, 16 destinos, 2000 comandos agregados, 65536 muestras `setPixels` agregadas y 16384 por operación, 32 millones de celdas estimadas. Se mantienen los límites globales del proyecto. La simulación se cancela a los 10 segundos para que puedas reducir el lote. Los formatos V1 conservan el límite de 1 MiB.
 
 ## Exportar una animación
 
-En `/animation`, selecciona un clip y pulsa **Exportar animación**. Elige hoja de sprites o PNG por frame. Para la hoja puedes ajustar columnas y revisar las dimensiones antes de preparar. **Preparar descarga** crea los archivos en segundo plano; puedes cancelarlo o cerrar el diálogo. Al terminar, descarga el ZIP completo o los archivos individuales. El manifiesto incluye orden, FPS y bucle. Exportar no marca el proyecto como guardado: conserva también tu JSON V2. Consulta [la guía de Godot](GODOT_EXPORT.md) para montar la animación.
+En el editor, selecciona un clip y pulsa **Exportar animación**. Elige hoja de sprites o PNG por frame. Para la hoja puedes ajustar columnas y revisar las dimensiones antes de preparar. **Preparar descarga** crea los archivos en segundo plano; puedes cancelarlo o cerrar el diálogo. Al terminar, descarga el ZIP completo o los archivos individuales. El manifiesto incluye orden, FPS y bucle. Exportar no marca el proyecto como guardado: conserva también tu JSON V2. Consulta [la guía de Godot](GODOT_EXPORT.md) para montar la animación.

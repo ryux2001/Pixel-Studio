@@ -1,10 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 async function pixels(page: Page) {
-  return page.locator("canvas").evaluate((canvas: HTMLCanvasElement) => Array.from(canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data));
+  return page.locator("canvas[aria-label^='Lienzo']").evaluate((canvas: HTMLCanvasElement) => Array.from(canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data));
 }
 async function point(page: Page, x: number, y: number) {
-  const info = await page.locator("canvas").evaluate((canvas: HTMLCanvasElement) => {
+  const info = await page.locator("canvas[aria-label^='Lienzo']").evaluate((canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
     return { left: rect.left, top: rect.top, scaleX: rect.width / canvas.width, scaleY: rect.height / canvas.height };
   });
@@ -23,12 +23,12 @@ async function color(page: Page, value: string) {
   await page.getByRole("button", { name: "Usar", exact: true }).click();
 }
 async function pixel(page: Page, x: number, y: number) {
-  return page.locator("canvas").evaluate((canvas: HTMLCanvasElement, p) => Array.from(canvas.getContext("2d")!.getImageData(p.x, p.y, 1, 1).data), { x, y });
+  return page.locator("canvas[aria-label^='Lienzo']").evaluate((canvas: HTMLCanvasElement, p) => Array.from(canvas.getContext("2d")!.getImageData(p.x, p.y, 1, 1).data), { x, y });
 }
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator("canvas[aria-label^='Lienzo']")).toBeVisible();
   // Controls are hydrated and the initial fit has settled.
   await expect(page.getByRole("button", { name: /^Lápiz/ })).toHaveAttribute("aria-pressed", "true");
 });
@@ -44,7 +44,7 @@ test("trazo continuo, undo/redo y presentación independiente", async ({ page })
   await page.getByRole("button", { name: "Cuadrícula", exact: true }).click();
   await page.getByRole("button", { name: "Aumentar zoom" }).click();
   expect(await pixels(page)).toEqual(drawn);
-  await expect(page.locator("canvas")).toHaveCSS("image-rendering", "pixelated");
+  await expect(page.locator("canvas[aria-label^='Lienzo']")).toHaveCSS("image-rendering", "pixelated");
 });
 
 test("personaje 48×48 conserva el dibujo al cambiar la vista y deshace un trazo entero", async ({ page }) => {
@@ -70,7 +70,7 @@ test("personaje 48×48 conserva el dibujo al cambiar la vista y deshace un trazo
   await page.getByRole("button", { name: "Aumentar zoom" }).click();
   await page.getByRole("button", { name: "Ajustar", exact: true }).click();
   expect(await pixels(page)).toEqual(character);
-  await expect(page.locator("canvas")).toHaveAttribute("width", "48");
+  await expect(page.locator("canvas[aria-label^='Lienzo']")).toHaveAttribute("width", "48");
 });
 
 test("editor y nuevo documento caben en ventanas estrechas e intermedias", async ({ page }) => {
@@ -78,7 +78,7 @@ test("editor y nuevo documento caben en ventanas estrechas e intermedias", async
     await page.setViewportSize({ width, height: 844 });
     await page.getByRole("button", { name: "Ajustar", exact: true }).click();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
-    const canvas = (await page.locator("canvas").boundingBox())!;
+    const canvas = (await page.locator("canvas[aria-label^='Lienzo']").boundingBox())!;
     expect(canvas.x).toBeGreaterThanOrEqual(0);
     expect(canvas.x + canvas.width).toBeLessThanOrEqual(width);
     await page.getByRole("button", { name: "Nuevo", exact: true }).click();
@@ -91,7 +91,7 @@ test("editor y nuevo documento caben en ventanas estrechas e intermedias", async
 
 test("salir y volver no une segmentos; cancelar el trazo restaura la base", async ({ page }) => {
   const a = await point(page, 2, 2), b = await point(page, 20, 20);
-  const box = (await page.locator("canvas").boundingBox())!;
+  const box = (await page.locator("canvas[aria-label^='Lienzo']").boundingBox())!;
   await page.mouse.move(a.x, a.y); await page.mouse.down();
   await page.mouse.move(box.x - 5, a.y);
   await page.mouse.move(b.x, b.y); await page.mouse.up();
@@ -140,7 +140,7 @@ test("selección restringida protege el exterior y acota el relleno", async ({ p
   await expect(page.getByLabel("Restringir edición a selección")).not.toBeChecked();
 });
 
-test("nuevo valida, confirma y puede deshacerse; atajos respetan inputs", async ({ page }) => {
+test("nuevo valida, confirma e inicia historial; atajos respetan inputs", async ({ page }) => {
   await drag(page, [1, 1], [3, 1]);
   const before = await pixels(page);
   await page.getByRole("button", { name: "Nuevo", exact: true }).click();
@@ -157,25 +157,22 @@ test("nuevo valida, confirma y puede deshacerse; atajos respetan inputs", async 
   await page.getByRole("button", { name: "Nuevo", exact: true }).click();
   await page.getByRole("button", { name: "32 × 32", exact: true }).click();
   await page.getByRole("button", { name: "Crear documento" }).click();
-  await expect(page.getByRole("dialog")).toBeVisible();
-  await page.getByLabel("Confirmo que quiero sustituir el documento").check();
-  await page.getByRole("button", { name: "Crear documento" }).click();
-  await expect(page.locator("canvas")).toHaveAttribute("width", "32");
-  await page.getByRole("button", { name: "Deshacer", exact: true }).click();
-  await expect(page.locator("canvas")).toHaveAttribute("width", "48");
-  await expect.poll(() => pixels(page)).toEqual(before);
+  await expect(page.getByRole("tab")).toHaveCount(2);
+  await expect(page.locator("canvas[aria-label^='Lienzo']")).toHaveAttribute("width", "32");
+  await expect(page.getByRole("button", { name: "Deshacer", exact: true })).toBeDisabled();
+  await expect.poll(async () => (await pixels(page)).every(v=>v===0)).toBe(true);
 });
 
 test("pointercancel conserva un trazo una sola vez y descarta una figura", async ({ page }) => {
   const a = await point(page, 2, 2), b = await point(page, 6, 2);
   await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.mouse.move(b.x, b.y);
-  await page.locator("canvas").dispatchEvent("pointercancel", { pointerId: 1 });
+  await page.locator("canvas[aria-label^='Lienzo']").dispatchEvent("pointercancel", { pointerId: 1 });
   await page.mouse.up();
   await page.getByRole("button", { name: "Deshacer", exact: true }).click();
   await expect.poll(async () => (await pixels(page)).every((v) => v === 0)).toBe(true);
   await tool(page, "Línea");
   await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.mouse.move(b.x, b.y);
-  await page.locator("canvas").dispatchEvent("pointercancel", { pointerId: 1 });
+  await page.locator("canvas[aria-label^='Lienzo']").dispatchEvent("pointercancel", { pointerId: 1 });
   await page.mouse.up();
   await expect.poll(async () => (await pixels(page)).every((v) => v === 0)).toBe(true);
 });

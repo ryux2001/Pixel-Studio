@@ -19,7 +19,7 @@ test("la aplicación arranca en español sin recursos externos", async ({ page }
   await expect(page).toHaveTitle("Pixel Art Studio");
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
   await expect(page.getByRole("heading", { level: 1, name: "Pixel Art Studio" })).toBeVisible();
-  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator("canvas[aria-label^='Lienzo']")).toBeVisible();
   await expect(page.getByRole("button", { name: "Lápiz", exact: false })).toHaveAttribute("aria-pressed", "true");
   expect(externalRequests).toEqual([]);
   expect(errors).toEqual([]);

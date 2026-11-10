@@ -9,7 +9,7 @@ const common={kind:"pixel-studio/animation-proposal",version:1,contextId:"extern
 const update=()=>({...common,mode:"update-frames",updates:["a","b"].map(frameId=>({frameId,expectedHash:hash,scope,payload:{type:"commands",commands:[{op:"setPixel",x:3,y:3,color:"#42065EFF"}]}}))});
 const append=()=>({...common,mode:"append-frames",expectedOrder:["a","b"],newFrames:[{tempId:"new-001",payload:{type:"copy-commands",sourceFrameId:"a",expectedSourceHash:hash,scope,commands:[{op:"setPixel",x:2,y:2,color:"#FFFFFFFF"}]}}]});
 async function setup(page:Page){
-  await page.goto("/animation");await expect(page.getByText("Borrador V2 disponible",{exact:true})).toBeVisible();
+  await page.goto("/animation");await expect(page.getByText("Borrador local actualizado",{exact:true})).toBeVisible();
   const project={kind:"pixel-studio/project",version:2,id:"exchange-test",name:"Intercambio",width:8,height:8,palette:[],baseSprite:{pixels:pixels()},animations:[{id:"idle",name:"idle",fps:8,loop:true,frames:[{id:"a",pixels:pixels()},{id:"b",pixels:pixels()}]}]};
   await page.getByLabel("Proyecto V1 o V2").setInputFiles({name:"project.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(project))});
   await page.getByRole("button",{name:"Abrir personaje",exact:true}).click();await page.getByLabel("Animación activa").selectOption({label:"idle · 2 frames"});
@@ -90,9 +90,9 @@ test("sixteen 128×128 targets simulate repeatedly and release every worker",asy
   await setup(page);
   const clear=Array(128*128).fill("#00000000"), modified=[...clear];modified[0]="#12345600";
   const largeHash=createHash("sha256").update(Buffer.from([0,0,0,128,0,0,0,128,...Array(128*128*4).fill(0)])).digest("hex");
-  const project={kind:"pixel-studio/project",version:2,id:"exchange-test",name:"Máximo intercambio",width:128,height:128,palette:[],baseSprite:{pixels:clear},animations:[{id:"idle",name:"idle",fps:8,loop:true,frames:Array.from({length:16},(_,i)=>({id:`f-${i}`,pixels:clear}))}]};
+  const project={kind:"pixel-studio/project",version:2,id:"exchange-large",name:"Máximo intercambio",width:128,height:128,palette:[],baseSprite:{pixels:clear},animations:[{id:"idle",name:"idle",fps:8,loop:true,frames:Array.from({length:16},(_,i)=>({id:`f-${i}`,pixels:clear}))}]};
   await page.getByLabel("Proyecto V1 o V2").setInputFiles({name:"large.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(project))});await page.getByRole("button",{name:"Abrir personaje",exact:true}).click();await page.getByLabel("Animación activa").selectOption({label:"idle · 16 frames"});await page.getByText("Intercambio con herramientas externas",{exact:true}).click();
-  const proposal={...common,mode:"update-frames",updates:project.animations[0].frames.map(f=>({frameId:f.id,expectedHash:largeHash,scope:{x:0,y:0,width:128,height:128},payload:{type:"pixels",pixels:modified}}))};
+  const proposal={...common,projectId:project.id,mode:"update-frames",updates:project.animations[0].frames.map(f=>({frameId:f.id,expectedHash:largeHash,scope:{x:0,y:0,width:128,height:128},payload:{type:"pixels",pixels:modified}}))};
   const timings:number[]=[];
   for(let i=0;i<5;i++){
     await simulate(page,proposal);await expect(page.getByText("Actualizar 16 fotogramas",{exact:true})).toBeVisible();

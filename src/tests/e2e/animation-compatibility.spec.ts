@@ -6,7 +6,7 @@ test("V2 compatibility: silver character migration and rectangular animation exp
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/animation");
-  await expect(page.getByText("Borrador V2 disponible", { exact: true })).toBeVisible();
+  await expect(page.getByText("Borrador local actualizado", { exact: true })).toBeVisible();
   const original = JSON.parse(await readFile("docs/Characters/Personaje plateado/personaje-cabello-plateado-retocado.json", "utf8"));
   await page.getByLabel("Proyecto V1 o V2").setInputFiles("docs/Characters/Personaje plateado/personaje-cabello-plateado-retocado.json");
   await page.getByRole("button", { name: "Abrir personaje", exact: true }).click();

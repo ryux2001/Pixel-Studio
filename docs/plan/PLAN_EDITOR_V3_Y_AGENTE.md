@@ -322,6 +322,10 @@ Cada fase termina con una demostración manual repetible y una lista de comproba
 
 ### Fase 1 — Editor unificado de un personaje
 
+Plan de implementación detallado: [PLAN_FASE_1_EDITOR_UNIFICADO.md](./PLAN_FASE_1_EDITOR_UNIFICADO.md). Parte de la fase 0 reducida acordada y mantiene la fase 2 como entrega posterior.
+
+Estado de esta entrega: completada. Evidencias y límites: [FASE_1_CIERRE.md](./FASE_1_CIERRE.md).
+
 **Depende de:** fase 0.
 
 **Entregable:** una pantalla donde se edita la base y las animaciones del mismo personaje, con el panel derecho preparado para referencias y previsualización.
@@ -333,6 +337,8 @@ Cada fase termina con una demostración manual repetible y una lista de comproba
 **Criterio de salida:** tabla de paridad completada; no se pierde una función anterior; archivos V1/V2 siguen válidos; editor manual usable sin red. Revisión visual a 1440, 768 y 390 px de ancho. La transición de rutas no destruye borradores.
 
 ### Fase 2 — Pestañas y recuperación de varios personajes
+
+Plan de implementación detallado: [PLAN_FASE_2_PESTANAS_Y_RECUPERACION.md](./PLAN_FASE_2_PESTANAS_Y_RECUPERACION.md). Estado: implementada. Evidencias y límites: [FASE_2_CIERRE.md](./FASE_2_CIERRE.md).
 
 **Depende de:** fase 1.
 
