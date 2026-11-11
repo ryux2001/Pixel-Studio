@@ -119,6 +119,13 @@
 .preview form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
 .preview input[type="number"] { width: 64px; padding: 8px; }
 .preview p { color: #b1b2c0; font-size: 12px; line-height: 1.5; }
+.gripPicker { cursor: crosshair; }
+.weaponPreview { margin-top: 16px; padding-top: 12px; border-top: 1px solid #393b46; }
+.weaponPreview fieldset { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; padding: 8px; min-width: 0; }
+.weaponPreview fieldset label { display: grid; gap: 4px; font-size: 12px; }
+.weaponPreview select { max-width: 100%; }
+.weaponActions { display: flex; flex-wrap: wrap; gap: 6px; }
+.weaponName { overflow-wrap: anywhere; }
 @media (max-width: 1199px) {
   .characterEditor.characterEditor { height: auto; }
   .characterEditor .characterPanel { height: auto; }

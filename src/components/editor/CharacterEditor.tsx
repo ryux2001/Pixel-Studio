@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { useCharacterPixelTools } from "@/hooks/useCharacterPixelTools";
 import { useReferenceImage } from "@/hooks/useReferenceImage";
+import { useWeaponPreview } from "@/hooks/useWeaponPreview";
 import { assertCharacterToken } from "@/lib/animation/history";
 import { CharacterSessions, type SessionBridge } from "./CharacterSessions";
 import type { CharacterEditorAction } from "@/lib/animation/reducer";
@@ -58,6 +59,7 @@ function ReadyEditor({session}:{session:SessionBridge}){
   const [inspectorView, setInspectorView] = useState(view.inspectorView??"preview");
   const [promptsOpen, setPromptsOpen] = useState(false);
   const reference = useReferenceImage(view.reference,session.checkReference,session.saveReference);
+  const weaponPreview = useWeaponPreview();
   const referenceInput = useRef<HTMLInputElement>(null);
   const [selection,setSelection]=useState<PixelRect|null>(view.selection??null);
   const [restrict,setRestrict]=useState(view.restrict??false),[grid,setGrid]=useState(view.grid??true);
@@ -168,7 +170,7 @@ function ReadyEditor({session}:{session:SessionBridge}){
         <ColorPalette key={color.join(",")} color={color} palette={project.palette} onColor={setColor} onPalette={palette=>runEdit([{type:"metadata",name:project.name,palette:[...palette]}],"Editar paleta")} disabled={locked}/></>}
       inspector={<>
         <label className={ui.inspectorChoice}>Panel derecho<select aria-label="Panel derecho" value={inspectorView} onChange={e=>setInspectorView(e.target.value)}><option value="preview">Vista previa</option><option value="reference">Referencias</option></select></label>
-        {inspectorView==="preview" ? <AnimationPreview onPlaying={onPlaying} key={operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
+        {inspectorView==="preview" ? <AnimationPreview onPlaying={onPlaying} key={operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} weaponPreview={weaponPreview} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
         : <section className={ui.referencePanel} aria-label="Referencia visual"><h2>Referencia PNG</h2><p>Se conserva en el borrador local de este personaje. El archivo JSON no incluye la referencia.</p>
           <input ref={referenceInput} type="file" accept=".png,image/png" hidden aria-label="Archivo PNG de referencia" disabled={locked} onChange={e=>{const file=e.target.files?.[0];e.target.value="";if(file)void reference.load(file);}}/>
           {reference.image && <><div className={ui.referenceImage}>{/* Validated local PNG object URL. */}
