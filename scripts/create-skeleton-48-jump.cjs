@@ -2,6 +2,8 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const { encode } = require('fast-png');
+const { extractPart, inverseRotation } = require('./lib/motion/pixels.cjs');
+const { staffMask } = require('./lib/motion/skeleton-48.cjs');
 
 const dir = 'docs/Characters/Esqueleto Morado/48px';
 const projectPath = `${dir}/esqueleto-morado-48-animaciones.project-v2.json`;
@@ -13,10 +15,7 @@ assert.equal(project.height, 48);
 assert.equal(base.length, 2304);
 
 const bones = new Set(['#A5A18AFF', '#C6C2A9FF', '#E1DDC4FF', '#EEE8D3FF', '#FFF4DCFF']);
-const staff = base.map((c, i) => {
-  const x = i % 48, y = Math.floor(i / 48);
-  return (y >= 9 && y <= 17 && x >= 36) || (y >= 18 && y <= 45 && x >= 39 && x <= 41) ? c : clear;
-});
+const staff = extractPart(base, 48, staffMask);
 const body = base.map((c, i) => staff[i] !== clear ? clear : c);
 
 // dy: upper-body motion; tuck: hem/feet contraction; tail: delayed cloth
@@ -61,8 +60,7 @@ const frames = poses.map((pose, n) => {
   // sleeve. The hand is redrawn above it, preventing a disconnected grip.
   const cos = Math.cos(pose.angle), sin = Math.sin(pose.angle);
   for (let y = 0; y < 48; y++) for (let x = 0; x < 48; x++) {
-    const sx = Math.round(40 + (x - 40) * cos + (y - 29 - pose.dy) * sin);
-    const ry = 29 - (x - 40) * sin + (y - 29 - pose.dy) * cos;
+    const [sx, ry] = inverseRotation(x, y, 40, 29, cos, sin, pose.dy);
     // During the crouch the staff tip stays within the floor line rather
     // than extending beyond the canvas as the grip moves downward.
     const sy = Math.round(ry > 29 && pose.dy > 0 ? 29 + (ry - 29) * 16 / (16 - pose.dy) : ry);

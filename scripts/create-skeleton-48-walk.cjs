@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- This Node.js utility uses CommonJS (.cjs). */
 const fs = require('node:fs');
 const { encode } = require('fast-png');
+const { translatePart, composePart } = require('./lib/motion/pixels.cjs');
+const { footMask } = require('./lib/motion/skeleton-48.cjs');
 
 const dir = 'docs/Characters/Esqueleto Morado/48px';
 const source = JSON.parse(fs.readFileSync(`${dir}/Esqueleto Morado · base 48 px.json`, 'utf8'));
@@ -12,11 +14,10 @@ if (idle.baseSprite.pixels.some((c,i) => c !== base[i])) throw new Error('Idle a
 
 // Cloth retains the original pixel clusters. Only exposed bone is separated
 // into foot layers; no trouser shapes or new leg silhouette are introduced.
-const bones = new Set(['#A5A18AFF','#C6C2A9FF','#E1DDC4FF','#EEE8D3FF','#FFF4DCFF']);
 const robe = [...base], frontFoot = [], backFoot = [];
 for (let y=39; y<=43; y++) for(let x=16; x<=33; x++) {
   const c = base[y*48+x];
-  if (!bones.has(c) && !(y===43 && x===17)) continue;
+  if (!footMask(x, y, c)) continue;
   (x<24 ? backFoot : frontFoot).push({x,y,c});
   robe[y*48+x] = ink;
 }
@@ -33,6 +34,8 @@ const gait = [
   {front:0, back:4,frontLift:2, backLift:0, bob:1, fold:1, tail:0},
   {front:2, back:2,frontLift:1, backLift:0, bob:0, fold:0, tail:0},
 ];
+const footOffset = Number(process.env.MOTION_FOOT_OFFSET || 0);
+if (!Number.isInteger(footOffset) || Math.abs(footOffset) > 2) throw new Error('Foot offset must be an integer between -2 and 2.');
 const frames = gait.map((pose, i) => {
   const pixels = Array(2304).fill(transparent);
   // Inverse sampling keeps the neck, shoulders, sleeve and grip continuous.
@@ -45,15 +48,11 @@ const frames = gait.map((pose, i) => {
     if(sx>=0 && sx<48 && sy<48) pixels[y*48+x]=robe[sy*48+sx];
   }
   function foot(layer, dx, lift) {
-    for(const {x,y,c} of layer) {
-      const xx=x+dx, yy=y-lift;
-      const target=pixels[yy*48+xx];
-      // Shin stays concealed by the cloth; the toes clear the hem on swing.
-      if(yy>=42-lift || target===ink || target===transparent) pixels[yy*48+xx]=c;
-    }
+    composePart(pixels, 48, 48, translatePart(layer, dx, -lift),
+      ({ y }, target) => y >= 42 - lift || target === ink || target === transparent);
   }
   foot(backFoot,pose.back,pose.backLift);
-  foot(frontFoot,pose.front,pose.frontLift);
+  foot(frontFoot,pose.front + footOffset,pose.frontLift);
   return {id:`esqueleto-48-caminar-${i+1}`,pixels};
 });
 const project = {

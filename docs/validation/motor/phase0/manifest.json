@@ -1,0 +1,148 @@
+{
+  "revision": "8b43e6b85ba2220c8ee6a6f857c0f2975f51a561",
+  "node": "v24.21.0",
+  "runs": [
+    {
+      "script": "create-animation-pilot.mjs",
+      "exitCode": 0,
+      "stdout": "Piloto V2: seis frames, 6 FPS, base V1 intacta.\n",
+      "stderr": "",
+      "outputs": []
+    },
+    {
+      "script": "create-skeleton-48-idle.cjs",
+      "exitCode": 0,
+      "stdout": "Base verificada: 48×48, 2304 píxeles RGBA. Idle: 8 frames, 4 FPS. Base original conservada.\n",
+      "stderr": "",
+      "outputs": []
+    },
+    {
+      "script": "create-skeleton-48-walk.cjs",
+      "exitCode": 0,
+      "stdout": "8 walk frames at 7 FPS; modified base and idle retained exactly.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "hash": "12727b31709698a27d1d89b34f2db353e9e9a275b6832966c5562c5911205e3c",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-attack.cjs",
+      "exitCode": 0,
+      "stdout": "Ataque: 12 frames, 12 FPS, sin bucle. Base, idle y caminar conservados. Proyecto, sheet, poses y GIF exportados.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "hash": "9de65459c59c1ea0d1d03178017c8c69a9ee7cf3c64369eabf9e53a98180a38e",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 14,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "d044d166a752984092a014df6086594c81bfb061a1d5beed88a23f8ea84c9679"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-jump.cjs",
+      "exitCode": 0,
+      "stdout": "Salto: 12 frames, 16 FPS, sin bucle. Base y animaciones anteriores conservadas exactamente.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "hash": "c4aeb8917d4ef82be87c5879a25cfd400b415177dfb06680b055c5caae9e91f2",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "script": "create-silver-walk.cjs",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "outputs": []
+    }
+  ]
+}

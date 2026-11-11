@@ -2,6 +2,8 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const { encode } = require('fast-png');
+const { extractPart, inverseRotation } = require('./lib/motion/pixels.cjs');
+const { staffMask } = require('./lib/motion/skeleton-48.cjs');
 
 const dir = 'docs/Characters/Esqueleto Morado/48px';
 const projectPath = `${dir}/esqueleto-morado-48-animaciones.project-v2.json`;
@@ -14,10 +16,7 @@ assert.equal(project.height, 48);
 assert.equal(base.length, 2304);
 
 // Separate the staff and casting sleeve; the shoulder remains anchored.
-const staff = base.map((c, i) => {
-  const x = i % 48, y = Math.floor(i / 48);
-  return (y >= 9 && y <= 17 && x >= 36) || (y >= 18 && y <= 45 && x >= 39 && x <= 41) ? c : clear;
-});
+const staff = extractPart(base, 48, staffMask);
 const isArm = (x, y) => x >= 32 && x <= 41 && y >= 26 && y <= 36
   && (x < 39 || (y >= 28 && y <= 31));
 const arm = base.map((c, i) => isArm(i % 48, Math.floor(i / 48)) ? c : clear);
@@ -42,8 +41,8 @@ const frames = poses.map(([angle, glow, lift], index) => {
   const cos = Math.cos(angle), sin = Math.sin(angle);
   // Inverse nearest-neighbor rotation preserves continuous pixel clusters.
   for (let y = 0; y < 48; y++) for (let x = 0; x < 48; x++) {
-    const sx = Math.round(40 + (x - 40) * cos + (y - 29 - lift) * sin);
-    const sy = Math.round(29 - (x - 40) * sin + (y - 29 - lift) * cos);
+    const [sx, sourceY] = inverseRotation(x, y, 40, 29, cos, sin, lift);
+    const sy = Math.round(sourceY);
     if (sx < 0 || sx >= 48 || sy < 0 || sy >= 48) continue;
     let color = staff[sy * 48 + sx];
     if (color === clear) continue;

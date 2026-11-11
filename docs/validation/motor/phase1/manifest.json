@@ -1,0 +1,1186 @@
+{
+  "revision": "8b43e6b85ba2220c8ee6a6f857c0f2975f51a561",
+  "node": "v24.21.0",
+  "runs": [
+    {
+      "script": "create-animation-pilot.mjs",
+      "exitCode": 0,
+      "stdout": "Piloto V2: seis frames, 6 FPS, base V1 intacta.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 14,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "d044d166a752984092a014df6086594c81bfb061a1d5beed88a23f8ea84c9679"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-idle.cjs",
+      "exitCode": 0,
+      "stdout": "Base verificada: 48×48, 2304 píxeles RGBA. Idle: 8 frames, 4 FPS. Base original conservada.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 14,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "d044d166a752984092a014df6086594c81bfb061a1d5beed88a23f8ea84c9679"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-walk.cjs",
+      "exitCode": 0,
+      "stdout": "8 walk frames at 7 FPS; modified base and idle retained exactly.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": true,
+          "hash": "12727b31709698a27d1d89b34f2db353e9e9a275b6832966c5562c5911205e3c",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-attack.cjs",
+      "exitCode": 0,
+      "stdout": "Ataque: 12 frames, 12 FPS, sin bucle. Base, idle y caminar conservados. Proyecto, sheet, poses y GIF exportados.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": true,
+          "hash": "9de65459c59c1ea0d1d03178017c8c69a9ee7cf3c64369eabf9e53a98180a38e",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 14,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "d044d166a752984092a014df6086594c81bfb061a1d5beed88a23f8ea84c9679"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    },
+    {
+      "script": "create-skeleton-48-jump.cjs",
+      "exitCode": 0,
+      "stdout": "Salto: 12 frames, 16 FPS, sin bucle. Base y animaciones anteriores conservadas exactamente.\n",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": true,
+          "hash": "c4aeb8917d4ef82be87c5879a25cfd400b415177dfb06680b055c5caae9e91f2",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    },
+    {
+      "script": "create-silver-walk.cjs",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "outputs": [
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+          "changed": false,
+          "hash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "previousHash": "ab9caa400c310abeca97782d01693510ce23daa2121d82366da03cf148ef951a",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+          "changed": false,
+          "hash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "previousHash": "6f0866d11d88abbd804431d7cae3ea081e577cfad6155a87d55ab7a9043d1266",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "previousHash": "c3ef9e406190da9dcfb41824b9dd6877f3107ff5fa2663b71311a91947b18b43",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            },
+            {
+              "id": "esqueleto-48-caminar",
+              "fps": 7,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "eb92b082737bbf34f63fb8f2d99439da82c6f76d9cb9899d3ba119bceb9ce5c2"
+            },
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 16,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "c0f3b1e6db91703b0540c92f6dbe61f49c1f84021ecc678ba3dae83bc6d7f667"
+            },
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 14,
+              "loop": true,
+              "frames": 12,
+              "pixelsHash": "d044d166a752984092a014df6086594c81bfb061a1d5beed88a23f8ea84c9679"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+          "changed": false,
+          "hash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "previousHash": "7e5fd9b66050470d28e8a5faa4c8a218668bf4afe3683357dcec3773347dbb75",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-ataque",
+              "fps": 12,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "7043e1d4b00d07d0545f92488696504fbad4a1ea8c13980bb15733d3aa650133"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+          "changed": false,
+          "hash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "previousHash": "3bf8ff9efe1d1e555f5eff24216bffd715cd5ee7689d77c577e277b1512831a8",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "cd35df2964304b99c8c539dc3429023c695a3ce96135736bc97b765e118d2c5e"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+          "changed": false,
+          "hash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "previousHash": "d09233210c9ec59fddea966e29874627878feaa9d5d05b09333fde93a5dde257",
+          "width": 48,
+          "height": 48,
+          "clips": [
+            {
+              "id": "esqueleto-48-salto",
+              "fps": 16,
+              "loop": false,
+              "frames": 12,
+              "pixelsHash": "42a240aaf912f23c951766e60ef0eafd22a83e31a24d99437caec29444b7e07c"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+          "changed": false,
+          "hash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "previousHash": "a3c8523ddbcb7a529e2edb54c23c2507397399a196b2127a66c219a8c1124a12",
+          "width": 48,
+          "height": 48,
+          "clips": []
+        },
+        {
+          "file": "docs\\Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+          "changed": false,
+          "hash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "previousHash": "ebd8f46e3d829d77dda71cc6449005121a22bdb9feb85db53750be3d54f489ad",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "esqueleto-idle",
+              "fps": 6,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "cd6c333a04904aa432e6445431afdd5028f1a25340c8462dc46f940cf14bdf05"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+          "changed": false,
+          "hash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "previousHash": "f10a4db60fdc723d6b4a3cf941a127593f937bfe3d78fec032a14f212869bc5e",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            },
+            {
+              "id": "plateado-caminar",
+              "fps": 8,
+              "loop": true,
+              "frames": 8,
+              "pixelsHash": "7104ed78117f12b2cdfecd6569157a5f7515f36d6416065ba80980c85e7ca80f"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+          "changed": false,
+          "hash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "previousHash": "5d22f6e3017aceb743e5aa7d8e2475dfc08d3b79369ab1b36ffe990f830504ed",
+          "width": 64,
+          "height": 64,
+          "clips": [
+            {
+              "id": "plateado-idle",
+              "fps": 4,
+              "loop": true,
+              "frames": 6,
+              "pixelsHash": "5739349e0a6a50ac84a0cba18abd7a031aa32489017acb8d96c6d5798fbebd0b"
+            }
+          ]
+        },
+        {
+          "file": "docs\\Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+          "changed": false,
+          "hash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "previousHash": "a337e7e9c6accfafd27b73646ead67a76795179ee4bd75963742a9214048514b",
+          "width": 64,
+          "height": 64,
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

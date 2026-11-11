@@ -1,0 +1,396 @@
+{
+  "valid": true,
+  "clips": [
+    {
+      "id": "esqueleto-48-idle",
+      "fps": [
+        4,
+        4
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        8,
+        8
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 1,
+          "beforeArea": 1089,
+          "afterArea": 1090,
+          "colorsOutsideDeclaredPalette": [
+            "#FF00FFFF"
+          ],
+          "temporalChangedPixels": null
+        },
+        {
+          "index": 1,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 1
+        },
+        {
+          "index": 2,
+          "changedPixels": 0,
+          "beforeArea": 1109,
+          "afterArea": 1109,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 251
+        },
+        {
+          "index": 3,
+          "changedPixels": 0,
+          "beforeArea": 1109,
+          "afterArea": 1109,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 0
+        },
+        {
+          "index": 4,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 251
+        },
+        {
+          "index": 5,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 0
+        },
+        {
+          "index": 6,
+          "changedPixels": 0,
+          "beforeArea": 1070,
+          "afterArea": 1070,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 245
+        },
+        {
+          "index": 7,
+          "changedPixels": 0,
+          "beforeArea": 1070,
+          "afterArea": 1070,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 0
+        }
+      ]
+    },
+    {
+      "id": "esqueleto-48-caminar",
+      "fps": [
+        7,
+        7
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        8,
+        8
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 0,
+          "beforeArea": 1090,
+          "afterArea": 1090,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": null
+        },
+        {
+          "index": 1,
+          "changedPixels": 0,
+          "beforeArea": 1075,
+          "afterArea": 1075,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 76
+        },
+        {
+          "index": 2,
+          "changedPixels": 0,
+          "beforeArea": 1097,
+          "afterArea": 1097,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 434
+        },
+        {
+          "index": 3,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 482
+        },
+        {
+          "index": 4,
+          "changedPixels": 0,
+          "beforeArea": 1098,
+          "afterArea": 1098,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 42
+        },
+        {
+          "index": 5,
+          "changedPixels": 0,
+          "beforeArea": 1104,
+          "afterArea": 1104,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 52
+        },
+        {
+          "index": 6,
+          "changedPixels": 0,
+          "beforeArea": 1117,
+          "afterArea": 1117,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 459
+        },
+        {
+          "index": 7,
+          "changedPixels": 0,
+          "beforeArea": 1091,
+          "afterArea": 1091,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 466
+        }
+      ]
+    },
+    {
+      "id": "esqueleto-48-ataque",
+      "fps": [
+        16,
+        16
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        12,
+        12
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": null
+        },
+        {
+          "index": 1,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 113
+        },
+        {
+          "index": 2,
+          "changedPixels": 0,
+          "beforeArea": 1104,
+          "afterArea": 1104,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 173
+        },
+        {
+          "index": 3,
+          "changedPixels": 0,
+          "beforeArea": 1093,
+          "afterArea": 1093,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 126
+        },
+        {
+          "index": 4,
+          "changedPixels": 0,
+          "beforeArea": 1102,
+          "afterArea": 1102,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 64
+        },
+        {
+          "index": 5,
+          "changedPixels": 0,
+          "beforeArea": 1102,
+          "afterArea": 1102,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 16
+        },
+        {
+          "index": 6,
+          "changedPixels": 0,
+          "beforeArea": 1136,
+          "afterArea": 1136,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 220
+        },
+        {
+          "index": 7,
+          "changedPixels": 0,
+          "beforeArea": 1141,
+          "afterArea": 1141,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 216
+        },
+        {
+          "index": 8,
+          "changedPixels": 0,
+          "beforeArea": 1139,
+          "afterArea": 1139,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 124
+        },
+        {
+          "index": 9,
+          "changedPixels": 0,
+          "beforeArea": 1112,
+          "afterArea": 1112,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 113
+        },
+        {
+          "index": 10,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 132
+        },
+        {
+          "index": 11,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 0
+        }
+      ]
+    },
+    {
+      "id": "esqueleto-48-salto",
+      "fps": [
+        14,
+        14
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        12,
+        12
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": null
+        },
+        {
+          "index": 1,
+          "changedPixels": 0,
+          "beforeArea": 1034,
+          "afterArea": 1034,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 595
+        },
+        {
+          "index": 2,
+          "changedPixels": 0,
+          "beforeArea": 1005,
+          "afterArea": 1005,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 461
+        },
+        {
+          "index": 3,
+          "changedPixels": 0,
+          "beforeArea": 1026,
+          "afterArea": 1026,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 806
+        },
+        {
+          "index": 4,
+          "changedPixels": 0,
+          "beforeArea": 976,
+          "afterArea": 976,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 556
+        },
+        {
+          "index": 5,
+          "changedPixels": 0,
+          "beforeArea": 954,
+          "afterArea": 954,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 508
+        },
+        {
+          "index": 6,
+          "changedPixels": 0,
+          "beforeArea": 948,
+          "afterArea": 948,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 30
+        },
+        {
+          "index": 7,
+          "changedPixels": 0,
+          "beforeArea": 957,
+          "afterArea": 957,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 492
+        },
+        {
+          "index": 8,
+          "changedPixels": 0,
+          "beforeArea": 1011,
+          "afterArea": 1011,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 575
+        },
+        {
+          "index": 9,
+          "changedPixels": 0,
+          "beforeArea": 995,
+          "afterArea": 995,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 786
+        },
+        {
+          "index": 10,
+          "changedPixels": 0,
+          "beforeArea": 1064,
+          "afterArea": 1064,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 636
+        },
+        {
+          "index": 11,
+          "changedPixels": 0,
+          "beforeArea": 1089,
+          "afterArea": 1089,
+          "colorsOutsideDeclaredPalette": [],
+          "temporalChangedPixels": 398
+        }
+      ]
+    }
+  ],
+  "addedClips": []
+}

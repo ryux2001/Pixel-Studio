@@ -1,0 +1,124 @@
+{
+  "valid": true,
+  "clips": [
+    {
+      "id": "plateado-idle",
+      "fps": [
+        4,
+        4
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        6,
+        6
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 0,
+          "beforeArea": 685,
+          "afterArea": 685
+        },
+        {
+          "index": 1,
+          "changedPixels": 0,
+          "beforeArea": 685,
+          "afterArea": 685
+        },
+        {
+          "index": 2,
+          "changedPixels": 0,
+          "beforeArea": 697,
+          "afterArea": 697
+        },
+        {
+          "index": 3,
+          "changedPixels": 0,
+          "beforeArea": 697,
+          "afterArea": 697
+        },
+        {
+          "index": 4,
+          "changedPixels": 0,
+          "beforeArea": 685,
+          "afterArea": 685
+        },
+        {
+          "index": 5,
+          "changedPixels": 0,
+          "beforeArea": 685,
+          "afterArea": 685
+        }
+      ]
+    },
+    {
+      "id": "plateado-caminar",
+      "fps": [
+        8,
+        8
+      ],
+      "loop": [
+        true,
+        true
+      ],
+      "frameCounts": [
+        8,
+        8
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "changedPixels": 30,
+          "beforeArea": 687,
+          "afterArea": 685
+        },
+        {
+          "index": 1,
+          "changedPixels": 19,
+          "beforeArea": 656,
+          "afterArea": 652
+        },
+        {
+          "index": 2,
+          "changedPixels": 11,
+          "beforeArea": 647,
+          "afterArea": 650
+        },
+        {
+          "index": 3,
+          "changedPixels": 40,
+          "beforeArea": 654,
+          "afterArea": 654
+        },
+        {
+          "index": 4,
+          "changedPixels": 28,
+          "beforeArea": 666,
+          "afterArea": 661
+        },
+        {
+          "index": 5,
+          "changedPixels": 30,
+          "beforeArea": 657,
+          "afterArea": 655
+        },
+        {
+          "index": 6,
+          "changedPixels": 15,
+          "beforeArea": 670,
+          "afterArea": 671
+        },
+        {
+          "index": 7,
+          "changedPixels": 26,
+          "beforeArea": 670,
+          "afterArea": 671
+        }
+      ]
+    }
+  ],
+  "addedClips": []
+}

@@ -1,0 +1,4 @@
+{
+  "valid": false,
+  "error": "Error: baseSprite.pixels: Cantidad de colores incorrecta."
+}

@@ -1,0 +1,332 @@
+[
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "animation-pilot",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-idle",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-attack",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-jump",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "skeleton-48-walk",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · ataque · 48 px (ryux).json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\Esqueleto Morado · base 48 px.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-ataque.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-morado-48-salto.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\48px\\esqueleto-referencia-48-base.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Esqueleto Morado\\64px\\esqueleto-morado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-animaciones.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Personaje plateado\\64px\\personaje-plateado-idle.project-v2.json",
+    "equivalent": true
+  },
+  {
+    "generator": "silver-walk",
+    "file": "Characters\\Personaje plateado\\Personaje cabello plateado v2.json",
+    "equivalent": true
+  }
+]
