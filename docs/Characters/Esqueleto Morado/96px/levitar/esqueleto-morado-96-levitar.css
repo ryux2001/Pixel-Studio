@@ -1,0 +1,30 @@
+/* Pixelbolt: atlas coordinates are pixels at the exported scale. */
+.pf-esqueleto-morado-96-levitar {
+  display: inline-block;
+  width: 96px; height: 96px;
+  background-image: url("esqueleto-morado-96-levitar.png");
+  background-repeat: no-repeat; image-rendering: pixelated;
+}
+.pf-esqueleto-morado-96-levitar-levitar { background-position: -0px -0px; animation: pf-esqueleto-morado-96-levitar-levitar 2000ms steps(1, end) infinite; }
+@keyframes pf-esqueleto-morado-96-levitar-levitar {
+  0% { background-position: -0px -0px; }
+  6.25% { background-position: -96px -0px; }
+  12.5% { background-position: -192px -0px; }
+  18.75% { background-position: -288px -0px; }
+  25% { background-position: -384px -0px; }
+  31.25% { background-position: -480px -0px; }
+  37.5% { background-position: -576px -0px; }
+  43.75% { background-position: -672px -0px; }
+  50% { background-position: -0px -96px; }
+  56.25% { background-position: -96px -96px; }
+  62.5% { background-position: -192px -96px; }
+  68.75% { background-position: -288px -96px; }
+  75% { background-position: -384px -96px; }
+  81.25% { background-position: -480px -96px; }
+  87.5% { background-position: -576px -96px; }
+  93.75% { background-position: -672px -96px; }
+  100% { background-position: -0px -0px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-esqueleto-morado-96-levitar-levitar { animation: none; }
+}

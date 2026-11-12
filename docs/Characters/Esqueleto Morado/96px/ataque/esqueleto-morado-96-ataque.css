@@ -1,0 +1,26 @@
+/* Pixelbolt: atlas coordinates are pixels at the exported scale. */
+.pf-esqueleto-morado-96-ataque {
+  display: inline-block;
+  width: 96px; height: 96px;
+  background-image: url("esqueleto-morado-96-ataque.png");
+  background-repeat: no-repeat; image-rendering: pixelated;
+}
+.pf-esqueleto-morado-96-ataque-ataque { background-position: -0px -0px; animation: pf-esqueleto-morado-96-ataque-ataque 1000ms steps(1, end) 1 forwards; }
+@keyframes pf-esqueleto-morado-96-ataque-ataque {
+  0% { background-position: -0px -0px; }
+  8.3% { background-position: -96px -0px; }
+  16.6% { background-position: -192px -0px; }
+  25% { background-position: -288px -0px; }
+  33.3% { background-position: -384px -0px; }
+  41.6% { background-position: -480px -0px; }
+  50% { background-position: -576px -0px; }
+  58.3% { background-position: -672px -0px; }
+  66.6% { background-position: -0px -96px; }
+  75% { background-position: -96px -96px; }
+  83.3% { background-position: -192px -96px; }
+  91.6% { background-position: -288px -96px; }
+  100% { background-position: -288px -96px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-esqueleto-morado-96-ataque-ataque { animation: none; }
+}
