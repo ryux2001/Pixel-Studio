@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import type { AnimationClip } from "@/types/animation";
 import type { PixelDocument } from "@/types/pixel-studio";
 import { useAnimationPlayback } from "@/hooks/useAnimationPlayback";
@@ -8,10 +9,11 @@ import { WeaponPreviewControls } from "./WeaponPreviewControls";
 import type { RunCharacterEdit } from "./AnimationControls";
 import ui from "./CharacterEditor.module.css";
 
-export function AnimationPreview({ clip, base, selected, disabled, onEdit, onSelect, onPlaying, weaponPreview }: {
+export function AnimationPreview({ clip, base, selected, disabled, onEdit, onSelect, onPlaying, weaponPreview, scale, onScale }: {
   clip?: AnimationClip; base: PixelDocument; selected: number; disabled: boolean;
   onEdit: RunCharacterEdit; onSelect: (index: number) => void; onPlaying: (playing: boolean) => void;
   weaponPreview: ReturnType<typeof useWeaponPreview>;
+  scale: number; onScale: (scale: number) => void;
 }) {
   const playback = useAnimationPlayback(clip?.frames.length ?? 1, clip?.fps ?? 8, clip?.loop ?? false, Math.max(0, selected), disabled);
   useEffect(() => { onPlaying(playback.playing); return () => onPlaying(false); }, [playback.playing, onPlaying]);
@@ -21,8 +23,18 @@ export function AnimationPreview({ clip, base, selected, disabled, onEdit, onSel
   const weapon = weaponPreview.weapon;
   const grip = frame && weaponPreview.grips.get(frame.id);
   const editingWeapon = !!frame && !!weapon && !disabled && !playback.playing && !weaponPreview.loading;
-  return <aside className={ui.preview} aria-label="Vista previa de animación">
+  return <aside className={ui.preview} aria-label="Vista previa de animación" style={{ "--preview-scale": scale } as CSSProperties}>
     <details open><summary>Vista previa · solo lectura</summary>
+      <div className={ui.previewScale}>
+        <label htmlFor="animation-preview-scale">Tamaño de vista</label>
+        <div>
+          <button type="button" aria-label="Reducir tamaño de la vista previa" title="Reducir tamaño" disabled={scale <= 1} onClick={() => onScale(Math.max(1, scale - 0.125))}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+          <input id="animation-preview-scale" type="range" min="1" max="2" step="0.125" value={scale} aria-label="Tamaño de vista previa" onChange={event => onScale(Number(event.target.value))}/>
+          <button type="button" aria-label="Aumentar tamaño de la vista previa" title="Aumentar tamaño" disabled={scale >= 2} onClick={() => onScale(Math.min(2, scale + 0.125))}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+          <output htmlFor="animation-preview-scale">{Math.round(scale * 100)}%</output>
+          <button type="button" aria-label="Restablecer tamaño original" title="Restablecer tamaño original" disabled={scale === 1} onClick={() => onScale(1)}>Original</button>
+        </div>
+      </div>
       <div className={ui.previewImage}><FrameThumbnail document={frame?.document ?? base}
         weapon={grip && weapon ? weapon : undefined} grip={grip}
         onPick={editingWeapon && frame ? (x, y) => {

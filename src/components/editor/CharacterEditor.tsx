@@ -52,11 +52,20 @@ function ReadyEditor({session}:{session:SessionBridge}){
   const [fitOnMount] = useState(view.zoom===undefined);
   const [canvasScroll,setCanvasScroll] = useState(view.canvasScroll);
   const [panel, setPanel] = useState(CHARACTER_LAYOUT);
+  const [projectPanelOpen, setProjectPanelOpen] = useState(true);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { try { setProjectPanelOpen(localStorage.getItem("pixel-studio-project-panel-open") !== "false"); } catch { /* Preferencia opcional. */ } }, []);
+  const toggleProjectPanel = () => {
+    const open = !projectPanelOpen;
+    setProjectPanelOpen(open);
+    try { localStorage.setItem("pixel-studio-project-panel-open", String(open)); } catch { /* Preferencia opcional. */ }
+  };
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { try { const saved = localStorage.getItem("pixel-studio-animation-layout-v1"); if (saved) setPanel(readCharacterLayout(JSON.parse(saved))); } catch { /* Preferencias opcionales. */ } }, []);
   useEffect(() => { try { localStorage.setItem("pixel-studio-animation-layout-v1", JSON.stringify(panel)); } catch { /* Preferencias opcionales. */ } }, [panel]);
   const canvas=useRef<CanvasHandle>(null);
   const [inspectorView, setInspectorView] = useState(view.inspectorView??"preview");
+  const [previewScale, setPreviewScale] = useState(view.previewScale ?? 1);
   const [promptsOpen, setPromptsOpen] = useState(false);
   const reference = useReferenceImage(view.reference,session.checkReference,session.saveReference);
   const weaponPreview = useWeaponPreview();
@@ -133,14 +142,19 @@ function ReadyEditor({session}:{session:SessionBridge}){
       if(id===request.current)setProposal({project:p,legacy,png,importKey});
     }catch(e){if(id===request.current)setError(String(e));}finally{if(id===request.current)setLoading(false);}
   };
-  const publishView = useEffectEvent(() => session.updateView({ zoom, grid, selection, restrict, tool, color, filled, inspectorView, onionPrevious, onionNext, onionOpacity, canvasScroll, reference: reference.record }));
-  useEffect(() => { publishView(); }, [zoom, grid, selection, restrict, tool, color, filled, inspectorView, onionPrevious, onionNext, onionOpacity, canvasScroll, reference.record]);
+  const publishView = useEffectEvent(() => session.updateView({ zoom, previewScale, grid, selection, restrict, tool, color, filled, inspectorView, onionPrevious, onionNext, onionOpacity, canvasScroll, reference: reference.record }));
+  useEffect(() => { publishView(); }, [zoom, previewScale, grid, selection, restrict, tool, color, filled, inspectorView, onionPrevious, onionNext, onionOpacity, canvasScroll, reference.record]);
   return <main className={`${styles.editor} ${ui.characterEditor}`}>
     <a className={styles.skip} href="#character-canvas">Ir al lienzo</a>
-    <header className={styles.header}>
+    <header className={`${styles.header} ${ui.projectHeader}`}>
       <div className={ui.headerTitle}><h1>Pixel Art Studio</h1><span>Personajes · {project.name}</span></div>
-      <span className={ui.agentNotice}>Agente · Próximamente</span>
+      <span className={ui.projectStatus} role="status">{session.status}{dirty ? " · Cambios sin guardar" : ""}</span>
+      <button type="button" className={ui.projectToggle} aria-expanded={projectPanelOpen} aria-controls="project-panel" onClick={toggleProjectPanel}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        Panel de proyecto
+      </button>
     </header>
+    <div id="project-panel" className={ui.projectPanel} hidden={!projectPanelOpen}>
     <div className={`${styles.fileBar} ${ui.fileToolbar}`}>
       <input ref={fileInput} aria-label="Proyecto V1 o V2" hidden disabled={locked} type="file" accept=".json" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f);}}/>
       <input ref={pngInput} aria-label="PNG como proyecto" hidden disabled={locked} type="file" accept=".png" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f,true);}}/>
@@ -161,16 +175,22 @@ function ReadyEditor({session}:{session:SessionBridge}){
       <div className={ui.undoActions}><button type="button" disabled={locked||!state.past.length} onClick={()=>dispatch({type:"undo"})}>Deshacer</button><button type="button" disabled={locked||!state.future.length} onClick={()=>dispatch({type:"redo"})}>Rehacer</button></div>
     </div>
     {session.tabs}
-    <div className={styles.fileStatus}><span role="status">{session.status}</span><span>{dirty?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" onClick={session.review}>Revisar borradores</button>{session.controlled&&/No se pudo guardar|Sin borrador local/.test(session.status)&&<button onClick={session.retry}>Reintentar guardado</button>}{error&&<span role="alert">{error}</span>}{loading&&<button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button>}</div>
+    <div className={styles.fileStatus}><span>{dirty?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" onClick={session.review}>Revisar borradores</button><span className={ui.agentNotice}>Agente · Próximamente</span></div>
     <RegionActions selection={selection} width={project.width} height={project.height} disabled={locked}
       onExport={()=>{try { const area=selection??{x:0,y:0,width:project.width,height:project.height}; download(new Blob([serializeRegionPatch(exportRegionPatch(bitmap,area))],{type:"application/json"}),`${project.name}-region-activa.json`); } catch(e){setError(String(e));}}}
       onImport={()=>pixelTools.begin("region")} onCommands={()=>pixelTools.begin("commands")} onPrompts={()=>setPromptsOpen(true)}/>
+    </div>
+    {(error || loading || /No se pudo guardar|Sin borrador local/.test(session.status)) && <div className={styles.fileStatus}>
+      {error&&<span role="alert">{error}</span>}
+      {session.controlled&&/No se pudo guardar|Sin borrador local/.test(session.status)&&<button type="button" onClick={session.retry}>Reintentar guardado</button>}
+      {loading&&<><span role="status">Procesando archivo…</span><button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button></>}
+    </div>}
     <CharacterWorkspace layout={panel} onLayout={change=>setPanel(p=>({...p,...change}))}
       tools={<><Toolbar tool={tool} setTool={setTool} filled={filled} setFilled={setFilled} disabled={locked}/>
         <ColorPalette key={color.join(",")} color={color} palette={project.palette} onColor={setColor} onPalette={palette=>runEdit([{type:"metadata",name:project.name,palette:[...palette]}],"Editar paleta")} disabled={locked}/></>}
       inspector={<>
         <label className={ui.inspectorChoice}>Panel derecho<select aria-label="Panel derecho" value={inspectorView} onChange={e=>setInspectorView(e.target.value)}><option value="preview">Vista previa</option><option value="reference">Referencias</option></select></label>
-        {inspectorView==="preview" ? <AnimationPreview onPlaying={onPlaying} key={operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} weaponPreview={weaponPreview} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
+        {inspectorView==="preview" ? <AnimationPreview onPlaying={onPlaying} key={operationKey} clip={activeClip} base={project.baseSprite} selected={activeIndex} disabled={locked} onEdit={runEdit} weaponPreview={weaponPreview} scale={previewScale} onScale={setPreviewScale} onSelect={index=>{if(activeClip){dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId:activeClip.frames[index].id}});focusTimeline();}}}/>
         : <section className={ui.referencePanel} aria-label="Referencia visual"><h2>Referencia PNG</h2><p>Se conserva en el borrador local de este personaje. El archivo JSON no incluye la referencia.</p>
           <input ref={referenceInput} type="file" accept=".png,image/png" hidden aria-label="Archivo PNG de referencia" disabled={locked} onChange={e=>{const file=e.target.files?.[0];e.target.value="";if(file)void reference.load(file);}}/>
           {reference.image && <><div className={ui.referenceImage}>{/* Validated local PNG object URL. */}

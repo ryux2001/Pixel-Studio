@@ -8,6 +8,7 @@ export async function restoreSessionView(input: SessionView, project: CharacterP
   const result: SessionView = {};
   for (const key of ["grid", "filled", "onionPrevious", "onionNext"] as const) if (typeof input[key] === "boolean") result[key] = input[key];
   if (Number.isInteger(input.zoom)) result.zoom=Math.max(1,Math.min(32,input.zoom!));
+  if (typeof input.previewScale === "number" && Number.isFinite(input.previewScale)) result.previewScale=Math.round(Math.max(1,Math.min(2,input.previewScale))*1000)/1000;
   if (Number.isInteger(input.onionOpacity)) result.onionOpacity=Math.max(0,Math.min(60,input.onionOpacity!));
   if (input.inspectorView==="preview"||input.inspectorView==="reference") result.inspectorView=input.inspectorView;
   if (TOOLS.some(tool=>tool.id===input.tool)) result.tool=input.tool;

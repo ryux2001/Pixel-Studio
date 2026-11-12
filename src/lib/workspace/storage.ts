@@ -5,7 +5,7 @@ import { validateCharacterProject } from "@/lib/animation/validation";
 import { serializeCharacterProject } from "@/lib/io/animation-project";
 
 export const WORKSPACE_DB = "pixel-studio-workspaces";
-export type SessionView = { zoom?: number; grid?: boolean; selection?: PixelRect | null; restrict?: boolean; tool?: Tool; color?: RGBA; filled?: boolean; inspectorView?: string; onionPrevious?: boolean; onionNext?: boolean; onionOpacity?: number; canvasScroll?: { left: number; top: number }; reference?: { blob: Blob; name: string; width: number; height: number } | null };
+export type SessionView = { zoom?: number; previewScale?: number; grid?: boolean; selection?: PixelRect | null; restrict?: boolean; tool?: Tool; color?: RGBA; filled?: boolean; inspectorView?: string; onionPrevious?: boolean; onionNext?: boolean; onionOpacity?: number; canvasScroll?: { left: number; top: number }; reference?: { blob: Blob; name: string; width: number; height: number } | null };
 export type SessionRecord = { id: string; version: 1; project: CharacterProject; saved: CharacterProject | null; target: TargetRef; view: SessionView; revision: number; owner: string; fence: number; expires: number; closed: boolean; deleted?: boolean; updated: number; source?: string; importKey?: string };
 export type WorkspaceRecord = { id: string; order: string[]; active: string | null };
 type Migration = { id: string; verified: boolean };
