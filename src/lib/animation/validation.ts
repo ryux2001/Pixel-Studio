@@ -2,6 +2,8 @@ import type { ProjectFileV2, CharacterProject } from "@/types/animation";
 import { colors, FileError, object } from "@/lib/io/validation";
 import { validateDocument } from "@/lib/pixels/validation";
 import { ANIMATION_LIMITS } from "./limits";
+import { PIECE_OFFSET_LIMIT, validateSeparation } from "./separation";
+import { readRigPixel } from "./rig-retouches";
 
 /** Preflight internal data before allocating hexadecimal arrays for export. */
 export function validateCharacterProject(p: CharacterProject): void {
@@ -32,7 +34,66 @@ export function validateCharacterProject(p: CharacterProject): void {
     if (d.width !== p.width || d.height !== p.height) throw new FileError("DIMENSIONS", "Bitmap incompatible con el proyecto.");
   };
   check(p.baseSprite);
+  if (p.separation !== undefined) validateSeparation(p.separation, p.width, p.height);
   for (const c of p.animations) for (const f of c.frames) check(f.document);
+  if (p.separation?.transitions !== undefined) validateTransitions(p);
+}
+
+function validateTransitions(project: CharacterProject) {
+  const transitions = project.separation?.transitions;
+  if (!Array.isArray(transitions) || transitions.length > ANIMATION_LIMITS.frames) throw new FileError("RIG", "Tramos de rig inválidos.");
+  const clipFrames = new Map(project.animations.map(clip => [clip.id, new Map(clip.frames.map(frame => [frame.id, frame]))]));
+  const spanIds = new Set<string>(), linkedFrames = new Set<string>();
+  const area = project.width * project.height;
+  for (const span of transitions) {
+    if (!span || !Array.isArray(span.frames) || !Number.isInteger(span.sampleCount) ||
+        span.sampleCount < 1 || span.sampleCount > ANIMATION_LIMITS.framesPerClip || !span.frames.length ||
+        span.frames.length > span.sampleCount || !span.poses) throw new FileError("RIG", "Tramo de rig inválido.");
+    id(span.id);
+    const clip = clipFrames.get(span.clipId);
+    if (!clip || spanIds.has(span.id)) throw new FileError("RIG", "Tramo duplicado o animación ausente.");
+    spanIds.add(span.id);
+    validateRigPose(span.poses.start);
+    validateRigPose(span.poses.end);
+    const samples = new Set<number>();
+    for (const frame of span.frames) {
+      const bitmap = frame && clip.get(frame.id)?.document;
+      if (!bitmap || linkedFrames.has(frame.id) || !Number.isInteger(frame.sample) || frame.sample < 0 ||
+          frame.sample >= span.sampleCount || samples.has(frame.sample) || !Array.isArray(frame.retouches) ||
+          frame.retouches.length > area) throw new FileError("RIG", "Fotograma de tramo inválido.");
+      linkedFrames.add(frame.id);
+      samples.add(frame.sample);
+      if (frame.pose !== undefined) validateRigPose(frame.pose);
+      if (frame.pieceRetouches !== undefined) {
+        if (!Array.isArray(frame.pieceRetouches) || frame.pieceRetouches.length > area * 4) throw new FileError("RIG", "Retoques de pieza inválidos.");
+        const coordinates = new Set<string>();
+        for (const pixel of frame.pieceRetouches) {
+          if (!pixel || ![pixel.x, pixel.y].every(n => Number.isInteger(n) && Math.abs(n) <= PIECE_OFFSET_LIMIT * 2) ||
+              !Number.isInteger(pixel.color) || pixel.color < 0 || pixel.color > 0xffffffff) throw new FileError("RIG", "Píxel de pieza inválido.");
+          const key = `${id(pixel.pieceId)}:${pixel.x}:${pixel.y}`;
+          if (coordinates.has(key)) throw new FileError("RIG", "Retoque de pieza duplicado.");
+          coordinates.add(key);
+        }
+      }
+      let previous = -1;
+      for (const retouch of frame.retouches) {
+        if (!retouch || !Number.isInteger(retouch.index) || retouch.index <= previous || retouch.index >= area ||
+            ![retouch.before, retouch.after].every(value => Number.isInteger(value) && value >= 0 && value <= 0xffffffff) ||
+            retouch.before === retouch.after || (retouch.matched !== undefined && retouch.matched !== true) ||
+            readRigPixel(bitmap, retouch.index) !== retouch.after) throw new FileError("RIG", "Retoque de fotograma inválido.");
+        previous = retouch.index;
+      }
+    }
+  }
+}
+
+function validateRigPose(pose: unknown) {
+  if (!pose || typeof pose !== "object" || Array.isArray(pose) || Object.keys(pose).length > 64) throw new FileError("RIG", "Pose de tramo inválida.");
+  // A saved frame can refer to a bone removed after it was generated.
+  for (const [bone, angle] of Object.entries(pose)) {
+    id(bone);
+    if (!Number.isFinite(angle) || Math.abs(angle) > 180) throw new FileError("RIG", "Ángulo de tramo inválido.");
+  }
 }
 
 function checkColors(value: unknown, size: number, path: string) {

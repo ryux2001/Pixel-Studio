@@ -1,6 +1,7 @@
 import type { CharacterProject } from "@/types/animation";
 import { createCharacterState, type CharacterState } from "@/lib/animation/history";
 import { characterEditorReducer, type CharacterEditorAction } from "@/lib/animation/reducer";
+import { separationBytes } from "@/lib/animation/separation";
 
 export const WORKSPACE_TAB_LIMIT = 8;
 export const WORKSPACE_MEMORY_LIMIT = 256 * 1024 * 1024;
@@ -15,7 +16,7 @@ export type WorkspaceAction =
   | { type: "document"; id: string; action: CharacterEditorAction };
 
 export function workspaceBytes(state: WorkspaceState): number {
-  const projectBytes = (project: CharacterProject) => project.baseSprite.rgba.byteLength + project.animations.reduce((sum, clip) => sum + clip.frames.reduce((n, frame) => n + frame.document.rgba.byteLength + 256, 0) + 512, 0) + 2048;
+  const projectBytes = (project: CharacterProject) => separationBytes(project.separation) + project.baseSprite.rgba.byteLength + project.animations.reduce((sum, clip) => sum + clip.frames.reduce((n, frame) => n + frame.document.rgba.byteLength + 256, 0) + 512, 0) + 2048;
   return Object.values(state.sessions).reduce((sum, session) => {
     const character = session.character;
     return sum + projectBytes(character.project) + (character.saved ? projectBytes(character.saved) : 0) + [...character.past, ...character.future].reduce((n, entry) => n + entry.bytes, 0);

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {registerHooks} from 'node:module';
+import {pathToFileURL,fileURLToPath} from 'node:url';
+import {decode} from 'fast-png';
+const root=process.cwd();
+registerHooks({resolve(specifier,context,next){if(specifier.startsWith('@/'))return next(pathToFileURL(path.join(root,'src',specifier.slice(2)+'.ts')).href,context);if(specifier.startsWith('.')&&context.parentURL?.endsWith('.ts')&&!path.extname(specifier))return next(pathToFileURL(path.resolve(path.dirname(fileURLToPath(context.parentURL)),specifier+'.ts')).href,context);return next(specifier,context)}});
+const {parseCharacterProject}=await import('../src/lib/io/animation-project.ts');
+const dir='docs/Characters/Dark-Queen/128px';let palettes=[];
+for(const view of ['frontal','tres-cuartos-derecha']){const stem=`${dir}/dark-queen-${view}-128`;const proj=parseCharacterProject(fs.readFileSync(stem+'.project-v2.json','utf8'));const png=decode(fs.readFileSync(stem+'.png'));assert.equal(proj.width,128);assert.equal(proj.height,128);assert.equal(png.width,128);assert.equal(png.height,128);assert.deepEqual(Buffer.from(proj.baseSprite.rgba),Buffer.from(png.data));palettes.push(proj.palette);console.log(view,'validado',proj.palette.length,'colores')};assert.deepEqual(palettes[0],palettes[1]);
+

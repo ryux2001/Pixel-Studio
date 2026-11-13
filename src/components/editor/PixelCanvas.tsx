@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
+import { useCallback, useEffect, useId, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { useCanvasPointer } from "@/hooks/useCanvasPointer";
 import type { Tool } from "@/lib/editor/state";
-import type { PixelDocument, PixelRect, RGBA } from "@/types/pixel-studio";
+import type { PixelDocument, PixelPoint, PixelRect, RGBA } from "@/types/pixel-studio";
+import { pointerToPixel } from "@/lib/editor/pointer-coordinates";
 import { OnionSkinOverlay } from "./OnionSkinOverlay";
 import styles from "./EditorShell.module.css";
 
@@ -11,6 +12,10 @@ type Props = {
   operationKey?: string;
   fitOnMount?: boolean;
   initialScroll?: { left: number; top: number };
+  linkedScroll?: { left: number; top: number };
+  layers?: { background?: PixelDocument; foreground?: PixelDocument; opacity?: number };
+  label?: string;
+  onPixelClick?: (point: PixelPoint) => void;
   onViewportScroll?: (position: { left: number; top: number }) => void;
   document: PixelDocument; tool: Tool; color: RGBA; filled: boolean;
   selection: PixelRect | null; restrict: boolean; zoom: number; grid: boolean; busy: boolean;
@@ -21,6 +26,7 @@ type Props = {
 
 export function PixelCanvas({ ref: handleRef, ...props }: Props) {
   const { zoom, onZoom, busy, grid } = props;
+  const helpId = useId();
   const { width, height } = props.document;
   const canvas = useRef<HTMLCanvasElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
@@ -48,6 +54,12 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
   useEffect(() => { if(props.fitOnMount!==false)fit(); }, [fit,props.fitOnMount]);
   const [initialScroll] = useState(props.initialScroll);
   useEffect(()=>{if(initialScroll&&viewport.current){viewport.current.scrollLeft=initialScroll.left;viewport.current.scrollTop=initialScroll.top;}},[initialScroll]);
+  const { left: scrollLeft, top: scrollTop } = props.linkedScroll ?? {};
+  useEffect(() => {
+    if (!viewport.current || scrollLeft === undefined || scrollTop === undefined) return;
+    viewport.current.scrollLeft = scrollLeft;
+    viewport.current.scrollTop = scrollTop;
+  }, [scrollLeft, scrollTop, zoom, width, height]);
   useEffect(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     // Strict Mode restarts effects: a cancelled frame must not block the next render.
@@ -77,7 +89,15 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
           <div className={styles.surface} style={{ width: width * zoom, height: height * zoom }}>
             {props.onion?.previous && <OnionSkinOverlay document={props.onion.previous} direction="previous" opacity={props.onion.opacity}/>}
             {props.onion?.next && <OnionSkinOverlay document={props.onion.next} direction="next" opacity={props.onion.opacity}/>}
-            <canvas style={{position:"relative"}} ref={canvas} width={width} height={height} {...(!error ? pointer.handlers : {})} tabIndex={0} aria-label={`Lienzo de ${width} por ${height} píxeles. Usa las herramientas para dibujar con el puntero.`} aria-describedby="canvas-help" className={styles.bitmap} />
+            {props.layers?.background && <BitmapLayer document={props.layers.background} />}
+            <canvas style={{position:"relative"}} ref={canvas} width={width} height={height}
+              {...(!error && !props.onPixelClick ? pointer.handlers : {})}
+              onClick={!error && !busy && props.onPixelClick ? event => {
+                const point = pointerToPixel(event.clientX, event.clientY, event.currentTarget.getBoundingClientRect(), width, height);
+                if (point) props.onPixelClick?.(point);
+              } : undefined}
+              tabIndex={0} aria-label={props.label ?? `Lienzo de ${width} por ${height} píxeles. Usa las herramientas para dibujar con el puntero.`} aria-describedby={helpId} className={styles.bitmap} />
+            {props.layers?.foreground && <BitmapLayer document={props.layers.foreground} opacity={props.layers.opacity} />}
             {grid && zoom >= 4 && <div aria-hidden="true" className={styles.grid} style={{ backgroundSize: `${zoom}px ${zoom}px` }} />}
             {selection && <div aria-hidden="true" className={styles.selection} style={{ left: selection.x * zoom, top: selection.y * zoom, width: selection.width * zoom, height: selection.height * zoom }} />}
           </div>
@@ -86,6 +106,15 @@ export function PixelCanvas({ ref: handleRef, ...props }: Props) {
       </div>
     </div>
     {error && <p role="alert" className={styles.error}>{error}</p>}
-    <div className={styles.coordinateBar}><span>{pointer.position ? `x: ${pointer.position.x}  y: ${pointer.position.y}` : "x: —  y: —"}</span><span id="canvas-help">Arrastra para dibujar · Ctrl + rueda para zoom · Esc para cancelar</span></div>
+    <div className={styles.coordinateBar}><span>{pointer.position ? `x: ${pointer.position.x}  y: ${pointer.position.y}` : "x: -  y: -"}</span><span id={helpId}>Ctrl + rueda para zoom · Esc para cancelar</span></div>
   </>;
+}
+
+function BitmapLayer({ document, opacity }: { document: PixelDocument; opacity?: number }) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    canvas.current?.getContext("2d")?.putImageData(new ImageData(new Uint8ClampedArray(document.rgba), document.width, document.height), 0, 0);
+  }, [document]);
+  return <canvas ref={canvas} aria-hidden="true" width={document.width} height={document.height} className={styles.bitmap}
+    style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity }} />;
 }

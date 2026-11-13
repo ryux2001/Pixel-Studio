@@ -27,7 +27,12 @@ export function useAnimationPlayback(count: number, fps: number, loop: boolean, 
     handle = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(handle);
   }, [view.playing, count, fps, loop, disabled]);
-  return { ...view, pause, toggle: () => {
+  const seek = (index: number) => {
+    running.current = false;
+    cursor.current = Math.max(0, Math.min(index, count - 1));
+    setView({ index: cursor.current, playing: false });
+  };
+  return { ...view, pause, seek, toggle: () => {
     if (view.playing) { pause(); return; }
     if (disabled || count < 2 || document.hidden) return;
     if (!loop && cursor.current >= count - 1) cursor.current = 0;

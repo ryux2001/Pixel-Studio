@@ -18,7 +18,7 @@ import { INITIAL_COLOR } from "@/lib/editor/state";
 import { characterFromStatic } from "@/lib/animation/project";
 import { characterToken, isCharacterDirty } from "@/lib/animation/history";
 import { resolveTarget } from "@/lib/animation/targets";
-import { parseCharacterProject, serializeCharacterProject, ANIMATION_LIMITS } from "@/lib/io/animation-project";
+import { parseCharacterProject, serializeCharacterProject } from "@/lib/io/animation-project";
 import { serializeProject } from "@/lib/io/project";
 import { download } from "@/lib/io/download";
 import { type Tool } from "@/lib/editor/state";
@@ -34,10 +34,15 @@ import { AnimationControls, type RunCharacterEdit } from "./AnimationControls";
 import { AnimationPreview } from "./AnimationPreview";
 import { FrameTimeline } from "./FrameTimeline";
 import { AnimationExchange } from "./AnimationExchange";
+import { RigImportDialog } from "./RigImportDialog";
+import { PieceRigWorkspace } from "./PieceRigWorkspace";
+import { SeparationWorkspace } from "./SeparationWorkspace";
 import { ExportAnimationDialog } from "./ExportAnimationDialog";
 import { AnimationProposalDialog } from "./AnimationProposalDialog";
 import { useAnimationProposal } from "@/hooks/useAnimationProposal";
-import { editCharacter } from "@/lib/animation/actions";
+import { editCharacter, type CharacterEdit } from "@/lib/animation/actions";
+import { retainPoseBones } from "@/lib/animation/piece-rig";
+import { RIG_PROJECT_BYTES } from "@/lib/animation/limits";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import ui from "./CharacterEditor.module.css";
 import { EditorIcon } from "./EditorIcon";
@@ -96,13 +101,18 @@ function ReadyEditor({session}:{session:SessionBridge}){
   const request=useRef(0);
   const [newOpen,setNewOpen]=useState(false);
   const [exportOpen,setExportOpen]=useState(false);
+  const [mode, setMode] = useState<"drawing" | "separation" | "rig">("drawing");
+  const separating = mode === "separation";
+  const rigging = mode === "rig" && !!project.separation;
+  const drawing = !separating && !rigging;
+  const [rigImport,setRigImport]=useState<{ key: string; project: CharacterProject } | null>(null);
   useEffect(()=>()=>{request.current++;},[]);
   const exchange=useAnimationProposal(state,(prepared,ids,token)=>{if(!dispatch({type:"proposal",prepared,ids,token}))throw new Error("No se pudo aplicar la propuesta a esta sesión.");},restrict&&selection?selection:undefined);
   const pixelTools = useCharacterPixelTools(state, (document, captured, label) => {
     assertCharacterToken(state, captured);
     if(!dispatch({ type: "edit", edits: [{ type: "pixels", target: state.target, document }], label, token: captured }))throw new Error("No se pudo aplicar a este personaje. Revisa el control de la sesión o el límite de memoria.");
   });
-  const locked=busy||loading||!!proposal||!session.controlled||newOpen||exchange.open||exportOpen||pixelTools.open||promptsOpen;
+  const locked=busy||loading||!!proposal||!session.controlled||newOpen||exchange.open||exportOpen||pixelTools.open||promptsOpen||!!rigImport;
   const activeClip=state.target.kind==="frame"?project.animations.find(c=>c.id===(state.target.kind==="frame"?state.target.animationId:"")):undefined;
   const activeIndex=state.target.kind==="frame"?activeClip?.frames.findIndex(f=>f.id===(state.target.kind==="frame"?state.target.frameId:""))??-1:-1;
   const focusTimeline=()=>requestAnimationFrame(()=>{if(timelineRef.current)timelineRef.current.focus({preventScroll:true});else document.querySelector<HTMLSelectElement>('[aria-label="Animación activa"]')?.focus();});
@@ -114,7 +124,7 @@ function ReadyEditor({session}:{session:SessionBridge}){
       setError("");return true;
     }catch(e){setError(e instanceof Error?e.message:String(e));return false;}
   };
-  useEditorShortcuts({setTool,undo:()=>dispatch({type:"undo"}),redo:()=>dispatch({type:"redo"}),escape:()=>{if(!canvas.current?.cancel()){setSelection(null);setRestrict(false);}},blocked:locked});
+  useEditorShortcuts({setTool: next => { if (drawing) setTool(next); },undo:()=>dispatch({type:"undo"}),redo:()=>dispatch({type:"redo"}),escape:()=>{if(drawing && !canvas.current?.cancel()){setSelection(null);setRestrict(false);}},blocked:locked||separating});
   const exportPng=(scale:1|8)=>{void import("@/lib/io/png").then(async({encodePng})=>{download(new Blob([new Uint8Array(await encodePng(bitmap,scale))],{type:"image/png"}),`${project.name}-${activeClip?`frame-${activeIndex+1}`:"base"}${scale===8?"-8x":""}.png`);}).catch(e=>setError(String(e)));};
   const dismissOpen=()=>{setProposal(null);requestAnimationFrame(()=>fileButton.current?.focus());};
   const closeMenu=()=>{if(fileMenu.current)fileMenu.current.open=false;};
@@ -133,7 +143,7 @@ function ReadyEditor({session}:{session:SessionBridge}){
   const open=async(file:File,png=false)=>{
     const id=++request.current;setLoading(true);setError("");
     try{
-      if(file.size>(png?5*1024*1024:ANIMATION_LIMITS.bytes))throw new Error("Archivo demasiado grande.");
+      if(file.size>(png?5*1024*1024:RIG_PROJECT_BYTES))throw new Error("Archivo demasiado grande.");
       const raw=await file.arrayBuffer();
       const importKey=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",raw)),b=>b.toString(16).padStart(2,"0")).join("");
       let p:CharacterProject,legacy=false;
@@ -156,10 +166,10 @@ function ReadyEditor({session}:{session:SessionBridge}){
     </header>
     <div id="project-panel" className={ui.projectPanel} hidden={!projectPanelOpen}>
     <div className={`${styles.fileBar} ${ui.fileToolbar}`}>
-      <input ref={fileInput} aria-label="Proyecto V1 o V2" hidden disabled={locked} type="file" accept=".json" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f);}}/>
+      <input ref={fileInput} aria-label={project.separation ? "Proyecto JSON" : "Proyecto V1 o V2"} hidden disabled={locked} type="file" accept=".json" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f);}}/>
       <input ref={pngInput} aria-label="PNG como proyecto" hidden disabled={locked} type="file" accept=".png" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void open(f,true);}}/>
       <input ref={frameInput} aria-label="PNG en destino activo" hidden disabled={locked} type="file" accept=".png" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void importFrame(f);}}/>
-      <button type="button" disabled={busy||loading} onClick={save}>Guardar JSON V2</button>
+      <button type="button" disabled={busy||loading} onClick={save}>{project.separation ? "Guardar JSON V3" : "Guardar JSON V2"}</button>
       <button ref={fileButton} type="button" disabled={locked} onClick={()=>fileInput.current?.click()}>Abrir JSON</button>
       <button type="button" disabled={locked} onClick={()=>setNewOpen(true)}>Nuevo</button>
       <button type="button" disabled={locked} onClick={()=>exportPng(1)}>{activeClip?`PNG frame ${activeIndex+1}`:"PNG sprite base"}</button>
@@ -176,15 +186,52 @@ function ReadyEditor({session}:{session:SessionBridge}){
     </div>
     {session.tabs}
     <div className={styles.fileStatus}><span>{dirty?"Cambios sin guardar":"Sin cambios pendientes"}</span><button type="button" onClick={session.review}>Revisar borradores</button><span className={ui.agentNotice}>Agente · Próximamente</span></div>
-    <RegionActions selection={selection} width={project.width} height={project.height} disabled={locked}
+    {drawing && <RegionActions selection={selection} width={project.width} height={project.height} disabled={locked}
       onExport={()=>{try { const area=selection??{x:0,y:0,width:project.width,height:project.height}; download(new Blob([serializeRegionPatch(exportRegionPatch(bitmap,area))],{type:"application/json"}),`${project.name}-region-activa.json`); } catch(e){setError(String(e));}}}
-      onImport={()=>pixelTools.begin("region")} onCommands={()=>pixelTools.begin("commands")} onPrompts={()=>setPromptsOpen(true)}/>
+      onImport={()=>pixelTools.begin("region")} onCommands={()=>pixelTools.begin("commands")} onPrompts={()=>setPromptsOpen(true)}/>}
     </div>
     {(error || loading || /No se pudo guardar|Sin borrador local/.test(session.status)) && <div className={styles.fileStatus}>
       {error&&<span role="alert">{error}</span>}
       {session.controlled&&/No se pudo guardar|Sin borrador local/.test(session.status)&&<button type="button" onClick={session.retry}>Reintentar guardado</button>}
       {loading&&<><span role="status">Procesando archivo…</span><button type="button" onClick={()=>{request.current++;setLoading(false);}}>Cancelar lectura</button></>}
     </div>}
+    <nav className={styles.fileBar} aria-label="Modo del editor">
+      <button type="button" aria-pressed={drawing} disabled={locked} onClick={() => setMode("drawing")}>Dibujo y animación</button>
+      <button type="button" aria-pressed={separating} disabled={locked} onClick={() => setMode("separation")}>Separación</button>
+      <button type="button" aria-pressed={rigging} disabled={locked || !project.separation} onClick={() => setMode("rig")}>Rig</button>
+    </nav>
+    {separating ? <SeparationWorkspace key={state.epoch} project={project} operationKey={operationKey} disabled={locked}
+      onEdit={(separation, label) => runEdit([{ type: "separation", separation }], label)}
+      onPalette={palette => runEdit([{ type: "metadata", name: project.name, palette: [...palette] }], "Editar paleta")}
+      onBusy={setBusy}
+      undo={() => dispatch({ type: "undo" })} redo={() => dispatch({ type: "redo" })} /> :
+    rigging && project.separation ? <PieceRigWorkspace key={state.epoch} project={project} separation={project.separation} disabled={locked}
+      onBones={bones => project.separation ? runEdit([{ type: "separation", separation: {
+        ...project.separation, bones, keyPoses: retainPoseBones(project.separation.keyPoses, bones),
+      } }], "Editar rig") : false}
+      onKeyPoses={keyPoses => project.separation ? runEdit([{ type: "separation", separation: { ...project.separation, keyPoses } }], "Guardar pose clave") : false}
+      onRegenerate={(transition, frames) => runEdit([{ type: "regenerate-rig-transition", transition, frames }], "Regenerar tramo del rig")}
+      onCapture={(documents, clipId, settings) => {
+        const frames = documents.map(document => ({ id: crypto.randomUUID(), document }));
+        const id = clipId || crypto.randomUUID();
+        const target = { kind: "frame", animationId: id, frameId: frames[0].id } as const;
+        const interpolation = settings && "poses" in settings ? settings : undefined;
+        const touched = settings && "pose" in settings ? settings : undefined;
+        const edit: CharacterEdit = clipId
+          ? { type: "append-documents", clipId, frames }
+          : { type: "import-clips", clips: [{ id, name: interpolation?.name ?? "Poses del rig", fps: interpolation?.fps ?? 8, loop: !interpolation, frames }] };
+        const edits: CharacterEdit[] = [edit];
+        if (settings) edits.push({ type: "register-rig-transition", transition: {
+          id: crypto.randomUUID(), clipId: id, sampleCount: frames.length,
+          poses: interpolation?.poses ?? { start: touched!.pose, end: touched!.pose },
+          frames: frames.map((frame, sample) => ({ id: frame.id, sample, retouches: [],
+            ...(touched && { pose: touched.pose, pieceRetouches: touched.pieceRetouches }),
+          })),
+        } });
+        if (!runEdit(edits, interpolation ? "Añadir transición del rig" : "Capturar pose del rig")) return null;
+        dispatch({ type: "select", target });
+        return { clipId: id, frameId: frames[0].id };
+      }} /> :
     <CharacterWorkspace layout={panel} onLayout={change=>setPanel(p=>({...p,...change}))}
       tools={<><Toolbar tool={tool} setTool={setTool} filled={filled} setFilled={setFilled} disabled={locked}/>
         <ColorPalette key={color.join(",")} color={color} palette={project.palette} onColor={setColor} onPalette={palette=>runEdit([{type:"metadata",name:project.name,palette:[...palette]}],"Editar paleta")} disabled={locked}/></>}
@@ -229,10 +276,15 @@ function ReadyEditor({session}:{session:SessionBridge}){
           {activeClip&&state.target.kind==="frame"?<FrameTimeline clip={activeClip} frameId={state.target.frameId} disabled={locked} listRef={timelineRef} onSelect={frameId=>dispatch({type:"select",target:{kind:"frame",animationId:activeClip.id,frameId}})}/>:<p className={ui.emptyTimeline}><strong>{project.animations.length?"Estás editando el sprite base":"Tu personaje está listo para una animación"}</strong>{project.animations.length?"Elige una animación para editar sus fotogramas. Cambiar la base no modifica los frames existentes.":"Crea una animación: su primer frame copiará la base. Después podrás añadir y editar cada fotograma."}</p>}
           <AnimationControls key={JSON.stringify([state.epoch,activeClip?.id])} project={project} target={state.target} disabled={locked} onEdit={runEdit} onTimelineFocus={focusTimeline}/>
           <AnimationExchange key={JSON.stringify(["exchange",state.epoch,activeClip?.id])} project={project} clip={activeClip} frameId={state.target.kind==="frame"?state.target.frameId:undefined} bitmap={bitmap} selection={selection} disabled={locked} onImport={()=>{canvas.current?.cancel();exchange.begin();}}/>
+          <button type="button" disabled={locked} onClick={() => { canvas.current?.cancel(); setRigImport({ key: operationKey, project }); }}>Importar rig de animación</button>
+          {rigImport && <RigImportDialog project={rigImport.project} stale={rigImport.key !== operationKey || !session.controlled}
+            onClose={() => setRigImport(null)}
+            onApply={(clips, replace) => rigImport.key === operationKey && runEdit([{ type: "import-clips", clips, replace }], "Importar rig",
+              { kind: "frame", animationId: clips[0].id, frameId: clips[0].frames[0].id })} />}
           </div>
         </details>
       </section>
-    </CharacterWorkspace>
+    </CharacterWorkspace>}
     {pixelTools.mode==="commands"&&<CommandsDialog flow={pixelTools.commands} name={`${project.name} · ${activeClip?`${activeClip.name} frame ${activeIndex+1}`:"Base"}`} width={project.width} height={project.height}/>}
     {pixelTools.mode==="region"&&<RegionPatchDialog flow={pixelTools.region} name={`${project.name} · ${activeClip?`${activeClip.name} frame ${activeIndex+1}`:"Base"}`}/>}
     {promptsOpen&&<PromptDialog width={project.width} height={project.height} selection={selection} onClose={()=>setPromptsOpen(false)}/>}

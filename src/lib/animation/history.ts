@@ -1,14 +1,16 @@
-import type { CharacterProject, TargetRef } from "@/types/animation";
+import type { CharacterProject, RigPose, RigRetouch, TargetRef } from "@/types/animation";
 import { cloneDocument } from "@/lib/pixels/bitmap";
 import { validateCharacterProject } from "./validation";
 import { editCharacter, type CharacterEdit } from "./actions";
 import { resolveTarget } from "./targets";
 import { FileError } from "@/lib/io/validation";
 import { diffDocuments, type PixelChange } from "@/lib/pixels/diff";
+import { separationBytes } from "./separation";
+import { trackedRigFrame, withFrameRetouches } from "./rig-retouches";
 
 type Entry = { target: TargetRef; undoTarget: TargetRef; label: string; bytes: number } & (
   { kind: "snapshot"; before: CharacterProject; after: CharacterProject } |
-  { kind: "pixels"; changes: PixelChange[] }
+  { kind: "pixels"; changes: PixelChange[]; retouches?: { before: RigRetouch[]; after: RigRetouch[] } }
 );
 export type CharacterState = {
   project: CharacterProject; target: TargetRef; saved: CharacterProject | null;
@@ -20,17 +22,48 @@ export const CHARACTER_HISTORY_BYTES = 64 * 1024 * 1024;
 
 function copy(p: CharacterProject): CharacterProject {
   validateCharacterProject(p);
-  return { ...p, palette: [...p.palette], baseSprite: cloneDocument(p.baseSprite), animations: p.animations.map(c => ({ ...c, frames: c.frames.map(f => ({ ...f, document: cloneDocument(f.document) })) })) };
+  const separation = p.separation && {
+    reference: cloneDocument(p.separation.reference),
+    remainder: cloneDocument(p.separation.remainder),
+    pieces: p.separation.pieces.map(piece => ({ ...piece, document: cloneDocument(piece.document) })),
+    ...(p.separation.bones && { bones: p.separation.bones.map(bone => ({ ...bone })) }),
+    ...(p.separation.keyPoses && { keyPoses: {
+      ...(p.separation.keyPoses.start && { start: { ...p.separation.keyPoses.start } }),
+      ...(p.separation.keyPoses.end && { end: { ...p.separation.keyPoses.end } }),
+    } }),
+    ...(p.separation.transitions && { transitions: structuredClone(p.separation.transitions) }),
+  };
+  return { ...p, ...(separation && { separation }), palette: [...p.palette], baseSprite: cloneDocument(p.baseSprite), animations: p.animations.map(c => ({ ...c, frames: c.frames.map(f => ({ ...f, document: cloneDocument(f.document) })) })) };
+}
+const bitmap = (x: CharacterProject["baseSprite"], y: CharacterProject["baseSprite"]) => x === y || (x.width === y.width && x.height === y.height && x.rgba.every((v, i) => v === y.rgba[i]));
+function equalPose(a?: RigPose, b?: RigPose): boolean {
+  return a === b || (!!a && !!b && Object.keys(a).length === Object.keys(b).length &&
+    Object.entries(a).every(([id, angle]) => Object.hasOwn(b, id) && b[id] === angle));
+}
+function equalSeparation(a: CharacterProject["separation"], b: CharacterProject["separation"]): boolean {
+  if (a === b) return true;
+  return !!a && !!b && bitmap(a.reference, b.reference) && bitmap(a.remainder, b.remainder) &&
+    equalPose(a.keyPoses?.start, b.keyPoses?.start) && equalPose(a.keyPoses?.end, b.keyPoses?.end) &&
+    (a.transitions === b.transitions || JSON.stringify(a.transitions) === JSON.stringify(b.transitions)) &&
+    a.bones?.length === b.bones?.length && (!a.bones || a.bones.every((bone, i) => {
+      const other = b.bones![i];
+      return bone.pieceId === other.pieceId && bone.parent === other.parent && bone.x === other.x && bone.y === other.y;
+    })) &&
+    a.pieces.length === b.pieces.length && a.pieces.every((piece, i) => {
+      const other = b.pieces[i];
+      return piece.id === other.id && piece.name === other.name && piece.x === other.x && piece.y === other.y &&
+        piece.homeX === other.homeX && piece.homeY === other.homeY && piece.visible === other.visible &&
+        piece.locked === other.locked && bitmap(piece.document, other.document);
+    });
 }
 function equal(a: CharacterProject, b: CharacterProject): boolean {
-  const bitmap = (x: CharacterProject["baseSprite"], y: CharacterProject["baseSprite"]) => x === y || (x.width === y.width && x.height === y.height && x.rgba.every((v, i) => v === y.rgba[i]));
-  return a.id === b.id && a.name === b.name && a.width === b.width && a.height === b.height && a.palette.length === b.palette.length && a.palette.every((v,i) => v === b.palette[i]) && bitmap(a.baseSprite,b.baseSprite) && a.animations.length === b.animations.length && a.animations.every((c,i) => {
+  return a.id === b.id && a.name === b.name && a.width === b.width && a.height === b.height && a.palette.length === b.palette.length && a.palette.every((v,i) => v === b.palette[i]) && bitmap(a.baseSprite,b.baseSprite) && equalSeparation(a.separation, b.separation) && a.animations.length === b.animations.length && a.animations.every((c,i) => {
     const d = b.animations[i];
     return c.id === d.id && c.name === d.name && c.fps === d.fps && c.loop === d.loop && c.frames.length === d.frames.length && c.frames.every((f,j) => f.id === d.frames[j].id && bitmap(f.document,d.frames[j].document));
   });
 }
 function bytes(p: CharacterProject) {
-  return p.baseSprite.rgba.byteLength + p.animations.reduce((n,c) => n + c.frames.reduce((s,f) => s + f.document.rgba.byteLength + 256, 0) + 512, 0) + 2048;
+  return separationBytes(p.separation) + p.baseSprite.rgba.byteLength + p.animations.reduce((n,c) => n + c.frames.reduce((s,f) => s + f.document.rgba.byteLength + 256, 0) + 512, 0) + 2048;
 }
 function trimmed(entries: Entry[]) {
   const result = entries.slice(-CHARACTER_HISTORY_LIMIT);
@@ -82,7 +115,15 @@ export function commitCharacter(s: CharacterState, edits: readonly CharacterEdit
   if (edits.length === 1 && pixel?.type === "pixels") {
     const before = resolveTarget(s.project,pixel.target), after = resolveTarget(project,pixel.target);
     const changes = diffDocuments(before,after);
-    if (changes.length * 128 < before.rgba.byteLength + after.rgba.byteLength) entry = { kind: "pixels", changes, target, undoTarget, label, bytes: changes.length * 128 + 512 };
+    const ref = pixel.target;
+    const tracked = ref.kind === "frame" ? trackedRigFrame(s.project, ref.animationId, ref.frameId) : undefined;
+    const retouches = tracked && ref.kind === "frame" ? {
+      before: tracked.retouches, after: trackedRigFrame(project, ref.animationId, ref.frameId)!.retouches,
+    } : undefined;
+    const cost = changes.length * 128 + 512 + (retouches ? (retouches.before.length + retouches.after.length) * 128 : 0);
+    if (changes.length * 128 < before.rgba.byteLength + after.rgba.byteLength && cost < entry.bytes) {
+      entry = { kind: "pixels", changes, target, undoTarget, label, bytes: cost, retouches };
+    }
   }
   return { ...s, project, target, generation: s.generation + 1, past: trimmed([...s.past, entry]), future: [] };
 }
@@ -99,7 +140,10 @@ function restore(s: CharacterState, e: Entry, forward: boolean): CharacterProjec
   if (e.kind === "snapshot") return forward ? e.after : e.before;
   const document = cloneDocument(resolveTarget(s.project,e.target));
   for (const change of e.changes) document.rgba.set(forward ? change.after : change.before,change.index * 4);
-  return editCharacter(s.project,{ type: "pixels", target: e.target, document });
+  const project = editCharacter(s.project,{ type: "pixels", target: e.target, document });
+  return e.retouches && e.target.kind === "frame"
+    ? withFrameRetouches(project, e.target.animationId, e.target.frameId, forward ? e.retouches.after : e.retouches.before)
+    : project;
 }
 export function isCharacterDirty(s: Pick<CharacterState, "project" | "saved">): boolean { return !s.saved || !equal(s.project,s.saved); }
 export function markCharacterSaved(s: CharacterState, token: CharacterToken): CharacterState {

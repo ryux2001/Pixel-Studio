@@ -3,6 +3,7 @@ import type { PixelRect, RGBA } from "@/types/pixel-studio";
 import type { Tool } from "@/lib/editor/state";
 import { validateCharacterProject } from "@/lib/animation/validation";
 import { serializeCharacterProject } from "@/lib/io/animation-project";
+import { separationBytes } from "@/lib/animation/separation";
 
 export const WORKSPACE_DB = "pixel-studio-workspaces";
 export type SessionView = { zoom?: number; previewScale?: number; grid?: boolean; selection?: PixelRect | null; restrict?: boolean; tool?: Tool; color?: RGBA; filled?: boolean; inspectorView?: string; onionPrevious?: boolean; onionNext?: boolean; onionOpacity?: number; canvasScroll?: { left: number; top: number }; reference?: { blob: Blob; name: string; width: number; height: number } | null };
@@ -60,7 +61,7 @@ function check(record: SessionRecord) {
 }
 export function validateSession(record: SessionRecord) { check(record); return record; }
 function storageBytes(record: SessionRecord) {
-  const bytes = (p: CharacterProject) => p.baseSprite.rgba.byteLength + p.animations.reduce((n,c) => n + c.frames.reduce((m,f) => m + f.document.rgba.byteLength,0),0) + 4096;
+  const bytes = (p: CharacterProject) => separationBytes(p.separation) + p.baseSprite.rgba.byteLength + p.animations.reduce((n,c) => n + c.frames.reduce((m,f) => m + f.document.rgba.byteLength,0),0) + 4096;
   return bytes(record.project) + (record.saved ? bytes(record.saved) : 0) + (record.view.reference?.blob.size ?? 0);
 }
 function summarize(record: SessionRecord): SessionSummary {

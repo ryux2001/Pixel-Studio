@@ -1,0 +1,69 @@
+.workspace {
+  display: grid;
+  gap: 12px;
+  padding: 12px clamp(12px, 2vw, 24px);
+  min-width: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(210px, 0.55fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.panel > div[aria-label] { height: clamp(220px, 43vh, 500px); flex: none; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+}
+
+.controls h2, .controls h3 { margin: 0 auto 0 0; font-size: 1rem; }
+.controls label { display: inline-flex; align-items: center; gap: 4px; }
+.workspace .controls input[type="number"] { width: 72px; }
+.workspace button[aria-pressed="true"] { border-color: #66c8be; color: #b0eee5; }
+.workspace select, .workspace input:not([type="checkbox"]):not([type="range"]) {
+  color: inherit;
+  background: #15161b;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.pieces, .properties { margin: 0; padding: 8px; display: grid; gap: 8px; }
+.pieces { list-style: none; max-height: 45vh; overflow: auto; }
+.pieces li { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.pieces li > button:first-child { flex: 1 1 100%; text-align: left; overflow-wrap: anywhere; }
+.properties > label { display: grid; gap: 4px; }
+.transferControls, .transferControls > label:first-child { display: grid; gap: 8px; }
+.transferControls { padding: 8px; }
+.transferControls p { margin: 0; }
+.transferControls select { min-width: 0; }
+.properties .controls { padding: 0; }
+.editTools, .gallery { display: grid; gap: 8px; padding: 8px; }
+.gallery { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+.gallery > div { min-width: 0; overflow: hidden; }
+.gallery canvas { max-width: 100%; object-fit: contain; }
+.error { color: #ffa6a6; margin: 0; }
+
+@media (max-width: 1000px) {
+  .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .columns > aside { grid-column: 1 / -1; }
+}
+@media (max-width: 570px) {
+  .columns { grid-template-columns: minmax(0, 1fr); }
+}

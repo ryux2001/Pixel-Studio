@@ -1,8 +1,8 @@
 import type { PixelDocument, RGBA } from "@/types/pixel-studio";
 import { validateColor, validateDimensions, validateDocument, validatePoint } from "./validation";
 
-export function createDocument(width: number, height: number): PixelDocument {
-  validateDimensions(width, height);
+export function createDocument(width: number, height: number, minimum?: number): PixelDocument {
+  validateDimensions(width, height, minimum);
   return { width, height, rgba: new Uint8ClampedArray(width * height * 4) };
 }
 
